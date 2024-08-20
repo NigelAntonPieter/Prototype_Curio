@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Prototype Curio stagemarkt (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Prototype Curio stagemarkt (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
