@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Prototype_Curio_stagemarkt.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,11 @@ namespace Prototype_Curio_stagemarkt
         public MainWindow()
         {
             this.InitializeComponent();
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+            }
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)
