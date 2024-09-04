@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Prototype_Curio_stagemarkt.Stage.CompanysList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Prototype_Curio_stagemarkt.Stage"
+      xmlns:localData="using:Prototype_Curio_stagemarkt.Data"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Background="#A38FE4"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Grid.Row="0">
+                <Button x:Name="LogoButton"
+                        Click="LogoButton_Click"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Padding="0"
+                        Margin="70,20,0,0">
+                    <TextBlock Text="CurioMarkt"
+                               FontWeight="Bold"
+                               FontSize="50"
+                               Foreground="White" />
+                </Button>
+                <TextBlock Text="Van Curio Voor Curio"
+                           FontSize="20"
+                           Margin="70,0,0,0" />
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <ListView Grid.Column="0" Margin="20" BorderBrush="Black" BorderThickness="2" Background="White" CornerRadius="25">
+                <StackPanel>
+                    <TextBlock Text="Leerweg"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="Black"
+                               Margin="0,20,0,5" />
+                    <CheckBox x:Name="bolCheckbox"
+                               Content="Bol"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    <CheckBox x:Name="bblCheckbox"
+                              Content="Bbl"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    
+                    <TextBlock Text="Niveau"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="Black"
+                               Margin="0,20,0,5" />
+                    <CheckBox x:Name="niveau2Checkbox"
+                              Content="Niveau 2"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    <CheckBox x:Name="niveau3Checkbox"
+                              Content="Niveau 3"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    <CheckBox x:Name="niveau4Checkbox"
+                              Content="Niveau 4"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    
+                    <TextBlock Text="Specialisatie"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="Black"
+                               Margin="0,20,0,5" />
+                    <CheckBox x:Name="webCheckbox"
+                              Content="Web"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    <CheckBox x:Name="nativeCheckbox"
+                              Content="Native"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                    <CheckBox x:Name="frontendCheckbox"
+                              Content="Front-end"
+                              Foreground="Black"
+                              Margin="0,0,0,5"
+                              Checked="CheckBox_Checked"
+                              Unchecked="CheckBox_Unchecked" />
+                </StackPanel>
+            </ListView>
+            
+            <ListView x:Name="companyListView"
+                      Grid.Column="1"
+                      AllowFocusOnInteraction="False"
+                      Background="White">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="localData:Company">
+                        <Grid Margin="10"
+                              Background="White"
+                              Padding="10"
+                              CornerRadius="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left section: Text and Info -->
+                            <StackPanel Orientation="Vertical"
+                                        Grid.Column="0"
+                                        Margin="10"
+                                        BorderBrush="Black"
+                                        BorderThickness="1"
+                                        CornerRadius="15"
+                                        Padding="20">
+                                <TextBlock Text="{x:Bind Name}"
+                                           FontSize="38"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,5"
+                                           Foreground="Black" />
+                                <StackPanel Orientation="Vertical"
+                                            Margin="0,0,0,10">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Plaats: "
+                                                   FontWeight="Bold"
+                                                   Foreground="Black" />
+                                        <TextBlock Text="{x:Bind City}"
+                                                   Foreground="Black" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Leerweg: "
+                                                   FontWeight="Bold"
+                                                   Foreground="Black" />
+                                        <TextBlock Text="{x:Bind LearningPath}"
+                                                   Foreground="Black" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Niveau: "
+                                                   FontWeight="Bold"
+                                                   Foreground="Black" />
+                                        <TextBlock Text="{x:Bind Level}"
+                                                   Foreground="Black" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="{x:Bind Description}"
+                                               Foreground="DarkGray"
+                                               TextWrapping="Wrap"
+                                               MaxLines="7"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <Image Source="{x:Bind ImagePathWithFallBack}"
+                                           Width="150"
+                                           Height="150"
+                                           Stretch="UniformToFill" />
+                                </StackPanel>
+
+                                <Button x:Name="bContent"
+                                        Click="bContent_Click"
+                                        Content="Bekijk stage"
+                                        Background="#FFA500"
+                                        Foreground="White"
+                                        HorizontalAlignment="Left"
+                                        Padding="5,2"
+                                        Margin="0,10,0,0" />
+                            </StackPanel>
+
+                            <!-- Right section: Company Image -->
+                            <StackPanel Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

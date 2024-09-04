@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Prototype_Curio_stagemarkt.Data
 {
-    internal class User
-    {
 
+    public class User
+    {
         public static User LoggedInUser { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Education { get; set; }
-        public ICollection<Company> Companys { get; set; }
+        public bool IsCompany { get; set; } // True for Company, False for Student
 
-        static User CurrentUser;
+        public int? CompanyId { get; set; } 
+        public Company Company { get; set; }
+
+        public int? StudentId { get; set; }
+        public Student Student{ get; set; }
     }
 }

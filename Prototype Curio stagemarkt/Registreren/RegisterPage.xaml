@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page 
+    xmlns:local1="using:Prototype_Curio_stagemarkt.Main"
+    x:Class="Prototype_Curio_stagemarkt.Registreren.RegisterPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Prototype_Curio_stagemarkt.Registreren"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header Grid -->
+        <Grid Grid.Row="0"
+              Background="#A38FE4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Margin="20">
+                <Button x:Name="LogoButton"
+                        Click="LogoButton_Click"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Padding="0"
+                        Margin="0">
+                    <TextBlock Text="CurioMarkt"
+                               FontWeight="Bold"
+                               FontSize="40"
+                               Foreground="White" />
+                </Button>
+                <TextBlock Text="Van Curio Voor Curio"
+                           FontSize="18"
+                           Foreground="White"
+                           Margin="0,10,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Registration Grids -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Student Registration Grid -->
+            <Grid Grid.Column="0"
+                  Background="White"
+                  BorderBrush="Black"
+                  BorderThickness="2">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="20">
+                    <TextBlock Text="Registeren als Student"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20" 
+                               Foreground="Black"/>
+                    <TextBlock Text="Username"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="Black" />
+                    <TextBox x:Name="studentUsernameTextbox"
+                             Width="250"
+                             Height="40"
+                             FontSize="16"
+                             Padding="10"
+                             BorderBrush="Black"
+                             Background="White"/>
+                    <TextBlock Text="Email"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="Black" />
+                    <TextBox x:Name="studentEmailTextbox"
+                             Width="250"
+                             Height="40"
+                             FontSize="16"
+                             Padding="10"
+                             BorderBrush="Black"
+                             Background="White" />
+                    <TextBlock Text="Password"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="Black" />
+                    <PasswordBox x:Name="studentPasswordBox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                    <TextBlock Text="Select a course"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="Black" />
+                    <ComboBox x:Name="studentCourseCombobox"
+                              PlaceholderText="Select a course"
+                              Width="250"
+                              Height="40"
+                              DisplayMemberPath="Name"
+                              BorderBrush="Black"
+                              Background="White" />
+                    <Button x:Name="fileButton1"
+                            Click="fileButton_Click"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Background="#A38FE4"
+                            Foreground="White"
+                            BorderBrush="Transparent">Add a photo...</Button>
+                    <Button x:Name="registerStudentButton"
+                            Click="RegisterStudentButton_Click"
+                            Width="250"
+                            Height="50"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Background="#A38FE4"
+                            Foreground="White"
+                            BorderBrush="Transparent"
+                            Margin="0,20,0,0">Registreer als Student</Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Company Registration Grid -->
+            <Grid Grid.Column="1"
+                  Background="White"
+                  BorderBrush="Black"
+                  BorderThickness="2"
+                  >
+                <ScrollViewer>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="20">
+                        <TextBlock Text="Registeren als Bedrijf"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,20" 
+                                   Foreground="Black"/>
+                        <TextBlock Text="Bedrijfsnaam"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyNameTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Password"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <PasswordBox x:Name="companyPasswordBox"
+                                     Width="250"
+                                     Height="40"
+                                     FontSize="16"
+                                     Padding="10"
+                                     BorderBrush="Black"
+                                     Background="White" />
+                        <TextBlock Text="Telefoonnummer"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyPhoneTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="E-mailadres"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyEmailTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Straat"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyStreetTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Stad"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyCityTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Beschrijving"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyDescriptionTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Niveau"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyLevelTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Leerlijn"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <TextBox x:Name="companyLearningPathTextbox"
+                                 Width="250"
+                                 Height="40"
+                                 FontSize="16"
+                                 Padding="10"
+                                 BorderBrush="Black"
+                                 Background="White" />
+                        <TextBlock Text="Opleiding"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+                        <ComboBox x:Name="companyCourseCombobox"
+                                  PlaceholderText="Select a course"
+                                  Width="250"
+                                  Height="40"
+                                  DisplayMemberPath="Name"
+                                  BorderBrush="Black"
+                                  Background="White" />
+                        <TextBlock Text="LOGO"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="Black" />
+
+                        <Button x:Name="fileButton"
+                                Click="fileButton_Click"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Background="#A38FE4"
+                                Foreground="White"
+                                BorderBrush="Transparent">Add a photo...</Button>
+                        <Button x:Name="registerCompanyButton"
+                                Click="RegisterCompanyButton_Click"
+                                Width="250"
+                                Height="50"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Background="#A38FE4"
+                                Foreground="White"
+                                BorderBrush="Transparent"
+                                Margin="0,20,0,0">Registreer als Bedrijf</Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
