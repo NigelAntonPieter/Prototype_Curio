@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Prototype_Curio_stagemarkt.Data
 {
-    internal class FavoriteCompany
+    public class FavoriteCompany
     {
         public int CompanyId { get; set; }
         public Company Company { get; set; }

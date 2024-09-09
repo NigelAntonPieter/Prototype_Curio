@@ -50,7 +50,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 companyCityTextbox.Text = company.City;
                 companyDescriptionTextbox.Text = company.Description;
                 companyLevelTextbox.Text = company.Level.ToString();
-                companyLearningPathTextbox.Text = company.LearningPath;
+                companyLearningPathTextbox.Text = company.LearningPath.Name;
                 companyCourseCombobox.Text = company.Specialization;
                 isPlaceOpen.IsChecked = company.IsOpen; 
             }

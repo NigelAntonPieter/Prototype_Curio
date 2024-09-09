@@ -15,5 +15,7 @@ namespace Prototype_Curio_stagemarkt.Data
         public string Specialization { get; set; }
         public string ImagePath { get; set; }
         public string ImagePathWithFallBack => ImagePath ?? "/Assets/Profile.png";
+
+        public ICollection<FavoriteCompany> FavoriteCompanies { get; set; } = new List<FavoriteCompany>();
     }
 }

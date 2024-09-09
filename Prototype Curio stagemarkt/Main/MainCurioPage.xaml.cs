@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -131,27 +132,40 @@ namespace Prototype_Curio_stagemarkt.Main
             if (!string.IsNullOrEmpty(searchQuery) && string.IsNullOrEmpty(searchAdresQuery))
             {
                 filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
                     .Where(c => c.Name.ToLower().Contains(searchQuery))
                     .ToList();
             }
             else if (string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
                 filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
                     .Where(c => c.City.ToLower().Contains(searchAdresQuery))
                     .ToList();
             }
             else if (!string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
                 filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
                     .Where(c => c.Name.ToLower().Contains(searchQuery) && c.City.ToLower().Contains(searchAdresQuery))
                     .ToList();
             }
             else
             {
-                filteredCompanies = db.Companies.ToList();
+                filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath) // Ensure LearningPath is included
+                    .ToList();
             }
 
-            this.Frame.Navigate(typeof(CompanysList), filteredCompanies);
+            // Include the current logged-in student in the navigation parameter
+            if (User.LoggedInUser?.Student != null)
+            {
+                this.Frame.Navigate(typeof(CompanysList), (filteredCompanies, User.LoggedInUser.Student));
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(CompanysList), filteredCompanies);
+            }
         }
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)

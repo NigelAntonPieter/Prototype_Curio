@@ -58,13 +58,13 @@
                                Foreground="Black"
                                Margin="0,20,0,5" />
                     <CheckBox x:Name="bolCheckbox"
-                               Content="Bol"
+                               Content="BOL"
                               Foreground="Black"
                               Margin="0,0,0,5"
                               Checked="CheckBox_Checked"
                               Unchecked="CheckBox_Unchecked" />
                     <CheckBox x:Name="bblCheckbox"
-                              Content="Bbl"
+                              Content="BBL"
                               Foreground="Black"
                               Margin="0,0,0,5"
                               Checked="CheckBox_Checked"
@@ -161,7 +161,7 @@
                                         <TextBlock Text="Leerweg: "
                                                    FontWeight="Bold"
                                                    Foreground="Black" />
-                                        <TextBlock Text="{x:Bind LearningPath}"
+                                        <TextBlock Text="{x:Bind LearningPath.Name}"
                                                    Foreground="Black" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">

@@ -18,11 +18,13 @@ namespace Prototype_Curio_stagemarkt.Data
         public string City { get; set; }    
         public string Description { get; set; }
         public int Level { get; set; }
-        public string LearningPath { get; set; }
+        public int LearningPathId { get; set; }
+        public LearningPath LearningPath { get; set; }
         public string Specialization { get; set; }
         public string ImagePath { get; set; }
         public string ImagePathWithFallBack => ImagePath ?? "/Assets/images.jpeg";
         public bool IsOpen { get; set; } = true;
+        public ICollection<FavoriteCompany> FavoriteCompanies { get; set; } = new List<FavoriteCompany>();
         public ICollection<User> Users { get; set; }
 
     }

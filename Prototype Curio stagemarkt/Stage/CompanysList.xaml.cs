@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -29,12 +30,21 @@ namespace Prototype_Curio_stagemarkt.Stage
     {
         public ObservableCollection<Company> AllCompanies { get; private set; }
         public ObservableCollection<Company> FilteredCompanies { get; private set; }
+        private Student _currentStudent;
+        private Company _currentCompany;
 
         public CompanysList()
         {
             this.InitializeComponent();
+           LoadCompanies();
+        }
+
+        private void LoadCompanies()
+        {
             using var db = new AppDbContext();
-            var companies = db.Companies.ToList();
+            var companies = db.Companies
+                .Include(c => c.LearningPath) 
+                .ToList();
             AllCompanies = new ObservableCollection<Company>(companies);
             FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
             companyListView.ItemsSource = FilteredCompanies;
@@ -44,16 +54,24 @@ namespace Prototype_Curio_stagemarkt.Stage
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is List<Company> filteredCompanies)
+            if (e.Parameter is (List<Company> filteredCompanies, Student student))
             {
                 AllCompanies = new ObservableCollection<Company>(filteredCompanies);
-                companyListView.ItemsSource = FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
+                FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
+                companyListView.ItemsSource = FilteredCompanies;
+                _currentStudent = student;
+            }
+            else if (e.Parameter is List<Company> companies)
+            {
+                AllCompanies = new ObservableCollection<Company>(companies);
+                FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
+                companyListView.ItemsSource = FilteredCompanies;
+                _currentStudent = null; // Or handle accordingly
+                
             }
             else
             {
-                // If no filtered companies are passed, initialize with all companies
-                FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
-                companyListView.ItemsSource = FilteredCompanies;
+                LoadCompanies();
             }
         }
 
@@ -64,14 +82,12 @@ namespace Prototype_Curio_stagemarkt.Stage
 
         private void bContent_Click(object sender, RoutedEventArgs e)
         {
-            // Haal de knop die is ingedrukt
             var button = sender as Button;
             var company = button?.DataContext as Company;
 
             if (company != null)
             {
-                // Navigeer naar CompanyOverviewPage en geef de geselecteerde Company door
-                this.Frame.Navigate(typeof(CompanyOverviewPage), company);
+                this.Frame.Navigate(typeof(CompanyOverviewPage), (company, _currentStudent));
             }
         }
 
@@ -90,14 +106,14 @@ namespace Prototype_Curio_stagemarkt.Stage
             // Maak een lijst van CheckBoxen en bijbehorende filtercriteria
             var filterCriteria = new List<(CheckBox CheckBox, Func<Company, bool> Filter)>
             {
-                (bolCheckbox, company => company.LearningPath == "Bol"),
-                (bblCheckbox, company => company.LearningPath == "Bbl"),
-                (niveau2Checkbox, company => company.Level == 2),
-                (niveau3Checkbox, company => company.Level == 3),
-                (niveau4Checkbox, company => company.Level == 4),
-                (webCheckbox, company => company.Specialization == "Web"),
-                (nativeCheckbox, company => company.Specialization == "Native"),
-                (frontendCheckbox, company => company.Specialization == "Front-end")
+               (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
+                (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
+                (niveau2Checkbox, c => c.Level == 2),
+                (niveau3Checkbox, c => c.Level == 3),
+                (niveau4Checkbox, c => c.Level == 4),
+                (webCheckbox, c => c.Specialization == "Web"),
+                (nativeCheckbox, c => c.Specialization == "Native"),
+                (frontendCheckbox, c => c.Specialization == "Front-end")
             };
 
             var filteredList = AllCompanies.AsEnumerable();
@@ -125,18 +141,18 @@ namespace Prototype_Curio_stagemarkt.Stage
         {
             // Maak een lijst van CheckBoxen en hun uitsluitingscriteria
             var exclusionCriteria = new List<(CheckBox CheckBox, List<CheckBox> Exclude)>
-    {
-        (bolCheckbox, new List<CheckBox> { bblCheckbox }),
-        (bblCheckbox, new List<CheckBox> { bolCheckbox }),
+            {
+                (bolCheckbox, new List<CheckBox> { bblCheckbox }),
+                (bblCheckbox, new List<CheckBox> { bolCheckbox }),
 
-        (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
-        (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
-        (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox }),
+                (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
+                (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
+                (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox }),
 
-        (nativeCheckbox, new List<CheckBox> { webCheckbox, frontendCheckbox }),
-        (webCheckbox, new List<CheckBox> { nativeCheckbox, frontendCheckbox }),
-        (frontendCheckbox, new List<CheckBox> { nativeCheckbox, webCheckbox })
-    };
+                (nativeCheckbox, new List<CheckBox> { webCheckbox, frontendCheckbox }),
+                (webCheckbox, new List<CheckBox> { nativeCheckbox, frontendCheckbox }),
+                (frontendCheckbox, new List<CheckBox> { nativeCheckbox, webCheckbox })
+            };
 
             // Zet alle checkboxes weer in
             foreach (var (checkBox, _) in exclusionCriteria)

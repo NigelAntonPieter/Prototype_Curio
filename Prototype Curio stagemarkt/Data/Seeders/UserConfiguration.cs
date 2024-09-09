@@ -25,9 +25,11 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
                    .HasForeignKey(u => u.StudentId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+
             builder.HasData(
                  new User { Id = 1,  IsCompany = true, CompanyId = 1 },
-                    new User { Id = 2, IsCompany = false, StudentId = 1 }
+                    new User { Id = 2, IsCompany = false, StudentId = 1 },
+                        new User { Id = 3 , IsCompany= false, StudentId =2}
                 );
         }
     }

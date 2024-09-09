@@ -15,7 +15,8 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
         {
 
             builder.HasData(
-                 new Student {  Id = 1, Name= "Max", EmailAdress = "student1@example.com", Password = SecureHasher.Hash("wachtwoord"), Specialization = "Native" }
+                 new Student {  Id = 1, Name= "Max", EmailAdress = "student1@example.com", Password = SecureHasher.Hash("wachtwoord"), Specialization = "Native" },
+                  new Student { Id = 2, Name = "JJ", EmailAdress = "student2@example.com", Password = SecureHasher.Hash("a"), Specialization = "Native" }
                 );
         }
     }

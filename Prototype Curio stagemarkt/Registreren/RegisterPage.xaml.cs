@@ -38,16 +38,31 @@ namespace Prototype_Curio_stagemarkt.Registreren
         public RegisterPage()
         {
             this.InitializeComponent();
+            LoadCourses();
+            LoadLearningPaths();
+        }
 
-            using (var context = new AppDbContext())
+        private void LoadCourses()
+        {
+            using (var db = new AppDbContext())
             {
-                var courses = context.Courses.ToList();
+                var courses = db.Courses.ToList();
                 studentCourseCombobox.ItemsSource = courses;
                 studentCourseCombobox.DisplayMemberPath = "Name";
                 studentCourseCombobox.SelectedValuePath = "Id";
                 companyCourseCombobox.ItemsSource = courses;
                 companyCourseCombobox.DisplayMemberPath = "Name";
                 companyCourseCombobox.SelectedValuePath = "Id";
+            }
+        }
+        private void LoadLearningPaths()
+        {
+            using (var db = new AppDbContext())
+            {
+                var learningPaths = db.LearningPaths.ToList();
+                companyLearningPathComboBox.ItemsSource = learningPaths;
+                companyLearningPathComboBox.DisplayMemberPath = "Name";
+                companyLearningPathComboBox.SelectedValuePath = "Id";
             }
         }
 
@@ -99,6 +114,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
                 using (var db = new AppDbContext())
                 {
                     var selectedCourse = companyCourseCombobox.SelectedItem as Course;
+                    var selectedLearningPath = (int)companyLearningPathComboBox.SelectedValue;
 
                     var newCompany = new Company
                     {
@@ -109,7 +125,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
                         City = companyCityTextbox.Text,
                         Description = companyDescriptionTextbox.Text,
                         Level = level,
-                        LearningPath = companyLearningPathTextbox.Text,
+                        LearningPathId = selectedLearningPath,
                         Specialization = selectedCourse?.Name,
                         ImagePath = copiedFile?.Path,
                         Password = SecureHasher.Hash(companyPasswordBox.Password),
@@ -189,7 +205,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
                 string.IsNullOrWhiteSpace(companyCityTextbox.Text) ||
                 string.IsNullOrWhiteSpace(companyDescriptionTextbox.Text) ||
                 string.IsNullOrWhiteSpace(companyLevelTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyLearningPathTextbox.Text) ||
+                companyLearningPathComboBox.SelectedItem == null ||
                 companyCourseCombobox.SelectedItem == null ||
                 copiedFile == null)
             {
