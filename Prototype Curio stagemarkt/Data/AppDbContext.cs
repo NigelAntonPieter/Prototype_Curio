@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Data.Seeders;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,20 @@ using System.Threading.Tasks;
 
 namespace Prototype_Curio_stagemarkt.Data
 {
-    internal class AppDbContext:DbContext
+    internal class AppDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Level> Levels { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }
+       public DbSet<AdminClass> Admins { get; set; }
         public DbSet<LearningPath> LearningPaths { get; set; }
         public DbSet<FavoriteCompany> FavoriteCompanies { get; set; }
+        public DbSet<InternschipTeacher> InternschipTeachers { get; set; }
+        public DbSet<WorkHour> WorkHours { get; set; }
+        public DbSet<Application> Applications { get; set; }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,41 +35,17 @@ namespace Prototype_Curio_stagemarkt.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                 .HasOne(u => u.Company)
-                 .WithMany(c => c.Users)
-                 .HasForeignKey(u => u.CompanyId)
-                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Student)
-                .WithMany()
-                .HasForeignKey(u => u.StudentId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Company>()
-            .HasOne(c => c.LearningPath)
-            .WithMany(lp => lp.Companies)
-            .HasForeignKey(c => c.LearningPathId);
-
-            modelBuilder.Entity<FavoriteCompany>()
-                .HasKey(fc => new { fc.CompanyId, fc.StudentId });
-
-            modelBuilder.Entity<FavoriteCompany>()
-                .HasOne(fc => fc.Company)
-                .WithMany(c => c.FavoriteCompanies)
-                .HasForeignKey(fc => fc.CompanyId);
-
-            modelBuilder.Entity<FavoriteCompany>()
-                .HasOne(fc => fc.Student)
-                .WithMany(s => s.FavoriteCompanies)
-                .HasForeignKey(fc => fc.StudentId);
-
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new CourseConfiguration());
             modelBuilder.ApplyConfiguration(new LearningPathConfigurationv());
+            modelBuilder.ApplyConfiguration(new LevelConfiguration());
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            modelBuilder.ApplyConfiguration(new AdminConfiguration());
+            modelBuilder.ApplyConfiguration(new InternshipTeacherConfiguration());
+            modelBuilder.ApplyConfiguration(new WorkHourConfiguration());
+            modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
+            modelBuilder.ApplyConfiguration(new FavoriteCompanyConfiguration());
         }
     }
 }

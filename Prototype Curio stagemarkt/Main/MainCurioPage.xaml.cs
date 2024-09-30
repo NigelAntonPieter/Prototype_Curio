@@ -7,11 +7,13 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Login;
 using Prototype_Curio_stagemarkt.Registreren;
 using Prototype_Curio_stagemarkt.Stage;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -47,6 +49,13 @@ namespace Prototype_Curio_stagemarkt.Main
                 AccountPageButton.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void LogoButton_Click(object sender, RoutedEventArgs e)
+        {
+            User.LoggedInUser = null;
+            this.Frame.Navigate(typeof(WelcomePage));
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -71,16 +80,10 @@ namespace Prototype_Curio_stagemarkt.Main
                 }
 
                 UserLogin.Text = $"Welcome, {userName}!";
-                LoginPage.Content = "Logout";
-                LoginPage.Click -= LoginPage_Click;
-                LoginPage.Click += LogoutButton_Click;
             }
             else
             {
                 UserLogin.Text = "";
-                LoginPage.Content = "Login";
-                LoginPage.Click -= LogoutButton_Click;
-                LoginPage.Click += LoginPage_Click;
             }
         }
         private void RegisterPage_Click(object sender, RoutedEventArgs e)
@@ -93,17 +96,7 @@ namespace Prototype_Curio_stagemarkt.Main
             this.Frame.Navigate(typeof(LoginPage));
         }
 
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            User.LoggedInUser = null;
-
-            UserLogin.Text = "";
-            LoginPage.Content = "Login";
-            LoginPage.Click -= LogoutButton_Click; 
-            LoginPage.Click += LoginPage_Click;
-            this.Frame.Navigate(typeof(MainCurioPage));
-
-        }
+       
 
         private void searchTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -133,31 +126,31 @@ namespace Prototype_Curio_stagemarkt.Main
             {
                 filteredCompanies = db.Companies
                     .Include(c => c.LearningPath)
-                    .Where(c => c.Name.ToLower().Contains(searchQuery))
+                    .Where(c => c.IsOpen && c.Name.ToLower().Contains(searchQuery))
                     .ToList();
             }
             else if (string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
                 filteredCompanies = db.Companies
                     .Include(c => c.LearningPath)
-                    .Where(c => c.City.ToLower().Contains(searchAdresQuery))
+                    .Where(c => c.IsOpen && c.City.ToLower().Contains(searchAdresQuery))
                     .ToList();
             }
             else if (!string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
                 filteredCompanies = db.Companies
                     .Include(c => c.LearningPath)
-                    .Where(c => c.Name.ToLower().Contains(searchQuery) && c.City.ToLower().Contains(searchAdresQuery))
+                    .Where(c =>  c.IsOpen && c.Name.ToLower().Contains(searchQuery) && c.City.ToLower().Contains(searchAdresQuery))
                     .ToList();
             }
             else
             {
                 filteredCompanies = db.Companies
-                    .Include(c => c.LearningPath) // Ensure LearningPath is included
+                    .Include(c => c.LearningPath)
+                    .Where(c => c.IsOpen)
                     .ToList();
             }
 
-            // Include the current logged-in student in the navigation parameter
             if (User.LoggedInUser?.Student != null)
             {
                 this.Frame.Navigate(typeof(CompanysList), (filteredCompanies, User.LoggedInUser.Student));
@@ -168,10 +161,7 @@ namespace Prototype_Curio_stagemarkt.Main
             }
         }
 
-        private void LogoButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainCurioPage));
-        }
+       
 
         private void AccountPageBUtton_Click(object sender, RoutedEventArgs e)
         {
@@ -179,12 +169,10 @@ namespace Prototype_Curio_stagemarkt.Main
             {
                 if (User.LoggedInUser.IsCompany)
                 {
-                    // Navigeer naar AccountCompanyPage en stuur het bedrijf mee als parameter
-                    this.Frame.Navigate(typeof(AccountCompanyPage), User.LoggedInUser);
+                    this.Frame.Navigate(typeof(AccountCompanyPage), User.LoggedInUser.CompanyId);
                 }
                 else
                 {
-                    // Navigeer naar AccountPage en stuur de student mee als parameter
                     this.Frame.Navigate(typeof(AccountPage), User.LoggedInUser);
                 }
             }

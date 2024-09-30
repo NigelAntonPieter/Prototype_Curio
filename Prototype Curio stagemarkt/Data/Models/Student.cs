@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prototype_Curio_stagemarkt.Data
+namespace Prototype_Curio_stagemarkt.Data.Models
 {
     public class Student
     {
@@ -16,6 +17,12 @@ namespace Prototype_Curio_stagemarkt.Data
         public string ImagePath { get; set; }
         public string ImagePathWithFallBack => ImagePath ?? "/Assets/Profile.png";
 
+        public int? InternshipTeacherId { get; set; }
+        public InternschipTeacher InternschipTeacher { get; set; }
+
         public ICollection<FavoriteCompany> FavoriteCompanies { get; set; } = new List<FavoriteCompany>();
+        public ICollection<WorkHour> workHours { get; set; } = new List<WorkHour>();
+        public ICollection<Application> Applications { get; set; } = new List<Application>();
+
     }
 }

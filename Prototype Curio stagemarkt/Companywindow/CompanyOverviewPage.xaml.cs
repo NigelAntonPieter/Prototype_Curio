@@ -6,9 +6,11 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,6 +30,7 @@ namespace Prototype_Curio_stagemarkt.Companywindow
 
         private Company _currentCompany;
         private Student _currentStudent;
+        private int selectedCompanyId;
         public CompanyOverviewPage()
         {
             this.InitializeComponent();
@@ -35,7 +38,6 @@ namespace Prototype_Curio_stagemarkt.Companywindow
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-
             base.OnNavigatedTo(e);
 
             if (e.Parameter is (Company company, Student student))
@@ -43,11 +45,14 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                 _currentCompany = company;
                 _currentStudent = student;
 
+                // Stel de SelectedCompanyId in
+                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+
                 // Update the UI with company details
                 companyNameTextblock.Text = company.Name;
                 companyCityTextblock.Text = company.City;
                 companyLearningPathTextblock.Text = company.LearningPath?.Name ?? "No Learning Path";
-                companyLevelTextblock.Text = company.Level.ToString();
+                companyLevelTextblock.Text = company.Level?.ToString();
                 companyDescriptionTextblock.Text = company.Description;
 
                 // Set the DataContext to the company if needed
@@ -61,11 +66,14 @@ namespace Prototype_Curio_stagemarkt.Companywindow
             {
                 _currentCompany = singleCompany;
 
+                // Stel de SelectedCompanyId in
+                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+
                 // Update the UI with company details
                 companyNameTextblock.Text = _currentCompany.Name;
                 companyCityTextblock.Text = _currentCompany.City;
                 companyLearningPathTextblock.Text = _currentCompany.LearningPath?.Name ?? "No Learning Path";
-                companyLevelTextblock.Text = _currentCompany.Level.ToString();
+                companyLevelTextblock.Text = _currentCompany.Level?.ToString();
                 companyDescriptionTextblock.Text = _currentCompany.Description;
 
                 // Disable the buttons if no student is logged in
@@ -85,7 +93,14 @@ namespace Prototype_Curio_stagemarkt.Companywindow
 
         private void applyButton_Click(object sender, RoutedEventArgs e)
         {
+            var button = sender as Button;
+            var student = button?.DataContext as Company;
+            var company = button?.DataContext as Company;
 
+            if (student != null)
+            {
+                this.Frame.Navigate(typeof(ApplyPage), (company, _currentStudent, selectedCompanyId));
+            }
         }
 
         private async void favoriteButton_Click(object sender, RoutedEventArgs e)

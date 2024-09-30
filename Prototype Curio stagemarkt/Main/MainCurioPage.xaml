@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="Prototype_Curio_stagemarkt.Main.MainCurioPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,7 +8,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="#A38FE4">
+    <Grid>
+        <!-- Achtergrond afbeelding -->
+        <Grid.Background>
+            <ImageBrush  ImageSource="/Assets/curio_mbo_campagne_7_2000x1125px.jpg" 
+                Stretch="Fill" />
+        </Grid.Background>
+
+        <!-- Header Sectie (onveranderd) -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
@@ -43,17 +49,15 @@
                     Visibility="Collapsed"
                     >Registeren</Button>
 
-            <Button x:Name="LoginPage"
-                    Click="LoginPage_Click">Login</Button>
+            <TextBox x:Name="UserLogin" IsReadOnly="True" Margin="20,0,0,0" Background="White" />
 
-            <TextBox x:Name="UserLogin" IsReadOnly="True" Margin="20,0,0,0" Background="Transparent" />
-            
             <Button x:Name="AccountPageButton"
                     Click="AccountPageBUtton_Click"
                     Margin="20,0,0,0"
                     Visibility="Collapsed">Account</Button>
         </StackPanel>
 
+        <!-- Zoeksectie (onveranderd) -->
         <Grid Grid.ColumnSpan="2"
               Grid.Row="1"
               Background="White"
@@ -114,13 +118,11 @@
                         Grid.Column="2"
                         Click="Bsearch_Click"
                         BorderBrush="Black"
-                        Background="#A38FE4"
                         Content="Zoek"
-                        Margin="20,0,0,0" />
+                        Margin="20,0,0,0"
+                        Background="#E23C84"/>
             </Grid>
         </Grid>
 
     </Grid>
 </Page>
-
-

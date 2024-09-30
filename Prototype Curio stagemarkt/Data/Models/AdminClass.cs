@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prototype_Curio_stagemarkt.Data
+namespace Prototype_Curio_stagemarkt.Data.Models
 {
-    public class Course
+    public class AdminClass
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        public string Password { get; set; }
     }
 }

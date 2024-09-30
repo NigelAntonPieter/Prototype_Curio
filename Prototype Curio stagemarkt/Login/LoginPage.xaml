@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="Prototype_Curio_stagemarkt.Login.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,19 +10,23 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Header Grid -->
-        <Grid Grid.Row="0"
-              Background="#A38FE4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0"
-                        Margin="20">
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Assets/curio_mbo_campagne_7_2000x1125px.jpg" 
+                Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <TranslateTransform Y="0.7" />
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Grid.Background>
+            <StackPanel Margin="20">
                 <Button x:Name="LogoButton"
                         Click="LogoButton_Click"
                         Background="Transparent"
@@ -44,53 +47,47 @@
 
         <!-- Login Grid -->
         <Grid Grid.Row="1"
-              Background="White"
-              >
+              Background="#F9F9F9"
+              Margin="20"
+              CornerRadius="10">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Spacing="20">
+                        Spacing="20"
+                        Margin="20">
                 <TextBlock x:Name="ErrorTextBlock"
                            Foreground="Red"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,10" />
-                <TextBlock Text="Registeren"
+                <TextBlock Text="Inloggen"
                            FontSize="24"
                            FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,20" />
+                           HorizontalAlignment="Center" />
                 <TextBlock Text="Gebruikersnaam"
                            FontSize="18"
-                           FontWeight="SemiBold"
-                           Foreground="Black"/>
+                           FontWeight="SemiBold"/>
                 <TextBox x:Name="usernameTextbox"
                          Width="250"
                          Height="45"
                          FontSize="16"
-                         Padding="10" 
-                         BorderBrush="Black"
-                         BorderThickness="2"/>
+                         Padding="10"
+                         Margin="0,5,0,10"
+                         BorderBrush="#E23C84"
+                         BorderThickness="1"
+                         Background="White"
+                         CornerRadius="5" />
                 <TextBlock Text="Wachtwoord"
                            FontSize="18"
-                           FontWeight="SemiBold"
-                           Foreground="Black"/>
+                           FontWeight="SemiBold"/>
                 <PasswordBox x:Name="passwordBox"
                              Width="250"
-                             Height="40"
-                             FontSize="16"
+                             Height="45"
+                             FontSize="18"
                              Padding="10"
-                             BorderBrush="Black"
-                             BorderThickness="2" />
-                <Button x:Name="LoginButton"
-                        Click="LoginButton_Click"
-                        Width="250"
-                        Height="50"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Background="#A38FE4"
-                        BackgroundSizing="InnerBorderEdge"
-                        Foreground="White"
-                        BorderBrush="Transparent"
-                        Margin="0,20,0,0">Login</Button>
+                             Margin="0,5,0,20"
+                             BorderBrush="#E23C84"
+                             BorderThickness="1"
+                             Background="White"
+                             CornerRadius="5"/>
             </StackPanel>
         </Grid>
     </Grid>

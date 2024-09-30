@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prototype_Curio_stagemarkt.Data
+namespace Prototype_Curio_stagemarkt.Data.Models
 {
     public class LearningPath
     {
