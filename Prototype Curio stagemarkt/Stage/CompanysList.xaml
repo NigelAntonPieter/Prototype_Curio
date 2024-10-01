@@ -100,7 +100,7 @@
                               Checked="CheckBox_Checked"
                               Unchecked="CheckBox_Unchecked" />
                     
-                    <TextBlock Text="Specialisatie"
+                    <!--<TextBlock Text="Specialisatie"
                                FontSize="20"
                                FontWeight="Bold"
                                Foreground="Black"
@@ -122,7 +122,7 @@
                               Foreground="Black"
                               Margin="0,0,0,5"
                               Checked="CheckBox_Checked"
-                              Unchecked="CheckBox_Unchecked" />
+                              Unchecked="CheckBox_Unchecked" />-->
                 </StackPanel>
             </ListView>
             

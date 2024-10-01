@@ -10,17 +10,21 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <!-- Define grid layout: 1 row for header, 1 row for calendar, 1 row for work hours lists -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
+        <!-- Header section -->
         <Grid Grid.Row="0">
             <Grid.Background>
                 <ImageBrush ImageSource="/Assets/curio.jpg"
                             Stretch="UniformToFill">
                     <ImageBrush.RelativeTransform>
                         <TransformGroup>
-                            <TranslateTransform Y="0.7" />
+                            <TranslateTransform Y="0.9" />
                         </TransformGroup>
                     </ImageBrush.RelativeTransform>
                 </ImageBrush>
@@ -49,6 +53,7 @@
             </StackPanel>
         </Grid>
 
+        <!-- CalendarView section -->
         <CalendarView x:Name="HourcardCalendar"
                       Grid.Row="1"
                       HorizontalAlignment="Stretch"
@@ -59,36 +64,94 @@
                       HorizontalDayItemAlignment="Center"
                       VerticalDayItemAlignment="Top"
                       CalendarViewDayItemChanging="HourcardCalendar_CalendarViewDayItemChanging">
-
             <CalendarView.CalendarViewDayItemStyle>
                 <Style TargetType="CalendarViewDayItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <ListView ItemsSource="{Binding}"
-                                          IsItemClickEnabled="True"
-                                          ItemClick="teacherListView_ItemClick">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate x:DataType="localData:WorkHour">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{x:Bind Student.Name}"
-                                                           FontWeight="Bold" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                <StackPanel>
+                                    <StackPanel>
+                                        <TextBlock x:Name="StudentCountTextBlock"
+                                                   Text="{Binding StudentCount}"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="100,0,0,5" />
+                                    </StackPanel>
+
+                                    <ScrollViewer Height="200">
+                                        <!-- Beperk de hoogte -->
+                                        <ListView x:Name="teacherListView"
+                                                  ItemsSource="{Binding}"
+                                                  IsItemClickEnabled="True"
+                                                  ItemClick="TeacherListView_ItemClick">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate x:DataType="localData:WorkHour">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <TextBlock Text="{x:Bind Student.Name}"
+                                                                   FontWeight="Bold" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </ScrollViewer>
+                                </StackPanel>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
             </CalendarView.CalendarViewDayItemStyle>
         </CalendarView>
+
+
+
+        <Grid Grid.Row="2">
+            <!-- Approved and Unapproved Work Hours lists -->
+            <StackPanel Grid.Row="2"
+                        Margin="20"
+                        Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Approved Work Hours"
+                               FontWeight="Bold"
+                               Margin="0,20,0,0" />
+                    <TextBlock Text="{x:Bind ApprovedWorkHours.Count}"
+                               FontSize="20"
+                               Foreground="#E23C84"
+                               Tapped="ApprovedWorkHours_Tapped" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"
+                            Margin="30,0,30,0">
+                    <TextBlock Text="Unapproved Work Hours"
+                               FontWeight="Bold"
+                               Margin="0,20,0,0" />
+                    <TextBlock Text="{x:Bind UnapprovedWorkHours.Count}"
+                               FontSize="20"
+                               Foreground="#E23C84"
+                               Tapped="UnapprovedWorkHours_Tapped" />
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="In Review Work Hours"
+                               FontWeight="Bold"
+                               Margin="0,20,0,0" />
+                    <TextBlock Text="{x:Bind InreviewdWorkHours.Count}"
+                               FontSize="20"
+                               Foreground="#E23C84"
+                               Tapped="InreviewdWorkHours_Tapped" />
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+
+
+        <!-- ContentDialog for work hours approval -->
         <ContentDialog x:Name="workHourDialog"
                        Title="Stage uren"
                        PrimaryButtonText="Approve"
                        SecondaryButtonText="Decline"
-                       PrimaryButtonClick="workHourDialog_PrimaryButtonClick"
-                       SecondaryButtonClick="workHourDialog_SecondaryButtonClick">
+                       PrimaryButtonClick="WorkHourDialog_PrimaryButtonClick"
+                       SecondaryButtonClick="WorkHourDialog_SecondaryButtonClick"
+                       CloseButtonText="Oke">
             <ContentDialog.ContentTemplate>
                 <DataTemplate x:DataType="localData:WorkHour">
                     <StackPanel Orientation="Vertical">
@@ -102,6 +165,59 @@
                     </StackPanel>
                 </DataTemplate>
             </ContentDialog.ContentTemplate>
+        </ContentDialog>
+
+        <ContentDialog x:Name="showWorkHoursDetailDialog"
+                       Title="Aantal werkuren per student"
+                       PrimaryButtonText="oke">
+            <ScrollViewer>
+                <StackPanel>
+                    <ListView x:Name="workHoursListView">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,10">
+                                    <TextBlock Text="{Binding StudentName}"
+                                               FontWeight="Bold"
+                                               FontSize="20"
+                                               Margin="0,0,0,5" />
+                                    <ItemsControl ItemsSource="{Binding WorkHours}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0,0,0,5"
+                                                            Background="#E23C84">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="0,0,0,2">
+                                                        <TextBlock>
+                                                        <Run Text="Uren:"
+                                                             FontWeight="Bold" />
+                                                        <Run Text="{Binding HoursWorked}" />
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="0,0,0,2">
+                                                        <TextBlock>
+                                                        <Run Text="Datum:"
+                                                             FontWeight="Bold" />
+                                                        <Run Text="{Binding Date}" />
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </ScrollViewer>
+        </ContentDialog>
+
+
+        <ContentDialog x:Name="approvedDialog"
+                       Title="Goedkeuring"
+                       PrimaryButtonText="oke">
+            <TextBlock Text="Het is al goed gekeurd" />
         </ContentDialog>
     </Grid>
 </Page>

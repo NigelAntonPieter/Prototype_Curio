@@ -123,13 +123,13 @@ namespace Prototype_Curio_stagemarkt.Stage
         private void ApplyFilter()
         {
             var filterCriteria = new List<(CheckBox CheckBox, Func<Company, bool> Filter)>
-            {
-                (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
-                (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
-                (niveau2Checkbox, c => c.LevelId == 1),
-                (niveau3Checkbox, c => c.LevelId == 2),
-                (niveau4Checkbox, c => c.LevelId == 3)
-            };
+        {
+            (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
+            (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
+            (niveau2Checkbox, c => c.LevelId == 1),
+            (niveau3Checkbox, c => c.LevelId == 2),
+            (niveau4Checkbox, c => c.LevelId == 3)
+        };
 
             var filteredList = AllCompanies.AsEnumerable();
             foreach (var (checkBox, filter) in filterCriteria)
@@ -147,13 +147,13 @@ namespace Prototype_Curio_stagemarkt.Stage
         private void UpdateCheckBoxStates()
         {
             var exclusionCriteria = new List<(CheckBox CheckBox, List<CheckBox> Exclude)>
-            {
-                (bolCheckbox, new List<CheckBox> { bblCheckbox }),
-                (bblCheckbox, new List<CheckBox> { bolCheckbox }),
-                (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
-                (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
-                (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox })
-            };
+        {
+            (bolCheckbox, new List<CheckBox> { bblCheckbox }),
+            (bblCheckbox, new List<CheckBox> { bolCheckbox }),
+            (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
+            (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
+            (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox })
+        };
 
             foreach (var (checkBox, excludeList) in exclusionCriteria)
             {
