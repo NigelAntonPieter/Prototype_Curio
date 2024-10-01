@@ -133,7 +133,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async void WorkHourDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            await UpdateWorkHourStatus(WorkHoursStatus.Rejected);
+            await UpdateWorkHourStatus(WorkHoursStatus.Unapproved);
         }
 
         private async Task UpdateWorkHourStatus(WorkHoursStatus status)

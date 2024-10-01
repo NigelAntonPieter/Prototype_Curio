@@ -22,6 +22,6 @@ namespace Prototype_Curio_stagemarkt.Data.Models
     {
         InReview,
         Approved,
-        Rejected
+        Unapproved
     }
 }

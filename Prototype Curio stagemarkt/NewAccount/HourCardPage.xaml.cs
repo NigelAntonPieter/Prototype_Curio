@@ -98,7 +98,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                     args.Item.Background = firstWorkHour.Status switch
                     {
                         WorkHoursStatus.Approved => new SolidColorBrush(Colors.Green),
-                        WorkHoursStatus.Rejected => new SolidColorBrush(Colors.Red),
+                        WorkHoursStatus.Unapproved => new SolidColorBrush(Colors.Red),
                         _ => new SolidColorBrush(Colors.Orange),
                     };
 
@@ -131,7 +131,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                         // Update bestaande werkuren
                         workHour.HoursWorked = hoursWorked;
 
-                        if (workHour.Status == WorkHoursStatus.Rejected)
+                        if (workHour.Status == WorkHoursStatus.Unapproved)
                         {
                             workHour.Status = WorkHoursStatus.InReview;
                             workHour.Reason = string.Empty;

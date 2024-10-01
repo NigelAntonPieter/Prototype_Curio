@@ -216,24 +216,44 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private bool ValidateStudentInputs()
         {
-            return !string.IsNullOrWhiteSpace(studentUsernameTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(studentPasswordBox.Password)
-                   && studentCourseCombobox.SelectedItem != null;
+            if (string.IsNullOrWhiteSpace(studentUsernameTextbox.Text) ||
+                string.IsNullOrWhiteSpace(studentPasswordBox.Password) ||
+                studentCourseCombobox.SelectedItem == null)
+            {
+                ShowErrorDialog();
+                return false;
+            }
+
+            return true;
         }
+
 
         private bool ValidateCompanyInputs(out int level)
         {
             level = 0;
-            return !string.IsNullOrWhiteSpace(companyNameTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(companyPhoneTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(companyEmailTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(companyStreetTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(companyCityTextbox.Text)
-                   && !string.IsNullOrWhiteSpace(companyDescriptionTextbox.Text)
-                   && companyLevelComboBox.SelectedItem != null
-                   && companyLearningPathComboBox.SelectedItem != null
-                   && companyCourseCombobox.SelectedItem != null
-                   && copiedFile != null;
+
+            if (string.IsNullOrWhiteSpace(companyNameTextbox.Text) ||
+                string.IsNullOrWhiteSpace(companyPhoneTextbox.Text) ||
+                string.IsNullOrWhiteSpace(companyEmailTextbox.Text) ||
+                string.IsNullOrWhiteSpace(companyStreetTextbox.Text) ||
+                string.IsNullOrWhiteSpace(companyCityTextbox.Text) ||
+                string.IsNullOrWhiteSpace(companyDescriptionTextbox.Text) ||
+                companyLevelComboBox.SelectedItem == null ||
+                companyLearningPathComboBox.SelectedItem == null ||
+                companyCourseCombobox.SelectedItem == null ||
+                copiedFile == null)
+            {
+                ShowErrorDialog();
+                return false;
+            }
+
+            return true;
+        }
+
+
+        private async void ShowErrorDialog()
+        {
+            await ErrorDialog.ShowAsync();
         }
     }
 }

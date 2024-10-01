@@ -30,8 +30,8 @@ namespace Prototype_Curio_stagemarkt
             this.InitializeComponent();
             using (var db = new AppDbContext())
             {
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
+                //db.Database.EnsureDeleted();
+                //db.Database.EnsureCreated();
             }
             mainFrame.Navigate(typeof(WelcomePage));
         }

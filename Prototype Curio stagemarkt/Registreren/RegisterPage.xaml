@@ -255,5 +255,12 @@
                 </ScrollViewer>
             </Grid>
         </Grid>
+        <ContentDialog x:Name="ErrorDialog"
+                       Title="Fout bij het invullen"
+                       Content="Je moet alle velden correct invullen."
+                       CloseButtonText="OK"
+                       DefaultButton="Close"
+                       PrimaryButtonText="Probeer opnieuw" />
+
     </Grid>
 </Page>
