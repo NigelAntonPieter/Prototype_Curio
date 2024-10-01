@@ -122,16 +122,24 @@ namespace Prototype_Curio_stagemarkt.Stage
 
         private void ApplyFilter()
         {
-            var filterCriteria = new List<(CheckBox CheckBox, Func<Company, bool> Filter)>
-        {
-            (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
-            (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
-            (niveau2Checkbox, c => c.LevelId == 1),
-            (niveau3Checkbox, c => c.LevelId == 2),
-            (niveau4Checkbox, c => c.LevelId == 3)
-        };
-
             var filteredList = AllCompanies.AsEnumerable();
+
+            // Filteren op specialisatie van de student
+            if (!string.IsNullOrEmpty(_currentStudent?.Specialization))
+            {
+                filteredList = filteredList.Where(c => c.Specialization == _currentStudent.Specialization);
+            }
+
+            // Checkbox filters toepassen
+            var filterCriteria = new List<(CheckBox CheckBox, Func<Company, bool> Filter)>
+            {
+                (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
+                (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
+                (niveau2Checkbox, c => c.LevelId == 1),
+                (niveau3Checkbox, c => c.LevelId == 2),
+                (niveau4Checkbox, c => c.LevelId == 3)
+            };
+
             foreach (var (checkBox, filter) in filterCriteria)
             {
                 if (checkBox.IsChecked == true)
@@ -141,8 +149,10 @@ namespace Prototype_Curio_stagemarkt.Stage
             }
 
             UpdateFilteredCompanies(filteredList.ToList());
+
             UpdateCheckBoxStates();
         }
+
 
         private void UpdateCheckBoxStates()
         {

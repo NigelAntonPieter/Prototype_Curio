@@ -96,7 +96,7 @@
                          BorderBrush="#E23C84"
                          Background="White"
                          Foreground="Black"
-                         Padding="10" />
+                         Padding="8" />
                 <TextBlock Text="Password"
                            FontSize="18"
                            FontWeight="SemiBold"

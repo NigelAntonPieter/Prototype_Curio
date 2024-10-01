@@ -167,14 +167,14 @@
                                         <TextBlock Text="Leerweg: "
                                                    FontWeight="Bold"
                                                    Foreground="Black" />
-                                        <TextBlock Text="{x:Bind LearningPath}"
+                                        <TextBlock Text="{x:Bind LearningPath.Name}"
                                                    Foreground="Black" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Niveau: "
                                                    FontWeight="Bold"
                                                    Foreground="Black" />
-                                        <TextBlock Text="{x:Bind Level}"
+                                        <TextBlock Text="{x:Bind Level.GradeLevel}"
                                                    Foreground="Black" />
                                     </StackPanel>
                                 </StackPanel>
