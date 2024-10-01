@@ -6,6 +6,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.Data.Model;
+using Prototype_Curio_stagemarkt.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +26,10 @@ namespace Prototype_Curio_stagemarkt.Companywindow
     /// </summary>
     public sealed partial class CompanyOverviewPage : Page
     {
+
+        private Company _currentCompany;
+        private Student _currentStudent;
+        private int selectedCompanyId;
         public CompanyOverviewPage()
         {
             this.InitializeComponent();
@@ -33,22 +39,98 @@ namespace Prototype_Curio_stagemarkt.Companywindow
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is Company company)
+            if (e.Parameter is (Company company, Student student))
             {
-                // Stel de gegevens van de Company in
+                _currentCompany = company;
+                _currentStudent = student;
+
+                // Stel de SelectedCompanyId in
+                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+
+                // Update the UI with company details
                 companyNameTextblock.Text = company.Name;
                 companyCityTextblock.Text = company.City;
-                companyLearningPathTextblock.Text = company.LearningPath;
-                companyLevelTextblock.Text = company.Level.ToString();
+                companyLearningPathTextblock.Text = company.LearningPath?.Name ?? "No Learning Path";
+                companyLevelTextblock.Text = company.Level?.ToString();
                 companyDescriptionTextblock.Text = company.Description;
-                //companyImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri("ms-appx:///Assets/images.jpeg"));
 
+                // Set the DataContext to the company if needed
+                DataContext = _currentCompany;
+
+                // Update button states based on whether a student is logged in
+                applyButton.IsEnabled = _currentStudent != null;
+                favoriteButton.IsEnabled = _currentStudent != null;
+            }
+            else if (e.Parameter is (Company singleCompany, null))
+            {
+                _currentCompany = singleCompany;
+
+                // Stel de SelectedCompanyId in
+                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+
+                // Update the UI with company details
+                companyNameTextblock.Text = _currentCompany.Name;
+                companyCityTextblock.Text = _currentCompany.City;
+                companyLearningPathTextblock.Text = _currentCompany.LearningPath?.Name ?? "No Learning Path";
+                companyLevelTextblock.Text = _currentCompany.Level?.ToString();
+                companyDescriptionTextblock.Text = _currentCompany.Description;
+
+                // Disable the buttons if no student is logged in
+                applyButton.IsEnabled = false;
+                favoriteButton.IsEnabled = false;
+            }
+            else
+            {
+                return;
             }
         }
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.GoBack();
+        }
+
+        private void applyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var student = button?.DataContext as Company;
+            var company = button?.DataContext as Company;
+
+            if (student != null)
+            {
+                this.Frame.Navigate(typeof(ApplyPage), (company, _currentStudent, selectedCompanyId));
+            }
+        }
+
+        private async void favoriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentStudent == null || _currentCompany == null) return;
+
+            using var db = new AppDbContext();
+
+            // Controleer of het bedrijf al als favoriet is gemarkeerd
+            var existingFavorite = db.FavoriteCompanies
+                                     .FirstOrDefault(f => f.StudentId == _currentStudent.Id && f.CompanyId == _currentCompany.Id);
+
+            if (existingFavorite == null)
+            {
+                // Voeg het bedrijf toe aan de favorietenlijst
+                db.FavoriteCompanies.Add(new FavoriteCompany
+                {
+                    StudentId = _currentStudent.Id,
+                    CompanyId = _currentCompany.Id
+                });
+
+                await db.SaveChangesAsync();
+
+                await acceptDialog.ShowAsync();
+                this.Frame.GoBack();
+            }
+            else
+            {
+
+                await alreadyDialog.ShowAsync();
+            }
         }
     }
 }

@@ -9,7 +9,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="#A38FE4">
+    <Grid>
+        <!-- Achtergrond afbeelding -->
+        <Grid.Background>
+            <ImageBrush  ImageSource="/Assets/curio.jpg"
+                         Stretch="Fill" />
+        </Grid.Background>
+
+        <!-- Header Sectie (onveranderd) -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
@@ -19,7 +26,8 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="0">
+        <StackPanel Grid.Column="0"
+                    Grid.Row="0">
             <Button x:Name="LogoButton"
                     Click="LogoButton_Click"
                     Background="Transparent"
@@ -36,24 +44,28 @@
                        Margin="70,0,0,0" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="0"  VerticalAlignment="Top"  Orientation="Horizontal" Margin="35">
+        <StackPanel Grid.Column="1"
+                    Grid.Row="0"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
+                    Margin="35">
             <Button x:Name="RegisterPage"
                     Click="RegisterPage_Click"
                     Margin="0,0,20,0"
-                    Visibility="Collapsed"
-                    >Registeren</Button>
+                    Visibility="Collapsed">Registeren</Button>
 
-            <Button x:Name="LoginPage"
-                    Click="LoginPage_Click">Login</Button>
+            <TextBox x:Name="UserLogin"
+                     IsReadOnly="True"
+                     Margin="20,0,0,0"
+                     Background="White" />
 
-            <TextBox x:Name="UserLogin" IsReadOnly="True" Margin="20,0,0,0" Background="Transparent" />
-            
             <Button x:Name="AccountPageButton"
                     Click="AccountPageBUtton_Click"
                     Margin="20,0,0,0"
                     Visibility="Collapsed">Account</Button>
         </StackPanel>
 
+        <!-- Zoeksectie (onveranderd) -->
         <Grid Grid.ColumnSpan="2"
               Grid.Row="1"
               Background="White"
@@ -85,7 +97,7 @@
                          Width="300"
                          Height="50"
                          Margin="10,0,0,0"
-                         FontSize="20"/>
+                         FontSize="20" />
             </Grid>
 
             <Grid Grid.Column="1"
@@ -114,9 +126,9 @@
                         Grid.Column="2"
                         Click="Bsearch_Click"
                         BorderBrush="Black"
-                        Background="#A38FE4"
                         Content="Zoek"
-                        Margin="20,0,0,0" />
+                        Margin="20,0,0,0"
+                        Background="#E23C84" />
             </Grid>
         </Grid>
 

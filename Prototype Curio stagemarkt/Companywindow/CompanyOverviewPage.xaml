@@ -17,8 +17,17 @@
         </Grid.RowDefinitions>
 
         <!-- Header Grid -->
-        <Grid Grid.Row="0"
-              Background="#A38FE4">
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Assets/curio.jpg"
+                            Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <TranslateTransform Y="0.9" />
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -42,27 +51,67 @@
                            Margin="0,10,0,0" />
             </StackPanel>
         </Grid>
-     <!-- Header grid -->   
-        <Grid Grid.Row="1" Background="White">
+
+        <Grid Grid.Row="1"
+              Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <TextBlock x:Name="companyNameTextblock"
-                           Foreground="Black"
-                           FontSize="80"
-                           FontWeight="Bold"/>
-                <TextBlock x:Name="companyDescriptionTextblock" 
-                           Foreground="Black"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
+            <ScrollViewer>
+                <StackPanel Grid.Column="0"
+                            Margin="20">
+                    <TextBlock x:Name="companyNameTextblock"
+                               Foreground="Black"
+                               FontSize="50"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="companyDescriptionTextblock"
+                               Foreground="Black"
+                               FontSize="20"
+                               Margin="0,10,0,20" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <StackPanel Grid.Column="1"
+                        Margin="20">
                 <TextBlock x:Name="companyCityTextblock"
-                           Foreground="Black" />
+                           Foreground="Black"
+                           FontSize="18" />
                 <TextBlock x:Name="companyLevelTextblock"
-                           Foreground="Black" />
+                           Foreground="Black"
+                           FontSize="18" />
                 <TextBlock x:Name="companyLearningPathTextblock"
-                           Foreground="Black" />
+                           Foreground="Black"
+                           FontSize="18" />
+                <Button x:Name="applyButton"
+                        Content="Solliciteren"
+                        Click="applyButton_Click"
+                        Background="#E23C84"
+                        Foreground="White"
+                        Padding="10,5"
+                        Margin="0,10,0,5" />
+                <!-- Added margin for spacing -->
+                <Button x:Name="favoriteButton"
+                        Content="Favoriet"
+                        Click="favoriteButton_Click"
+                        Background="#E23C84"
+                        Foreground="White"
+                        Padding="10,5" />
+                <!-- Added padding for a better button appearance -->
+                <ContentDialog x:Name="acceptDialog"
+                               Title="Favoriet Toegevoegd"
+                               CloseButtonText="OK">
+                    <StackPanel>
+                        <TextBlock Text="Het bedrijf is toegevoegd aan je favorieten!." />
+                    </StackPanel>
+                </ContentDialog>
+                <ContentDialog x:Name="alreadyDialog"
+                               Title=" Al Favoriet"
+                               CloseButtonText="OK">
+                    <StackPanel>
+                        <TextBlock Text="Het bedrijf is al toegevoegd aan je favorieten!." />
+                    </StackPanel>
+                </ContentDialog>
             </StackPanel>
         </Grid>
     </Grid>

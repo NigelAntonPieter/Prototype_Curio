@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,6 +8,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.Data.Model;
+using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
@@ -29,80 +32,106 @@ namespace Prototype_Curio_stagemarkt.Stage
     {
         public ObservableCollection<Company> AllCompanies { get; private set; }
         public ObservableCollection<Company> FilteredCompanies { get; private set; }
+        private Student _currentStudent;
 
         public CompanysList()
         {
-            this.InitializeComponent();
-            using var db = new AppDbContext();
-            var companies = db.Companies.ToList();
-            AllCompanies = new ObservableCollection<Company>(companies);
-            FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
-            companyListView.ItemsSource = FilteredCompanies;
+            InitializeComponent();
+            LoadCompanies();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is List<Company> filteredCompanies)
+            if (e.Parameter is (List<Company> filteredCompanies, Student student))
             {
-                AllCompanies = new ObservableCollection<Company>(filteredCompanies);
-                companyListView.ItemsSource = FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
+                InitializeCompanies(filteredCompanies, student);
+            }
+            else if (e.Parameter is List<Company> companies)
+            {
+                InitializeCompanies(companies);
             }
             else
             {
-                // If no filtered companies are passed, initialize with all companies
-                FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
-                companyListView.ItemsSource = FilteredCompanies;
+                LoadCompanies();
+            }
+        }
+
+        private void InitializeCompanies(List<Company> companies, Student student = null)
+        {
+            AllCompanies = new ObservableCollection<Company>(companies);
+            FilteredCompanies = new ObservableCollection<Company>(AllCompanies);
+            _currentStudent = student;
+
+            if (_currentStudent != null)
+            {
+                FilterCompaniesBySpecialization(_currentStudent.Specialization);
+            }
+
+            companyListView.ItemsSource = FilteredCompanies;
+        }
+
+        private void LoadCompanies()
+        {
+            using var db = new AppDbContext();
+
+            var companies = db.Companies
+                .Include(c => c.LearningPath)
+                .Include(c => c.Level)
+                .Where(c => c.IsOpen)
+                .ToList();
+
+            if (_currentStudent != null)
+            {
+                companies = companies.Where(c => c.Specialization == _currentStudent.Specialization).ToList();
+            }
+
+            InitializeCompanies(companies);
+        }
+
+        private void FilterCompaniesBySpecialization(string specialization)
+        {
+            if (string.IsNullOrEmpty(specialization)) return;
+
+            var filtered = AllCompanies.Where(c => c.Specialization == specialization).ToList();
+            UpdateFilteredCompanies(filtered);
+        }
+
+        private void UpdateFilteredCompanies(List<Company> filtered)
+        {
+            FilteredCompanies.Clear();
+            foreach (var company in filtered)
+            {
+                FilteredCompanies.Add(company);
             }
         }
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainCurioPage));
+            Frame.Navigate(typeof(MainCurioPage));
         }
 
         private void bContent_Click(object sender, RoutedEventArgs e)
         {
-            // Haal de knop die is ingedrukt
-            var button = sender as Button;
-            var company = button?.DataContext as Company;
-
-            if (company != null)
+            if (sender is Button button && button.DataContext is Company company)
             {
-                // Navigeer naar CompanyOverviewPage en geef de geselecteerde Company door
-                this.Frame.Navigate(typeof(CompanyOverviewPage), company);
+                Frame.Navigate(typeof(CompanyOverviewPage), (company, _currentStudent));
             }
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            ApplyFilter();
-        }
-
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ApplyFilter();
         }
 
         private void ApplyFilter()
         {
-            // Maak een lijst van CheckBoxen en bijbehorende filtercriteria
             var filterCriteria = new List<(CheckBox CheckBox, Func<Company, bool> Filter)>
             {
-                (bolCheckbox, company => company.LearningPath == "Bol"),
-                (bblCheckbox, company => company.LearningPath == "Bbl"),
-                (niveau2Checkbox, company => company.Level == 2),
-                (niveau3Checkbox, company => company.Level == 3),
-                (niveau4Checkbox, company => company.Level == 4),
-                (webCheckbox, company => company.Specialization == "Web"),
-                (nativeCheckbox, company => company.Specialization == "Native"),
-                (frontendCheckbox, company => company.Specialization == "Front-end")
+                (bolCheckbox, c => c.LearningPath?.Name == "BOL"),
+                (bblCheckbox, c => c.LearningPath?.Name == "BBL"),
+                (niveau2Checkbox, c => c.LevelId == 1),
+                (niveau3Checkbox, c => c.LevelId == 2),
+                (niveau4Checkbox, c => c.LevelId == 3)
             };
 
             var filteredList = AllCompanies.AsEnumerable();
-
-            // Loop door de filtercriteria en pas de filters toe voor geselecteerde CheckBoxen
             foreach (var (checkBox, filter) in filterCriteria)
             {
                 if (checkBox.IsChecked == true)
@@ -111,61 +140,50 @@ namespace Prototype_Curio_stagemarkt.Stage
                 }
             }
 
-            // Update de FilteredCompanies ObservableCollection
-            FilteredCompanies.Clear();
-            foreach (var company in filteredList)
-            {
-                FilteredCompanies.Add(company);
-            }
-
+            UpdateFilteredCompanies(filteredList.ToList());
             UpdateCheckBoxStates();
         }
 
         private void UpdateCheckBoxStates()
         {
-            // Maak een lijst van CheckBoxen en hun uitsluitingscriteria
             var exclusionCriteria = new List<(CheckBox CheckBox, List<CheckBox> Exclude)>
-    {
-        (bolCheckbox, new List<CheckBox> { bblCheckbox }),
-        (bblCheckbox, new List<CheckBox> { bolCheckbox }),
-
-        (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
-        (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
-        (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox }),
-
-        (nativeCheckbox, new List<CheckBox> { webCheckbox, frontendCheckbox }),
-        (webCheckbox, new List<CheckBox> { nativeCheckbox, frontendCheckbox }),
-        (frontendCheckbox, new List<CheckBox> { nativeCheckbox, webCheckbox })
-    };
-
-            // Zet alle checkboxes weer in
-            foreach (var (checkBox, _) in exclusionCriteria)
             {
-                checkBox.IsEnabled = true;
-            }
+                (bolCheckbox, new List<CheckBox> { bblCheckbox }),
+                (bblCheckbox, new List<CheckBox> { bolCheckbox }),
+                (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
+                (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
+                (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox })
+            };
 
-            // Loop door de criteria en pas uitsluitingen toe
             foreach (var (checkBox, excludeList) in exclusionCriteria)
             {
-                if (checkBox.IsChecked == true)
+                UpdateCheckBoxAvailability(checkBox, excludeList);
+            }
+        }
+
+        private void UpdateCheckBoxAvailability(CheckBox checkBox, List<CheckBox> excludeList)
+        {
+            if (checkBox.IsChecked == true)
+            {
+                foreach (var exclude in excludeList)
                 {
-                    foreach (var exclude in excludeList)
-                    {
-                        exclude.IsEnabled = false;
-                    }
+                    exclude.IsEnabled = false;
                 }
-                else
+            }
+            else
+            {
+                foreach (var exclude in excludeList)
                 {
-                    foreach (var exclude in excludeList)
+                    if (excludeList.All(e => e.IsChecked != true))
                     {
-                        // Herstel de state van de uitgesloten checkboxes als ze ingeschakeld waren
-                        if (excludeList.All(e => !e.IsChecked == true))
-                        {
-                            exclude.IsEnabled = true;
-                        }
+                        exclude.IsEnabled = true;
                     }
                 }
             }
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) => ApplyFilter();
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => ApplyFilter();
     }
 }

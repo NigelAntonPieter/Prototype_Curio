@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using WinRT.Interop;
+using Prototype_Curio_stagemarkt.Data.Model;
+using Prototype_Curio_stagemarkt.Data.Models;
 
 
 
@@ -37,101 +39,70 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         public RegisterPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            LoadData();
+        }
 
-            using (var context = new AppDbContext())
+        private void LoadData()
+        {
+            LoadCourses();
+            LoadLearningPaths();
+            LoadLevelPaths();
+        }
+
+        private void LoadCourses()
+        {
+            using (var db = new AppDbContext())
             {
-                var courses = context.Courses.ToList();
+                var courses = db.Courses.ToList();
                 studentCourseCombobox.ItemsSource = courses;
-                studentCourseCombobox.DisplayMemberPath = "Name";
-                studentCourseCombobox.SelectedValuePath = "Id";
                 companyCourseCombobox.ItemsSource = courses;
-                companyCourseCombobox.DisplayMemberPath = "Name";
-                companyCourseCombobox.SelectedValuePath = "Id";
+                studentCourseCombobox.DisplayMemberPath = companyCourseCombobox.DisplayMemberPath = "Name";
+                studentCourseCombobox.SelectedValuePath = companyCourseCombobox.SelectedValuePath = "Id";
             }
         }
 
+        private void LoadLearningPaths()
+        {
+            using (var db = new AppDbContext())
+            {
+                var learningPaths = db.LearningPaths.ToList();
+                companyLearningPathComboBox.ItemsSource = learningPaths;
+                companyLearningPathComboBox.DisplayMemberPath = "Name";
+                companyLearningPathComboBox.SelectedValuePath = "Id";
+            }
+        }
+
+        private void LoadLevelPaths()
+        {
+            using (var db = new AppDbContext())
+            {
+                var levels = db.Levels.ToList();
+                companyLevelComboBox.ItemsSource = levels;
+                companyLevelComboBox.DisplayMemberPath = "GradeLevel";
+                companyLevelComboBox.SelectedValuePath = "Id";
+            }
+        }
+
+
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainCurioPage));
+            Frame.Navigate(typeof(WelcomePage));
         }
 
         private void RegisterStudentButton_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateStudentInputs())
             {
-                using (var db = new AppDbContext())
-                {
-                    var selectedCourse = studentCourseCombobox.SelectedItem as Course;
-
-                    var newStudent = new Student
-                    {
-                        Name = studentUsernameTextbox.Text,
-                        Password = SecureHasher.Hash(studentPasswordBox.Password),
-                        EmailAdress = studentEmailTextbox.Text,
-                        Specialization = selectedCourse?.Name,
-
-                    };
-
-                    db.Students.Add(newStudent);
-                    db.SaveChanges();
-
-                    // Maak een User-object aan voor de student
-                    var newUser = new User
-                    {
-                        IsCompany = false,
-                        StudentId = newStudent.Id,
-                    };
-
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
-
-                    User.LoggedInUser = newUser;
-                    this.Frame.Navigate(typeof(MainCurioPage));
-                }
+                RegisterStudent();
             }
         }
 
         private void RegisterCompanyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidateCompanyInputs(out int level))
+            if (ValidateCompanyInputs(out var level))
             {
-                using (var db = new AppDbContext())
-                {
-                    var selectedCourse = companyCourseCombobox.SelectedItem as Course;
-
-                    var newCompany = new Company
-                    {
-                        Name = companyNameTextbox.Text,
-                        Phone = companyPhoneTextbox.Text,
-                        EmailAddress = companyEmailTextbox.Text,
-                        Street = companyStreetTextbox.Text,
-                        City = companyCityTextbox.Text,
-                        Description = companyDescriptionTextbox.Text,
-                        Level = level,
-                        LearningPath = companyLearningPathTextbox.Text,
-                        Specialization = selectedCourse?.Name,
-                        ImagePath = copiedFile?.Path,
-                        Password = SecureHasher.Hash(companyPasswordBox.Password),
-                    };
-
-                    db.Companies.Add(newCompany);
-                    db.SaveChanges();
-
-                    // Maak een User-object aan voor het bedrijf
-                    var newUser = new User
-                    {
-                        IsCompany = true,
-                        CompanyId = newCompany.Id,
-                        Company = newCompany
-                    };
-
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
-
-                    User.LoggedInUser = newUser;
-                    this.Frame.Navigate(typeof(AccountCompanyPage));
-                }
+                RegisterCompany();
             }
         }
 
@@ -140,26 +111,102 @@ namespace Prototype_Curio_stagemarkt.Registreren
             await SelectAndCopyFileAsync();
         }
 
+        // Register methods
+
+        private void RegisterStudent()
+        {
+            using (var db = new AppDbContext())
+            {
+                var selectedCourse = studentCourseCombobox.SelectedItem as Course;
+                var internshipTeacher = db.InternschipTeachers.FirstOrDefault();
+
+                if (internshipTeacher == null) return;
+
+                var newStudent = new Student
+                {
+                    Name = studentUsernameTextbox.Text,
+                    Password = SecureHasher.Hash(studentPasswordBox.Password),
+                    EmailAdress = studentEmailTextbox.Text,
+                    Specialization = selectedCourse?.Name,
+                    InternshipTeacherId = internshipTeacher.Id
+                };
+
+                db.Students.Add(newStudent);
+                db.SaveChanges();
+
+                var newUser = new User
+                {
+                    IsCompany = false,
+                    StudentId = newStudent.Id,
+                };
+
+                db.Users.Add(newUser);
+                db.SaveChanges();
+
+                User.LoggedInUser = newUser;
+                Frame.Navigate(typeof(MainCurioPage));
+            }
+        }
+
+        private void RegisterCompany()
+        {
+            using (var db = new AppDbContext())
+            {
+                var selectedCourse = companyCourseCombobox.SelectedItem as Course;
+                var selectedLearningPath = (int)companyLearningPathComboBox.SelectedValue;
+                var selectedLevel = (int)companyLevelComboBox.SelectedValue;
+
+                var newCompany = new Company
+                {
+                    Name = companyNameTextbox.Text,
+                    Phone = companyPhoneTextbox.Text,
+                    EmailAddress = companyEmailTextbox.Text,
+                    Street = companyStreetTextbox.Text,
+                    City = companyCityTextbox.Text,
+                    Description = companyDescriptionTextbox.Text,
+                    LevelId = selectedLevel,
+                    LearningPathId = selectedLearningPath,
+                    Specialization = selectedCourse?.Name,
+                    ImagePath = copiedFile?.Path,
+                    Password = SecureHasher.Hash(companyPasswordBox.Password),
+                };
+
+                db.Companies.Add(newCompany);
+                db.SaveChanges();
+
+                var newUser = new User
+                {
+                    IsCompany = true,
+                    CompanyId = newCompany.Id,
+                    Company = newCompany
+                };
+
+                db.Users.Add(newUser);
+                db.SaveChanges();
+
+                User.LoggedInUser = newUser;
+                Frame.Navigate(typeof(AccountCompanyPage));
+            }
+        }
+
+        // File picker
+
         private async Task SelectAndCopyFileAsync()
         {
-            var fileopenPicker = new FileOpenPicker
+            var filePicker = new FileOpenPicker
             {
                 FileTypeFilter = { ".jpg", ".jpeg", ".png", ".gif" }
             };
 
-            nint windowHandle = WindowNative.GetWindowHandle(App.m_window);
-            InitializeWithWindow.Initialize(fileopenPicker, windowHandle);
+            var windowHandle = WindowNative.GetWindowHandle(App.m_window);
+            InitializeWithWindow.Initialize(filePicker, windowHandle);
 
-            var file = await fileopenPicker.PickSingleFileAsync();
-
+            var file = await filePicker.PickSingleFileAsync();
             if (file != null)
             {
                 var localFolder = ApplicationData.Current.LocalFolder;
-
                 var fileExtension = file.FileType;
-
-                var currentTime = DateTime.Now;
-                var renamedFileName = $"{currentTime.ToFileTime()}{fileExtension}";
+                var renamedFileName = $"{DateTime.Now.ToFileTime()}{fileExtension}";
 
                 copiedFile = await file.CopyAsync(localFolder, renamedFileName);
             }
@@ -169,52 +216,24 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private bool ValidateStudentInputs()
         {
-            if (string.IsNullOrWhiteSpace(studentUsernameTextbox.Text) ||
-                string.IsNullOrWhiteSpace(studentPasswordBox.Password) ||
-                studentCourseCombobox.SelectedItem == null)
-            {
-                ShowErrorMessage("Please fill in all fields for student registration.");
-                return false;
-            }
-            return true;
+            return !string.IsNullOrWhiteSpace(studentUsernameTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(studentPasswordBox.Password)
+                   && studentCourseCombobox.SelectedItem != null;
         }
 
         private bool ValidateCompanyInputs(out int level)
         {
-            level = 0; // Default value
-            if (string.IsNullOrWhiteSpace(companyNameTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyPhoneTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyEmailTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyStreetTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyCityTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyDescriptionTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyLevelTextbox.Text) ||
-                string.IsNullOrWhiteSpace(companyLearningPathTextbox.Text) ||
-                companyCourseCombobox.SelectedItem == null ||
-                copiedFile == null)
-            {
-                ShowErrorMessage("Please fill in all fields for company registration.");
-                return false;
-            }
-            if (!int.TryParse(companyLevelTextbox.Text, out level))
-            {
-                ShowErrorMessage("The Level field must be a valid number.");
-                return false;
-            }
-            return true;
-        }
-
-        private void ShowErrorMessage(string message)
-        {
-            var dialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = message,
-                CloseButtonText = "OK"
-            };
-
-            dialog.XamlRoot = this.Content.XamlRoot; // Set the XamlRoot of the dialog to match the page
-            _ = dialog.ShowAsync();
+            level = 0;
+            return !string.IsNullOrWhiteSpace(companyNameTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(companyPhoneTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(companyEmailTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(companyStreetTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(companyCityTextbox.Text)
+                   && !string.IsNullOrWhiteSpace(companyDescriptionTextbox.Text)
+                   && companyLevelComboBox.SelectedItem != null
+                   && companyLearningPathComboBox.SelectedItem != null
+                   && companyCourseCombobox.SelectedItem != null
+                   && copiedFile != null;
         }
     }
 }

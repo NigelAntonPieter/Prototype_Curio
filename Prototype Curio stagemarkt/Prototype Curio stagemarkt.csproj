@@ -13,11 +13,16 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="AdminMap\AdminPage.xaml" />
+    <None Remove="Companywindow\ApplyPage.xaml" />
     <None Remove="Companywindow\CompanyOverviewPage.xaml" />
     <None Remove="Login\AccountCompanyPage.xaml" />
     <None Remove="Login\AccountPage.xaml" />
     <None Remove="Login\LoginPage.xaml" />
     <None Remove="Main\MainCurioPage.xaml" />
+    <None Remove="Main\WelcomePage.xaml" />
+    <None Remove="NewAccount\AccountTeacherPage.xaml" />
+    <None Remove="NewAccount\HourCardPage.xaml" />
     <None Remove="Registreren\RegisterPage.xaml" />
     <None Remove="Stage\CompanysList.xaml" />
   </ItemGroup>
@@ -51,6 +56,21 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Companywindow\ApplyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="NewAccount\HourCardPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Main\WelcomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Login\AccountCompanyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -82,6 +102,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Companywindow\CompanyOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="NewAccount\AccountTeacherPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="AdminMap\AdminPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

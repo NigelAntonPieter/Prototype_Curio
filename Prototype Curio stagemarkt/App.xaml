@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Application
-    x:Class="Prototype_Curio_stagemarkt.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Prototype_Curio_stagemarkt"
-    RequestedTheme="Dark">
+<Application x:Class="Prototype_Curio_stagemarkt.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Prototype_Curio_stagemarkt"
+             RequestedTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,31 +11,48 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+            <!--Button-->
+            <SolidColorBrush x:Key="ButtonBackground"
+                             Color="White" />
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver"
-                             Color="#A38FE4" />
+                             Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed"
+                             Color="Transparent" />
+
+            <!--Text-->
+            <SolidColorBrush x:Key="TextControlBackground"
+                             Color="White" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused"
+                             Color="Black" />
             <SolidColorBrush x:Key="TextControlBorderBrushPointerOver"
-            Color="Black" />
+                             Color="Black" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver"
+                             Color="White" />
+            <SolidColorBrush x:Key="TextControlBorderBrush"
+                             Color="Black" />
+
+            <!--ComboBox-->
             <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver"
+                             Color="White" />
+
+            <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver"
+                             Color="White" />
+
+            <SolidColorBrush x:Key="ComboBoxBackground"
+                             Color="White" />
+
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver"
                              Color="Black" />
-            <SolidColorBrush x:Key="TextControlForeground"
-                             Color="Black" />
+
             <SolidColorBrush x:Key="ComboBoxForeground"
                              Color="Black" />
 
-            <SolidColorBrush x:Key="TextControlForegroundPointerOver"
-                             Color="Black" />
-            
+            <!--Checkbox-->
             <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver"
-                             Color="#A38FE4" />
-            
+                             Color="Transparent" />
+
             <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver"
-                             Color="#A38FE4" />
-
-            <SolidColorBrush x:Key="CheckBoxForegroundChecked"
-                             Color="Black" />
-            <SolidColorBrush x:Key="CheckBoxForegroundUnchecked"
-                             Color="Black" />
-
+                             Color="Transparent" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

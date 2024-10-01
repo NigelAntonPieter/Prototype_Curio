@@ -1,0 +1,186 @@
+<Page x:Class="Prototype_Curio_stagemarkt.AdminMap.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Prototype_Curio_stagemarkt.AdminMap"
+      xmlns:localData="using:Prototype_Curio_stagemarkt.Data.Models"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Header blijft in deze rij -->
+            <RowDefinition Height="*" />
+            <!-- Content in deze rij -->
+        </Grid.RowDefinitions>
+
+        <!-- HEADER: Hier verander ik niks aan -->
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Assets/curio.jpg"
+                            Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <TranslateTransform Y="0.9" />
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Grid.Row="0">
+                <Button x:Name="LogoButton"
+                        Click="LogoButton_Click"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Padding="0"
+                        Margin="70,20,0,0">
+                    <TextBlock Text="CurioMarkt"
+                               FontWeight="Bold"
+                               FontSize="50"
+                               Foreground="White" />
+                </Button>
+                <TextBlock Text="Van Curio Voor Curio"
+                           FontSize="20"
+                           Margin="70,0,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- CONTENT: Dit is de main content onder de header -->
+        <Grid Grid.Row="1"
+              Margin="20,10,20,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Bedrijven ListView -->
+            <ListView x:Name="adminCompanyListView"
+                      Grid.Column="0"
+                      AllowFocusOnInteraction="False"
+                      Background="White"
+                      IsItemClickEnabled="True"
+                      ItemClick="adminCompanyListView_ItemClick"
+                      IsRightTapEnabled="True"
+                      RightTapped="adminCompanyListView_RightTapped"
+                      Padding="10"
+                      BorderBrush="LightGray"
+                      BorderThickness="1"
+                      CornerRadius="10">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="localData:Company">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10"
+                                    Padding="15"
+                                    BorderBrush="#FFCCCCCC"
+                                    BorderThickness="1"
+                                    CornerRadius="10">
+                            <TextBlock Text="{x:Bind Name}"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,10" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Studenten ListView -->
+            <ListView x:Name="adminStudentListView"
+                      Grid.Column="1"
+                      AllowFocusOnInteraction="False"
+                      Background="White"
+                      IsItemClickEnabled="True"
+                      ItemClick="adminStudentListView_ItemClick"
+                      IsRightTapEnabled="True"
+                      RightTapped="adminStudentListView_RightTapped"
+                      Padding="10"
+                      BorderBrush="LightGray"
+                      BorderThickness="1"
+                      CornerRadius="10">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="localData:Student">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10"
+                                    Padding="15"
+                                    BorderBrush="#FFCCCCCC"
+                                    BorderThickness="1"
+                                    CornerRadius="10">
+                            <TextBlock Text="Studenten"
+                                       FontSize="26"
+                                       FontWeight="Bold"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,10" />
+                            <TextBlock Text="{x:Bind Name}"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,0,10" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Error dialog -->
+            <ContentDialog x:Name="deleteCompanyDialog"
+                           Title="Bevestig Verwijdering"
+                           PrimaryButtonText="Ja"
+                           CloseButtonText="Nee"
+                           PrimaryButtonClick="deleteCompanyDialog_PrimaryButtonClick"
+                           DefaultButton="Close">
+                <TextBlock Text="Weet je zeker dat je dit bedrijf wilt verwijderen?" />
+            </ContentDialog>
+
+            <ContentDialog x:Name="deleteStudentDialog"
+                           Title="Bevestig Verwijdering"
+                           PrimaryButtonText="Ja"
+                           CloseButtonText="Nee"
+                           PrimaryButtonClick="deleteStudentDialog_PrimaryButtonClick"
+                           DefaultButton="Close">
+                <TextBlock Text="Weet je zeker dat je deze student wilt verwijderen?" />
+            </ContentDialog>
+
+
+            <ContentDialog x:Name="databaseErrorDialog">
+                <TextBlock Text="Er is niks " />
+            </ContentDialog>
+
+            <ContentDialog x:Name="companyInfoDialog"
+                           Title="Bedrijf Informatie"
+                           PrimaryButtonText="Sluiten"
+                           DefaultButton="Primary">
+                <StackPanel>
+                    <TextBlock Text="Bedrijf naam:"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="companyNameTextBlock" />
+                    <TextBlock Text="Laatste keer ingelogd:"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="companyLastLoginTextBlock" />
+                </StackPanel>
+            </ContentDialog>
+
+            <ContentDialog x:Name="studentInfoDialog"
+                           Title="Student Informatie"
+                           PrimaryButtonText="Sluiten"
+                           DefaultButton="Primary">
+                <StackPanel>
+                    <TextBlock Text="Student naam:"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="studentNameTextBlock" />
+                    <TextBlock Text="Laatste keer ingelogd:"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="studentLastLoginTextBlock" />
+                </StackPanel>
+            </ContentDialog>
+
+        </Grid>
+    </Grid>
+</Page>
