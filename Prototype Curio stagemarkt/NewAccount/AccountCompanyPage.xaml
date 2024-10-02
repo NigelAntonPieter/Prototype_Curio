@@ -65,10 +65,12 @@
         <Grid Grid.Row="1"
               Margin="20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
+            <!-- Left Column: Registration -->
             <StackPanel Grid.Column="0"
                         Margin="10"
                         Spacing="15">
@@ -130,11 +132,9 @@
                          Height="40"
                          FontSize="16"
                          PlaceholderText="Voer leerlijn in" />
-
-
             </StackPanel>
 
-            <!-- Right Column -->
+            <!-- Right Column: Additional Info -->
             <StackPanel Grid.Column="1"
                         Margin="10"
                         Spacing="11">
@@ -189,7 +189,45 @@
                         Margin="0,20"
                         Content="Registreer als Bedrijf" />
             </StackPanel>
+
+            <!-- Applications List -->
+            <StackPanel Grid.Column="2"
+                        Margin="10"
+                        Spacing="15">
+                <TextBlock Text="Lopende Sollicitaties"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,20" />
+
+                <ListView x:Name="applicationListView"
+                          ItemClick="applicationListView_ItemClick"
+                          Margin="0,10,0,0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="{Binding Motivation}"
+                                           TextWrapping="Wrap"
+                                           MaxLines="2" />
+
+                                <!-- Hyperlink Button for CV -->
+                                <TextBlock Text="CV: "
+                                           FontWeight="SemiBold" />
+                                <HyperlinkButton x:Name="cvLink"
+                                                 NavigateUri="{Binding CvFilePath}"
+                                                 Content="{Binding CvFilePath}"
+                                                 Foreground="Blue"
+                                                 FontWeight="Bold"
+                                                 ToolTipService.ToolTip="Klik om CV te bekijken" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
         </Grid>
+
 
         <!-- Dialogs -->
         <ContentDialog x:Name="noCompanyDialog"
@@ -215,6 +253,23 @@
             <StackPanel>
                 <TextBlock Text="Weet je zeker dat je het wilt verwijderen" />
 
+            </StackPanel>
+        </ContentDialog>
+
+        <ContentDialog x:Name="applicationDetailsDialog"
+                       Title="Application Details"
+                       CloseButtonText="Close">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}" />
+                <TextBlock Text="{Binding Motivation}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="CV:"
+                           FontWeight="SemiBold" />
+                <TextBlock x:Name="cvLinkTextBlock"
+                           Text="{Binding CvFilePath}"
+                           Foreground="Blue"
+                           TextDecorations="Underline"
+                           PointerPressed="CvLinkTextBlock_PointerPressed" />
             </StackPanel>
         </ContentDialog>
     </Grid>

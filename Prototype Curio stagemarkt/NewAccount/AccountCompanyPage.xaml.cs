@@ -23,6 +23,9 @@ using Windows.Storage;
 using WinRT.Interop;
 using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Data;
+using Microsoft.UI.Text;
+using Microsoft.UI;
+using Windows.UI.Text;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -90,6 +93,12 @@ namespace Prototype_Curio_stagemarkt.Login
                      .Cast<ComboBoxItem>()
                      .FirstOrDefault(item => item.Content.ToString() == company.Specialization);
                     isPlaceOpen.IsChecked = company.IsOpen;
+
+                    var applications = await db.Applications
+                        .Where(a => a.CompanyId == companyId.Value)
+                        .ToListAsync();
+
+                    applicationListView.ItemsSource = applications;
                 }
                 else
                 {
@@ -138,9 +147,9 @@ namespace Prototype_Curio_stagemarkt.Login
             this.Frame.Navigate(typeof(WelcomePage));
         }
 
-        private void fileButton_Click(object sender, RoutedEventArgs e)
+        private async void fileButton_Click(object sender, RoutedEventArgs e)
         {
-            SelectAndCopyFileAsync();
+            await SelectAndCopyFileAsync();
         }
 
         private async Task SelectAndCopyFileAsync()
@@ -287,10 +296,85 @@ namespace Prototype_Curio_stagemarkt.Login
             await deleteDialog.ShowAsync();
         }
 
-        private void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (e.ClickedItem is Prototype_Curio_stagemarkt.Data.Models.Application application)
+            {
+                var applicationDetailsDialog = new ContentDialog
+                {
+                    Title = "Application Details",
+                    CloseButtonText = "Close"
+                };
 
+                var stackPanel = new StackPanel
+                {
+                    Children =
+                    {
+                        new TextBlock { Text = $"Name: {application.Name}" },
+                        new TextBlock { Text = $"Motivation: {application.Motivation}", TextWrapping = TextWrapping.Wrap },
+                        new TextBlock { Text = "CV:", FontWeight = FontWeights.Bold },
+                        new TextBlock
+                        {
+                            Text = application.CvFilePath,
+                            Foreground = new SolidColorBrush(Colors.Blue),
+                            TextDecorations = TextDecorations.Underline
+                        }
+                    }
+                };
+
+                // Create the TextBlock for the CV link
+                var cvLinkTextBlock = new TextBlock
+                {
+                    Text = application.CvFilePath,
+                    Foreground = new SolidColorBrush(Colors.Blue),
+                    TextDecorations = TextDecorations.Underline
+                };
+
+                // Assign the event handler separately
+                cvLinkTextBlock.PointerPressed += CvLinkTextBlock_PointerPressed;
+
+                stackPanel.Children.Add(cvLinkTextBlock);
+                applicationDetailsDialog.Content = stackPanel;
+
+                await applicationDetailsDialog.ShowAsync();
+            }
         }
+
+
+
+        // Event handler for clicking the CV link
+        private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var cvLinkTextBlock = sender as TextBlock;
+            var cvFilePath = cvLinkTextBlock.Text;
+
+            if (!string.IsNullOrEmpty(cvFilePath))
+            {
+                // Launch the file using its path
+                try
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
+                    if (file != null)
+                    {
+                        await Windows.System.Launcher.LaunchFileAsync(file);
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    // Handle the case where the file was not found
+                    var noFileDialog = new ContentDialog
+                    {
+                        Title = "File Not Found",
+                        Content = "The specified CV file could not be found.",
+                        CloseButtonText = "OK"
+                    };
+                    await noFileDialog.ShowAsync();
+                }
+            }
+        }
+
+
+
 
         private void deleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {

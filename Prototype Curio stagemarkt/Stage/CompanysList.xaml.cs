@@ -79,7 +79,7 @@ namespace Prototype_Curio_stagemarkt.Stage
             var companies = db.Companies
                 .Include(c => c.LearningPath)
                 .Include(c => c.Level)
-                .Where(c => c.IsOpen)
+                .Where(c => c.IsOpen && c.Level != null)
                 .ToList();
 
             if (_currentStudent != null)
