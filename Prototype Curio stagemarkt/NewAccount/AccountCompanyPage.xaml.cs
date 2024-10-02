@@ -26,6 +26,7 @@ using Prototype_Curio_stagemarkt.Data;
 using Microsoft.UI.Text;
 using Microsoft.UI;
 using Windows.UI.Text;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -296,53 +297,7 @@ namespace Prototype_Curio_stagemarkt.Login
             await deleteDialog.ShowAsync();
         }
 
-        private async void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem is Prototype_Curio_stagemarkt.Data.Models.Application application)
-            {
-                var applicationDetailsDialog = new ContentDialog
-                {
-                    Title = "Application Details",
-                    CloseButtonText = "Close"
-                };
-
-                var stackPanel = new StackPanel
-                {
-                    Children =
-                    {
-                        new TextBlock { Text = $"Name: {application.Name}" },
-                        new TextBlock { Text = $"Motivation: {application.Motivation}", TextWrapping = TextWrapping.Wrap },
-                        new TextBlock { Text = "CV:", FontWeight = FontWeights.Bold },
-                        new TextBlock
-                        {
-                            Text = application.CvFilePath,
-                            Foreground = new SolidColorBrush(Colors.Blue),
-                            TextDecorations = TextDecorations.Underline
-                        }
-                    }
-                };
-
-                // Create the TextBlock for the CV link
-                var cvLinkTextBlock = new TextBlock
-                {
-                    Text = application.CvFilePath,
-                    Foreground = new SolidColorBrush(Colors.Blue),
-                    TextDecorations = TextDecorations.Underline
-                };
-
-                // Assign the event handler separately
-                cvLinkTextBlock.PointerPressed += CvLinkTextBlock_PointerPressed;
-
-                stackPanel.Children.Add(cvLinkTextBlock);
-                applicationDetailsDialog.Content = stackPanel;
-
-                await applicationDetailsDialog.ShowAsync();
-            }
-        }
-
-
-
-        // Event handler for clicking the CV link
+        
         private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var cvLinkTextBlock = sender as TextBlock;
@@ -350,30 +305,17 @@ namespace Prototype_Curio_stagemarkt.Login
 
             if (!string.IsNullOrEmpty(cvFilePath))
             {
-                // Launch the file using its path
-                try
+                var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
+                if (file != null)
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
-                    if (file != null)
-                    {
-                        await Windows.System.Launcher.LaunchFileAsync(file);
-                    }
-                }
-                catch (FileNotFoundException)
-                {
-                    // Handle the case where the file was not found
-                    var noFileDialog = new ContentDialog
-                    {
-                        Title = "File Not Found",
-                        Content = "The specified CV file could not be found.",
-                        CloseButtonText = "OK"
-                    };
-                    await noFileDialog.ShowAsync();
+                    await Windows.System.Launcher.LaunchFileAsync(file);
                 }
             }
+            else
+            {
+                await CVFileDialog.ShowAsync();
+            }
         }
-
-
 
 
         private void deleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
