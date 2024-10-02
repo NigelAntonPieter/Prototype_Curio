@@ -311,10 +311,6 @@ namespace Prototype_Curio_stagemarkt.Login
                     await Windows.System.Launcher.LaunchFileAsync(file);
                 }
             }
-            else
-            {
-                await CVFileDialog.ShowAsync();
-            }
         }
 
 

@@ -84,7 +84,7 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="localData:WorkHour">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{x:Bind HoursWorked, Mode=OneWay}"
+                                                    <TextBlock Text="{x:Bind HoursWorked}"
                                                                FontWeight="Bold"
                                                                Foreground="Black" />
                                                 </StackPanel>

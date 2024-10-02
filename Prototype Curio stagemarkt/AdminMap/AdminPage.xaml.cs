@@ -117,10 +117,6 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                         {
                             await databaseErrorDialog.ShowAsync();
                         }
-                        else
-                        {
-                            throw ex;
-                        }
                     }
                 }
             }
@@ -162,10 +158,6 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                         if (databaseValues == null)
                         {
                             await databaseErrorDialog.ShowAsync();
-                        }
-                        else
-                        {
-                            throw ex;
                         }
                     }
                 }

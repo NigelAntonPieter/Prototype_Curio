@@ -272,9 +272,5 @@
                            PointerPressed="CvLinkTextBlock_PointerPressed" />
             </StackPanel>
         </ContentDialog>
-        <ContentDialog x:Name="CVFileDialog"
-                       CloseButtonText="oke">
-            <TextBlock Text="Wollah me er is er een" />
-        </ContentDialog>
     </Grid>
 </Page>

@@ -15,8 +15,6 @@ namespace Prototype_Curio_stagemarkt.Login
 {
     public sealed partial class AccountPage : Page
     {
-        private Student _currentStudent;
-
         public AccountPage()
         {
             InitializeComponent();
