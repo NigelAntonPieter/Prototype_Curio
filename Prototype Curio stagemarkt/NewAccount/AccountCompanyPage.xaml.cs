@@ -115,7 +115,6 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void UpdateApplicationCount()
         {
-            // Update het aantal sollicitanten in de header
             applicationCountTextBlock.Text = $"Sollicitanten: {_applicationCount}";
         }
         private void LoadCourses()
@@ -228,6 +227,10 @@ namespace Prototype_Curio_stagemarkt.Login
                         return;
                     }
 
+                    // Update specialisatie (course) hier
+                    var selectedCourse = (companyCourseCombobox.SelectedItem as ComboBoxItem)?.Content.ToString();
+                    company.Specialization = selectedCourse; // Bijwerken van de specialisatie
+
                     string enteredPassword = companyPasswordBox.Password;
 
                     if (!string.IsNullOrEmpty(enteredPassword) && enteredPassword != "*****")
@@ -247,11 +250,10 @@ namespace Prototype_Curio_stagemarkt.Login
                     company.IsOpen = isPlaceOpen.IsChecked == true;
                     company.ImagePath = copiedFile?.Path;
 
+                    db.SaveChanges();  // Sla alle wijzigingen op in de database
 
-                    db.SaveChanges();
-
+                    // Update de inloggegevens van de gebruiker
                     User.LoggedInUser.Company.Name = company.Name;
-
                     User.LoggedInUser.Company.Specialization = company.Specialization;
                     User.LoggedInUser.Company.Phone = company.Phone;
                     User.LoggedInUser.Company.EmailAddress = company.EmailAddress;
@@ -274,6 +276,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 return;
             }
         }
+
 
         private void isPlaceOpen_Unchecked(object sender, RoutedEventArgs e)
         {
