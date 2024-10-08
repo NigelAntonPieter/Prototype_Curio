@@ -126,7 +126,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
                 {
                     Name = studentUsernameTextbox.Text,
                     Password = SecureHasher.Hash(studentPasswordBox.Password),
-                    EmailAdress = studentEmailTextbox.Text,
+                    EmailAddress = studentEmailTextbox.Text,
                     Specialization = selectedCourse?.Name,
                     InternshipTeacherId = internshipTeacher.Id
                 };

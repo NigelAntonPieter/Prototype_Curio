@@ -1,0 +1,102 @@
+<Page x:Class="Prototype_Curio_stagemarkt.NewAccount.MesagePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Prototype_Curio_stagemarkt.NewAccount"
+      xmlns:localdata="using:Prototype_Curio_stagemarkt.Data.Model"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header Grid -->
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Assets/curio.jpg"
+                            Stretch="UniformToFill">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <TranslateTransform Y="0.7" />
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Grid.Background>
+            <StackPanel Margin="20">
+                <Button x:Name="LogoButton"
+                        Click="LogoButton_Click"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Padding="0">
+                    <TextBlock Text="CurioMarkt"
+                               FontWeight="Bold"
+                               FontSize="40"
+                               Foreground="White" />
+                </Button>
+                <TextBlock Text="Van Curio Voor Curio"
+                           FontSize="18"
+                           Foreground="White"
+                           Margin="0,10,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Messages List -->
+        <ListView x:Name="MessagesListView"
+                  Grid.Row="1"
+                  Margin="10"
+                  ItemsSource="{x:Bind Messages}"
+                  SelectionMode="None"
+                  Background="White"
+                  BorderThickness="0">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="localdata:Message">
+                    <StackPanel Margin="0,5">
+                        <!-- Display SenderCompany or SenderStudent name -->
+                        <TextBlock Text="{x:Bind SenderName, Mode=OneWay}"
+                                   FontWeight="Bold"
+                                   FontSize="14"
+                                   Foreground="Blue" />
+                        <TextBlock Text="{x:Bind Content}"
+                                   FontSize="16"
+                                   Padding="10"
+                                   Margin="0,2"
+                                   MaxWidth="300" />
+                        <TextBlock Text="{x:Bind SentAt}"
+                                   FontSize="12"
+                                   Foreground="Gray"
+                                   HorizontalAlignment="Right" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+
+        <!-- New Message Input -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    Margin="10"
+                    VerticalAlignment="Bottom">
+            <TextBox x:Name="NewMessageTextBox"
+                     PlaceholderText="Schrijf een bericht..."
+                     Width="Auto"
+                     HorizontalAlignment="Stretch"
+                     Height="40"
+                     Margin="0,0,10,0"
+                     Padding="10"
+                     Background="LightGray"
+                     CornerRadius="20" />
+            <Button Content="Versturen"
+                    Click="SendMessageButton_Click"
+                    Height="40"
+                    Background="LightBlue"
+                    BorderBrush="Transparent"
+                    CornerRadius="20" />
+        </StackPanel>
+    </Grid>
+</Page>

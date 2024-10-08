@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Prototype_Curio_stagemarkt.Data;
 
@@ -11,9 +12,11 @@ using Prototype_Curio_stagemarkt.Data;
 namespace Prototype_Curio_stagemarkt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241008115324_dm")]
+    partial class dm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Fedde",
-                            Password = "wDgi8/7e3vkKTZs8MH/xnlSZdu4dyTdzcuO2jPDqgCQ=:9hvCiM8MYIfSwrPiZZxzEA==:10000:SHA512"
+                            Password = "02ftV6WJfYRdRt5Gjzb65eV/c/TX8SX9ywC4Csdw384=:EDdnEYfAqocbBVbBYyDw8g==:10000:SHA512"
                         });
                 });
 
@@ -99,10 +102,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("ReceiverCompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReceiverStudentId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SenderCompanyId")
@@ -121,9 +121,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("ReceiverCompanyId");
-
-                    b.HasIndex("ReceiverStudentId");
+                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderCompanyId");
 
@@ -132,6 +130,17 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Hello from Company 2 to Student 6",
+                            IsRead = false,
+                            ReceiverId = 6,
+                            SenderCompanyId = 2,
+                            SentAt = new DateTime(2024, 10, 8, 13, 53, 24, 123, DateTimeKind.Local).AddTicks(4594)
+                        });
                 });
 
             modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Application", b =>
@@ -238,7 +247,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 1,
                             Name = "Company1",
-                            Password = "M6VAUOolQXRKjuHkQlCYb82AO/pixNB/w6TdXHtJBYE=:I1NkPs903pJDsLGu8kPr/A==:10000:SHA512",
+                            Password = "9HcEGOfZe8MREe5l6UgHm8a4QlVnYUnC53vwyvVPvf0=:BMQ74HCl8dHc3lH1Vgiz/Q==:10000:SHA512",
                             Phone = "123-456-7890",
                             Specialization = "Native",
                             Street = "123 Main Street"
@@ -253,7 +262,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 2,
                             Name = "Company2",
-                            Password = "zvRcGYsAVmsoVnYgy1dlC+mS3lrN8yzNza8jYy4KtBo=:SwaoNIcrKC092nsb6GCTZg==:10000:SHA512",
+                            Password = "sag7eFzeeWJNTEo5o+m7WzU/CDmWbiq8j+Jz/wIwhSA=:/bhnMAb6Zlt2gk73iMl8UA==:10000:SHA512",
                             Phone = "987-654-3210",
                             Specialization = "Native",
                             Street = "456 Oak Avenue"
@@ -268,7 +277,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 3,
                             Name = "Company3",
-                            Password = "eEWQDuc2oMbXvYqFqXe+vF7y32A1ceSHVe9aYDKq+TY=:/wZuvDj6pie5TqL1o6lcDw==:10000:SHA512",
+                            Password = "599SOy3ePdodBBtlJDgXAF1qPOgbvdqkT26CEymyRA4=:vcScSWU5U9T1AOTf/IIlJA==:10000:SHA512",
                             Phone = "555-123-4567",
                             Specialization = "Native",
                             Street = "789 Pine Road"
@@ -283,7 +292,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 1,
                             Name = "Company4",
-                            Password = "Q8SbYkWM3QIoYlnJ/bJdEpqvqTnIERdwPGTW178ua7k=:5sSRK6GDejYu7k8fmKyKMw==:10000:SHA512",
+                            Password = "e1KYc5K0E2GHMTbDDtOZrEZodia+qOgNsLHPOLbqi40=:kyuGavT2NunUKy4eFqiDdw==:10000:SHA512",
                             Phone = "555-123-4567",
                             Specialization = "Web",
                             Street = "799 Pine Road"
@@ -298,7 +307,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 2,
                             Name = "Company5",
-                            Password = "U9uvq3Lb8VWzaRIV00h+yaKqOdvaZK3hcu2mGEao5fI=:jhC5Z8IacE5lDsQdoMxp7w==:10000:SHA512",
+                            Password = "fjxIVvmfClKFoN99gsxH+dL1yiSYoY1apJ3JfRuzCCA=:UDTqsFBOjNlFMcCbz8OtkQ==:10000:SHA512",
                             Phone = "555-123-4568",
                             Specialization = "Web",
                             Street = "749 Pine Road"
@@ -313,7 +322,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 3,
                             Name = "Company5",
-                            Password = "aUAc7HjJEYCiubDdF4hPU74zoPn4Xen9caDjftrcemo=:sDyJRCkGOz8PENSKcw3HhA==:10000:SHA512",
+                            Password = "EBW/y+pGuTb9uBRyeetGFZi8ebJiLnf26JLow9ZqBHg=:qFDwQ5eXNDGh+ExN7E4bjQ==:10000:SHA512",
                             Phone = "555-123-4568",
                             Specialization = "Web",
                             Street = "749 Pine Road"
@@ -358,13 +367,13 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Laurens",
-                            Password = "5ZmKqgn8G62OIVo+5sNwlSEIBvAU5zC17W3BcAS2YJ4=:lVoafW3OZbXkyXbYQmqXfQ==:10000:SHA512"
+                            Password = "xGoWzNCRQDw4DcAoGat0W8AonnmnuIh37sdb+p9pIfU=:ote9MHChjz+k6wW113Vi+A==:10000:SHA512"
                         },
                         new
                         {
                             Id = 2,
                             Name = "Kiki",
-                            Password = "f2/UbOFH6r+QHO15uLdOxzT0j+MaZltcRIf/wWtP56c=:yZlTbsEzjSlnXYobLItw8A==:10000:SHA512"
+                            Password = "Y0WWEGoyiV57yVXVIKbo+hYVa5kd0QMYuPhycqmGuQg=:wByOnOPgt6RVLj9X6e/7Lg==:10000:SHA512"
                         });
                 });
 
@@ -473,7 +482,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Max",
-                            Password = "Z6D1fXtibk2jNDzxmKeSlqebUxl4bLQDoEAXZYP1sWw=:w9HIy+nr9/62eHv/a5ATMQ==:10000:SHA512",
+                            Password = "Xw97efZmc8jZBPR3MbYoFvNSuuAcK82BDZJNNIJC7iM=:p2/k629ByjTGMG4JYnKvqw==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -482,7 +491,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "JJ",
-                            Password = "vVf2A8SKyUoECFezexFwfpMC0y/sQwmIlYgmS8o2zRI=:oqo9tfbeIqHKQ6Va65j80Q==:10000:SHA512",
+                            Password = "7QkLu16Qu1krqag1T/MfGP//KNeZqIzuyKX5d1vtpYg=:PzFLhq4D47ZN50A+x4QOzg==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -491,7 +500,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Krijn",
-                            Password = "UG5IqtirawHRbBdfUVY75Xilgs7sj+RWUc12LUJqVIA=:PBlIo7o5caPRnBqUuXpCLA==:10000:SHA512",
+                            Password = "bgyw5PChrB6B7r6VTCyXi4I6v4IJLFldGRcXpdHJIyk=:VOTtIa/IhCfgJq7DfE2RZQ==:10000:SHA512",
                             Specialization = "FrontEnd"
                         },
                         new
@@ -500,7 +509,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Luna",
-                            Password = "Rkk0XL8ilurWDiexg3lpogTMmh0gs3xZletQsYbpM7Y=:71x+I6zLeW1hZ3qK7YeB6w==:10000:SHA512",
+                            Password = "yw0LW510qu6ahaigUJwqficzHxcH/NGR8GLhvnR41Oo=:8BEdS+4UPxjwykhMSRXRVA==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -509,7 +518,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Wiardi",
-                            Password = "rF/589hDNYAPSiBxPpb3vyMyVJCVefql8kcrhCS7NFA=:iLwXvQGquiwz5hKHKjpwiA==:10000:SHA512",
+                            Password = "XHYgFEUcxskl9y73481jpZBLgnVYPcR5/Kd/cjK72/A=:DoLE6ttIf1ovAZ/nZZunyw==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -518,7 +527,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Nigel",
-                            Password = "wkF4h/10xBax/scdCWDLhOHTwJVLSzyqFf6uLcFTNZs=:fVkS42ddVuISZ7Ua+WlqfQ==:10000:SHA512",
+                            Password = "7UX+Qf2gySRsb9bYnA+nEesbv4wCCXd+jJVOdiQAiro=:3vaZCx1rj1UJH/okl502JQ==:10000:SHA512",
                             Specialization = "FrontEnd"
                         },
                         new
@@ -527,7 +536,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Kelvin",
-                            Password = "TVh0hzijGE/7GCASSKMkN/wKrYC3bVfVifZKqhqh/FM=:W0mas3qWa/9eo9deOWxB3A==:10000:SHA512",
+                            Password = "s1OaFx9rr3W+LYvWrnSOuhAj70LJzHD3R0mHlumOyUg=:c6UU3Udk+BpVy3KpZ+PznQ==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -536,7 +545,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 1,
                             Name = "Jonathan",
-                            Password = "D00bfNfGzibU9dakpU36Z+oElUmWgBZ5c6enfy15XbI=:Ot7lQRq3hRquJfMvB5J75A==:10000:SHA512",
+                            Password = "hxzP1vl5Ripc4SpyrAqFwJ6ta73mE1VwpptuF5rAl+8=:UryjlYqrM1OXqgxKmv+IyA==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -545,7 +554,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Brent",
-                            Password = "Q75AGy031WPp/2NhLGt/7ebjQv+f4F20gI9aMFgG8pY=:ZB8NyP/s9GpW8WRpZauFYQ==:10000:SHA512",
+                            Password = "kZ+NvD1ca0hpEdY75Ht+yFJ3DTi1ugfeEqnJbrIl2ow=:g/9+gzh7bAf3/qrm4Wcquw==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -554,7 +563,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Simon",
-                            Password = "WOX2NIJRDUgl2JQWYHO0uYmeQWEmaW4AD2jpOMXGxnc=:zKHkvRMoA8qQI+DLrYglOg==:10000:SHA512",
+                            Password = "cXDbrZa5GKyNMzdJ6/yZE90kVJuWtH2PcsGjSxTm29Q=:FA+TRPAzRYfSpdNUQsp5DQ==:10000:SHA512",
                             Specialization = "Native"
                         });
                 });
@@ -1010,14 +1019,16 @@ namespace Prototype_Curio_stagemarkt.Migrations
 
                     b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "ReceiverCompany")
                         .WithMany()
-                        .HasForeignKey("ReceiverCompanyId")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("FK_Message_ReceiverCompany");
 
                     b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "ReceiverStudent")
                         .WithMany()
-                        .HasForeignKey("ReceiverStudentId")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("FK_Message_ReceiverStudent");
 
                     b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "SenderCompany")

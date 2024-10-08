@@ -24,6 +24,7 @@ namespace Prototype_Curio_stagemarkt.Data
         public DbSet<InternschipTeacher> InternschipTeachers { get; set; }
         public DbSet<WorkHour> WorkHours { get; set; }
         public DbSet<Application> Applications { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -47,6 +48,7 @@ namespace Prototype_Curio_stagemarkt.Data
             modelBuilder.ApplyConfiguration(new WorkHourConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
             modelBuilder.ApplyConfiguration(new FavoriteCompanyConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageConfiguration());
         }
     }
 }

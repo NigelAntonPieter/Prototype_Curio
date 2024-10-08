@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Prototype_Curio_stagemarkt.Login"
       xmlns:localData="using:Prototype_Curio_stagemarkt.Data.Models"
+      xmlns:localDate="using:Prototype_Curio_stagemarkt.Data.Model"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
@@ -54,18 +55,23 @@
                         Orientation="Horizontal">
                 <Button x:Name="deleteButton"
                         Click="deleteButton_Click"
-                        Background="#E23C84"
-                        Foreground="White"
                         Padding="10,5"
                         CornerRadius="5"
                         Margin="10">Delete Account</Button>
                 <Button x:Name="uploadFileButton"
                         Click="uploadFileButton_Click"
-                        Background="#E23C84"
-                        Foreground="White"
                         Padding="10,5"
                         CornerRadius="5"
                         Margin="10">Upload urenkaart</Button>
+                <ListView x:Name="companyMessageListView"
+                          SelectionChanged="companyListView_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="localData:Company">
+                            <TextBlock Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
             </StackPanel>
         </Grid>
 
@@ -126,7 +132,7 @@
                         Height="50"
                         FontSize="16"
                         FontWeight="SemiBold"
-                        Background="#A38FE4"
+                        Background="#E23C84"
                         Foreground="White"
                         BorderBrush="Transparent"
                         Margin="0,20,0,0">Sla op</Button>

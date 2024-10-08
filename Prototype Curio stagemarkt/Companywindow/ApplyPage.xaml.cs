@@ -59,7 +59,7 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                 {
                     var loggedInStudent = User.LoggedInUser.Student;
                     nameTextbox.Text = loggedInStudent.Name;
-                    emailTextbox.Text = loggedInStudent.EmailAdress;
+                    emailTextbox.Text = loggedInStudent.EmailAddress;
                 }
             }
         }

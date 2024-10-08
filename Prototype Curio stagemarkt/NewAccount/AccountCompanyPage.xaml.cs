@@ -23,6 +23,7 @@ using Windows.Storage;
 using WinRT.Interop;
 using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.NewAccount;
 using Microsoft.UI.Text;
 using Microsoft.UI;
 using Windows.UI.Text;
@@ -227,9 +228,8 @@ namespace Prototype_Curio_stagemarkt.Login
                         return;
                     }
 
-                    // Update specialisatie (course) hier
                     var selectedCourse = (companyCourseCombobox.SelectedItem as ComboBoxItem)?.Content.ToString();
-                    company.Specialization = selectedCourse; // Bijwerken van de specialisatie
+                    company.Specialization = selectedCourse; 
 
                     string enteredPassword = companyPasswordBox.Password;
 
@@ -250,9 +250,8 @@ namespace Prototype_Curio_stagemarkt.Login
                     company.IsOpen = isPlaceOpen.IsChecked == true;
                     company.ImagePath = copiedFile?.Path;
 
-                    db.SaveChanges();  // Sla alle wijzigingen op in de database
+                    db.SaveChanges();  
 
-                    // Update de inloggegevens van de gebruiker
                     User.LoggedInUser.Company.Name = company.Name;
                     User.LoggedInUser.Company.Specialization = company.Specialization;
                     User.LoggedInUser.Company.Phone = company.Phone;
@@ -347,5 +346,23 @@ namespace Prototype_Curio_stagemarkt.Login
                 this.Frame.GoBack();
             }
         }
+
+        private void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var originalSource = e.OriginalSource as FrameworkElement;
+
+            while (originalSource != null && originalSource.DataContext == null)
+            {
+                originalSource = VisualTreeHelper.GetParent(originalSource) as FrameworkElement;
+            }
+
+            var application = originalSource?.DataContext as Prototype_Curio_stagemarkt.Data.Models.Application;
+
+            if (application != null)
+            {
+                this.Frame.Navigate(typeof(MesagePage), (application.StudentId, application.CompanyId, User.LoggedInUser.IsCompany));
+            }
+        }
+
     }
 }

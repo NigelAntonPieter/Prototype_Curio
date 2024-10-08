@@ -201,7 +201,10 @@
                            Margin="0,20" />
 
                 <ListView x:Name="applicationListView"
-                          Margin="0,0,0,0">
+                          Margin="0,0,0,0"
+                          IsRightTapEnabled="True"
+                          RightTapped="applicationListView_RightTapped"
+                          ItemsSource="{Binding Applications}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -220,7 +223,7 @@
                                            TextDecorations="Underline"
                                            PointerPressed="CvLinkTextBlock_PointerPressed"
                                            ToolTipService.ToolTip="Klik om CV te bekijken"
-                                           Margin="0,0,0,30"/>
+                                           Margin="0,0,0,30" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>

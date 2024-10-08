@@ -1,14 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
 using Prototype_Curio_stagemarkt.Data;
+using Prototype_Curio_stagemarkt.Data.Model;
 using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Prototype_Curio_stagemarkt.Utility;
 using System;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace Prototype_Curio_stagemarkt.Login
@@ -20,14 +24,19 @@ namespace Prototype_Curio_stagemarkt.Login
             InitializeComponent();
             LoadCourses();
             LoadFavoriteCompanies();
+            LoadCompaniesWithMessages(); // Load companies with messages
             DataContext = User.LoggedInUser;
         }
+
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             PopulateStudentInfo();
+
+            
         }
+
 
         private void PopulateStudentInfo()
         {
@@ -204,5 +213,54 @@ namespace Prototype_Curio_stagemarkt.Login
                 Frame.Navigate(typeof(WelcomePage));
             }
         }
+
+        private bool HasUnreadMessages()
+        {
+            using (var db = new AppDbContext())
+            {
+                var studentId = User.LoggedInUser.StudentId;
+                if (studentId == null) return false;
+                return db.Messages.Any(m => m.ReceiverStudentId == studentId && !m.IsRead);
+            }
+        }
+
+        private void LoadCompaniesWithMessages()
+        {
+            if (User.LoggedInUser?.StudentId != null)
+            {
+                using var db = new AppDbContext();
+                var companyIds = db.Messages
+                    .Where(m => m.ReceiverStudentId == User.LoggedInUser.StudentId || m.SenderStudentId == User.LoggedInUser.StudentId)
+                    .Select(m => m.SenderCompanyId) // or m.ReceiverCompanyId based on your logic
+                    .Distinct()
+                    .ToList();
+
+                // Fetch the companies based on the IDs
+                var companies = db.Companies
+                    .Where(c => companyIds.Contains(c.Id))
+                    .ToList();
+
+                // Set the ItemSource of the ListView
+                companyMessageListView.ItemsSource = companies;
+            }
+        }
+
+        private void companyListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Make sure there's a selected item
+            if (companyMessageListView.SelectedItem is Company selectedCompany)
+            {
+                int companyId = selectedCompany.Id; // Get the ID of the selected company
+                var studentId = User.LoggedInUser.StudentId; // Get the logged-in student's ID
+
+                // Navigate to the message page with the student ID and company ID
+                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
+
+                // Reset the selection to prevent repeated navigation on the same item
+                companyMessageListView.SelectedItem = null;
+            }
+        }
+
+
     }
 }
