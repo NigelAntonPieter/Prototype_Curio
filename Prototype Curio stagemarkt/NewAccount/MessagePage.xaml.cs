@@ -49,19 +49,29 @@ namespace Prototype_Curio_stagemarkt.NewAccount
         {
             base.OnNavigatedTo(e);
 
-            var (studentId, companyId) = ((int, int))e.Parameter;
-            var messages = GetMessagesForChat(studentId, companyId);
-            MessagesListView.ItemsSource = messages;
+            var (studentId, companyId, isCompany) = ((int?, int, bool))e.Parameter;
+
+            if (studentId.HasValue)
+            {
+                _studentId = studentId.Value;
+            }
+            _companyId = companyId;
+
+            LoadMessages();  
         }
+
+
 
         public List<Message> GetMessagesForChat(int studentId, int companyId)
         {
             using var db = new AppDbContext();
             var messages = db.Messages
-                .Where(m => (m.SenderStudentId == studentId && m.ReceiverCompanyId == companyId) ||
-                            (m.SenderCompanyId == companyId && m.ReceiverStudentId == studentId))
-                .OrderBy(m => m.SentAt) 
+                .Where(m =>
+                    (m.SenderStudentId == studentId && m.ReceiverCompanyId == companyId && m.SenderStudentId.HasValue) ||
+                    (m.SenderCompanyId == companyId && m.ReceiverStudentId == studentId && m.SenderCompanyId.HasValue))
+                .OrderBy(m => m.SentAt)
                 .ToList();
+
 
             return messages;
         }
@@ -73,32 +83,36 @@ namespace Prototype_Curio_stagemarkt.NewAccount
             {
                 List<Message> messages;
 
-                if (User.LoggedInUser.IsCompany) 
+                if (User.LoggedInUser.IsCompany)
                 {
                     messages = await db.Messages
-                        .Where(m => m.SenderCompanyId == User.LoggedInUser.CompanyId && m.ReceiverStudentId == _studentId)
+                        .Where(m => m.SenderCompanyId == User.LoggedInUser.CompanyId && m.ReceiverStudentId == _studentId
+                                 || m.SenderStudentId == _studentId && m.ReceiverCompanyId == User.LoggedInUser.CompanyId)
                         .Include(m => m.SenderCompany)
                         .Include(m => m.SenderStudent)
                         .OrderBy(m => m.SentAt)
                         .ToListAsync();
                 }
-                else 
+                else
                 {
                     messages = await db.Messages
-                        .Where(m => m.SenderStudentId == User.LoggedInUser.Student.Id && m.ReceiverCompanyId == _companyId)
+                        .Where(m => m.SenderStudentId == User.LoggedInUser.Student.Id && m.ReceiverCompanyId == _companyId
+                                 || m.SenderCompanyId == _companyId && m.ReceiverStudentId == User.LoggedInUser.Student.Id)
                         .Include(m => m.SenderCompany)
                         .Include(m => m.SenderStudent)
                         .OrderBy(m => m.SentAt)
                         .ToListAsync();
                 }
 
-                Messages.Clear();
+                Messages.Clear(); // Oude berichten verwijderen
                 foreach (var message in messages)
                 {
-                    Messages.Add(message);
+                    Messages.Add(message);  // Voeg nieuwe berichten toe aan de ObservableCollection
                 }
             }
         }
+
+
 
 
 
@@ -106,25 +120,21 @@ namespace Prototype_Curio_stagemarkt.NewAccount
         {
             if (!string.IsNullOrEmpty(NewMessageTextBox.Text))
             {
-                // Check if the receiver exists based on whether the user is a company or a student
                 bool receiverExists;
 
                 if (User.LoggedInUser.IsCompany)
                 {
-                    // Check if the receiver student exists
                     receiverExists = await DoesStudentExist(_studentId);
                 }
                 else
                 {
-                    // Here, you might want to check if the company exists instead if the user is a student
                     receiverExists = await DoesCompanyExist(_companyId);
                 }
 
                 if (!receiverExists)
                 {
-                    // Handle the case where the receiver does not exist
                     Debug.WriteLine($"Receiver does not exist. StudentId: {_studentId}, CompanyId: {_companyId}");
-                    return; // Exit the method if the receiver is not found
+                    return; 
                 }
 
                 var newMessage = new Message

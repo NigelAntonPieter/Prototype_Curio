@@ -360,9 +360,14 @@ namespace Prototype_Curio_stagemarkt.Login
 
             if (application != null)
             {
-                this.Frame.Navigate(typeof(MesagePage), (application.StudentId, application.CompanyId, User.LoggedInUser.IsCompany));
+                int? studentId = application.StudentId; // Nullable studentId
+                int companyId = application.CompanyId;  // Assuming companyId is non-nullable
+
+                // Navigate to MesagePage, passing nullable studentId, companyId, and isCompany flag
+                this.Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
             }
         }
+
 
     }
 }

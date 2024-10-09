@@ -49,24 +49,24 @@
         <ListView x:Name="MessagesListView"
                   Grid.Row="1"
                   Margin="10"
-                  ItemsSource="{x:Bind Messages}"
+                  ItemsSource="{Binding Messages}"
                   SelectionMode="None"
                   Background="White"
                   BorderThickness="0">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="localdata:Message">
+                <DataTemplate>
                     <StackPanel Margin="0,5">
                         <!-- Display SenderCompany or SenderStudent name -->
-                        <TextBlock Text="{x:Bind SenderName, Mode=OneWay}"
+                        <TextBlock Text="{Binding SenderName, Mode=OneWay}"
                                    FontWeight="Bold"
                                    FontSize="14"
                                    Foreground="Blue" />
-                        <TextBlock Text="{x:Bind Content}"
+                        <TextBlock Text="{Binding Content}"
                                    FontSize="16"
                                    Padding="10"
                                    Margin="0,2"
                                    MaxWidth="300" />
-                        <TextBlock Text="{x:Bind SentAt}"
+                        <TextBlock Text="{Binding SentAt}"
                                    FontSize="12"
                                    Foreground="Gray"
                                    HorizontalAlignment="Right" />
