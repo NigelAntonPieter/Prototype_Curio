@@ -241,26 +241,24 @@ namespace Prototype_Curio_stagemarkt.Login
                     .ToList();
 
                 // Set the ItemSource of the ListView
-                companyMessageListView.ItemsSource = companies;
+                companyComboBox.ItemsSource = companies;
             }
         }
-
-        private void companyListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void companyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Make sure there's a selected item
-            if (companyMessageListView.SelectedItem is Company selectedCompany)
+            // Zorg dat er een geselecteerd item is
+            if (companyComboBox.SelectedItem is Company selectedCompany)
             {
-                int companyId = selectedCompany.Id; // Get the ID of the selected company
-                var studentId = User.LoggedInUser.StudentId; // Get the logged-in student's ID
+                int companyId = selectedCompany.Id; // Haal het ID van het geselecteerde bedrijf op
+                var studentId = User.LoggedInUser.StudentId; // Haal het ID van de ingelogde student op
 
-                // Navigate to the message page with the student ID and company ID
+                // Navigeer naar de berichtenpagina met het studentId en companyId
                 Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
 
-                // Reset the selection to prevent repeated navigation on the same item
-                companyMessageListView.SelectedItem = null;
+                // Reset de selectie om herhaalde navigatie te voorkomen
+                companyComboBox.SelectedItem = null;
             }
         }
-
 
     }
 }

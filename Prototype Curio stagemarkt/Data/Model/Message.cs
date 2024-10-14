@@ -30,6 +30,22 @@ namespace Prototype_Curio_stagemarkt.Data.Model
         public virtual Company ReceiverCompany { get; set; }
 
         public string SenderName => SenderCompany?.Name ?? SenderStudent?.Name ?? "Unknown";
+        public string ReceiverName => ReceiverCompany?.Name ?? ReceiverStudent?.Name ?? "Unknown";
+
+        public bool IsSender
+        {
+            get
+            {
+                if (User.LoggedInUser.IsCompany)
+                {
+                    return SenderCompanyId == User.LoggedInUser.CompanyId;
+                }
+                else
+                {
+                    return SenderStudentId == User.LoggedInUser.Student.Id;
+                }
+            }
+        }
     }
 
 }

@@ -3,10 +3,17 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Prototype_Curio_stagemarkt.NewAccount"
       xmlns:localdata="using:Prototype_Curio_stagemarkt.Data.Model"
+      xmlns:converters="using:Prototype_Curio_stagemarkt.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:SenderToAligmentConverter x:Key="SenderToAlignmentConverter" />
+        <converters:SenderToBackgroundConverter x:Key="SenderToBackgroundConverter" />
+    </Page.Resources>
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -46,36 +53,46 @@
         </Grid>
 
         <!-- Messages List -->
-        <ListView x:Name="MessagesListView"
+        <ListView x:Name="senderMessagesListView"
                   Grid.Row="1"
                   Margin="10"
                   ItemsSource="{Binding Messages}"
                   SelectionMode="None"
-                  Background="White"
-                  BorderThickness="0">
+                  Background="Transparent"
+                  BorderThickness="0"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="0,5">
-                        <!-- Display SenderCompany or SenderStudent name -->
-                        <TextBlock Text="{Binding SenderName, Mode=OneWay}"
-                                   FontWeight="Bold"
-                                   FontSize="14"
-                                   Foreground="Blue" />
-                        <TextBlock Text="{Binding Content}"
-                                   FontSize="16"
-                                   Padding="10"
-                                   Margin="0,2"
-                                   MaxWidth="300" />
+                    <StackPanel>
+                        <!-- Container with alignment depending on whether it's the logged-in user -->
+                        <StackPanel Background="{Binding IsSender, Converter={StaticResource SenderToBackgroundConverter}}"
+                                    BorderBrush="LightGray"
+                                    BorderThickness="1"
+                                    CornerRadius="15"
+                                    Padding="10"
+                                    HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}">
+
+                            <!-- Show sender name and message content -->
+                            <TextBlock Text="{Binding SenderName }"
+                                       Foreground="DarkSlateGray"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,5" />
+                            <TextBlock Text="{Binding Content}"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"
+                                       Foreground="Black" />
+                        </StackPanel>
+
+                        <!-- Timestamp aligned based on sender -->
                         <TextBlock Text="{Binding SentAt}"
                                    FontSize="12"
                                    Foreground="Gray"
-                                   HorizontalAlignment="Right" />
+                                   HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}"
+                                   Margin="5,0,5,10" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-
 
         <!-- New Message Input -->
         <StackPanel Grid.Row="2"
@@ -89,12 +106,16 @@
                      Height="40"
                      Margin="0,0,10,0"
                      Padding="10"
-                     Background="LightGray"
-                     CornerRadius="20" />
+                     Background="White"
+                     BorderBrush="LightGray"
+                     BorderThickness="1"
+                     CornerRadius="20"
+                     TextWrapping="Wrap" />
             <Button Content="Versturen"
                     Click="SendMessageButton_Click"
                     Height="40"
-                    Background="LightBlue"
+                    Background="#E23C84"
+                    Foreground="White"
                     BorderBrush="Transparent"
                     CornerRadius="20" />
         </StackPanel>

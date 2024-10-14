@@ -63,14 +63,16 @@
                         Padding="10,5"
                         CornerRadius="5"
                         Margin="10">Upload urenkaart</Button>
-                <ListView x:Name="companyMessageListView"
-                          SelectionChanged="companyListView_SelectionChanged">
-                    <ListView.ItemTemplate>
+                <ComboBox x:Name="companyComboBox"
+                          SelectionChanged="companyComboBox_SelectionChanged"
+                          PlaceholderText="Dm"
+                          PlaceholderForeground="Black">
+                    <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="localData:Company">
                             <TextBlock Text="{x:Bind Name}" />
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
             </StackPanel>
         </Grid>

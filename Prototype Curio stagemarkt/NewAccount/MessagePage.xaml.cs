@@ -56,6 +56,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                 _studentId = studentId.Value;
             }
             _companyId = companyId;
+            this.Tag = User.LoggedInUser;
 
             LoadMessages();  
         }
@@ -77,40 +78,40 @@ namespace Prototype_Curio_stagemarkt.NewAccount
         }
 
 
-        private async void LoadMessages()
-        {
-            using (var db = new AppDbContext())
+            private async void LoadMessages()
             {
-                List<Message> messages;
+                using (var db = new AppDbContext())
+                {
+                    List<Message> messages;
 
-                if (User.LoggedInUser.IsCompany)
-                {
-                    messages = await db.Messages
-                        .Where(m => m.SenderCompanyId == User.LoggedInUser.CompanyId && m.ReceiverStudentId == _studentId
-                                 || m.SenderStudentId == _studentId && m.ReceiverCompanyId == User.LoggedInUser.CompanyId)
-                        .Include(m => m.SenderCompany)
-                        .Include(m => m.SenderStudent)
-                        .OrderBy(m => m.SentAt)
-                        .ToListAsync();
-                }
-                else
-                {
-                    messages = await db.Messages
-                        .Where(m => m.SenderStudentId == User.LoggedInUser.Student.Id && m.ReceiverCompanyId == _companyId
-                                 || m.SenderCompanyId == _companyId && m.ReceiverStudentId == User.LoggedInUser.Student.Id)
-                        .Include(m => m.SenderCompany)
-                        .Include(m => m.SenderStudent)
-                        .OrderBy(m => m.SentAt)
-                        .ToListAsync();
-                }
+                    if (User.LoggedInUser.IsCompany)
+                    {
+                        messages = await db.Messages
+                            .Where(m => m.SenderCompanyId == User.LoggedInUser.CompanyId && m.ReceiverStudentId == _studentId
+                                     || m.SenderStudentId == _studentId && m.ReceiverCompanyId == User.LoggedInUser.CompanyId)
+                            .Include(m => m.SenderCompany)
+                            .Include(m => m.SenderStudent)
+                            .OrderBy(m => m.SentAt)
+                            .ToListAsync();
+                    }
+                    else
+                    {
+                        messages = await db.Messages
+                            .Where(m => m.SenderStudentId == User.LoggedInUser.Student.Id && m.ReceiverCompanyId == _companyId
+                                     || m.SenderCompanyId == _companyId && m.ReceiverStudentId == User.LoggedInUser.Student.Id)
+                            .Include(m => m.SenderCompany)
+                            .Include(m => m.SenderStudent)
+                            .OrderBy(m => m.SentAt)
+                            .ToListAsync();
+                    }
 
-                Messages.Clear(); // Oude berichten verwijderen
-                foreach (var message in messages)
-                {
-                    Messages.Add(message);  // Voeg nieuwe berichten toe aan de ObservableCollection
+                    Messages.Clear(); // Oude berichten verwijderen
+                    foreach (var message in messages)
+                    {
+                        Messages.Add(message);  // Voeg nieuwe berichten toe aan de ObservableCollection
+                    }
                 }
             }
-        }
 
 
 
