@@ -261,6 +261,10 @@
                        CloseButtonText="OK"
                        DefaultButton="Close"
                        PrimaryButtonText="Probeer opnieuw" />
+        <ContentDialog  x:Name="existingDialog"
+                        Title="email"
+                        Content="Deze email bestaat al "
+                        CloseButtonText="Ok"/>
 
     </Grid>
 </Page>

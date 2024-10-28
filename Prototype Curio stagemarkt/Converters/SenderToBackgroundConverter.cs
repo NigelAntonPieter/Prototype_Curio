@@ -15,7 +15,7 @@ namespace Prototype_Curio_stagemarkt.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             bool isSender = (bool)value;
-            return isSender ? new SolidColorBrush(Colors.LightBlue) : new SolidColorBrush(Colors.LightGray);
+            return isSender ? new SolidColorBrush(Colors.DeepPink) : new SolidColorBrush(Colors.LightGray);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -74,7 +74,7 @@
             <StackPanel Grid.Column="0"
                         Margin="10"
                         Spacing="15">
-                <TextBlock Text="Registeren als Bedrijf"
+                <TextBlock Text="Account"
                            FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
@@ -204,7 +204,8 @@
                           Margin="0,0,0,0"
                           IsRightTapEnabled="True"
                           RightTapped="applicationListView_RightTapped"
-                          ItemsSource="{Binding Applications}">
+                          ItemsSource="{Binding Applications}"
+                          SelectionChanged="applicationListView_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

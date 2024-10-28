@@ -32,12 +32,16 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         private Company selectedCompany;
 
         public ObservableCollection<Student> AllStudents { get; private set; }
+        public ObservableCollection<Company> AllCompanies { get; private set; }
 
 
         public AdminPage()
         {
             this.InitializeComponent();
             using var db = new AppDbContext();
+
+            AllCompanies = new ObservableCollection<Company>();
+            AllStudents = new ObservableCollection<Student>();
 
             LoadCompanies();
             LoadStudents();
@@ -47,14 +51,20 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         {
             using var db = new AppDbContext();
             var companies = db.Companies.ToList();
-            adminCompanyListView.ItemsSource = companies;
+            foreach (var company in companies)
+            {
+                AllCompanies.Add(company); 
+            }
         }
 
         private void LoadStudents()
         {
             using var db = new AppDbContext();
             var students = db.Students.ToList();
-            adminStudentListView.ItemsSource = students;
+            foreach (var student in students)
+            {
+                AllStudents.Add(student); 
+            }
         }
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
@@ -63,12 +73,56 @@ namespace Prototype_Curio_stagemarkt.AdminMap
             this.Frame.Navigate(typeof(WelcomePage));
         }
 
-
-
-        private async void adminCompanyListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private async void adminCompanyGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var listViewItem = (FrameworkElement)e.OriginalSource;
-            selectedCompany = listViewItem.DataContext as Company;
+            var clickedCompany = e.ClickedItem as Company;
+
+            if (clickedCompany != null)
+            {
+                using var db = new AppDbContext();
+                var user = db.Users.FirstOrDefault(u => u.CompanyId == clickedCompany.Id);
+
+                if (user != null)
+                {
+                    // Update de TextBlocks in het ContentDialog met de bedrijfsnaam en laatste inlogtijd
+                    companyNameTextBlock.Text = clickedCompany.Name;
+                    companyLastLoginTextBlock.Text = user.LastLogin.HasValue
+                        ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
+                        : "Nooit ingelogd";
+
+                    // Toon het dialoogvenster
+                    await companyInfoDialog.ShowAsync();
+                }
+            }
+        }
+
+        private async void adminStudentGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var clickedStudent = e.ClickedItem as Student;
+
+            if (clickedStudent != null)
+            {
+                using var db = new AppDbContext();
+                var user = db.Users.FirstOrDefault(u => u.StudentId == clickedStudent.Id);
+
+                if (user != null)
+                {
+                    // Update de TextBlocks in het ContentDialog met de studentnaam en laatste inlogtijd
+                    studentNameTextBlock.Text = clickedStudent.Name;
+                    studentLastLoginTextBlock.Text = user.LastLogin.HasValue
+                        ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
+                        : "Nooit ingelogd";
+
+                    // Toon het dialoogvenster
+                    await studentInfoDialog.ShowAsync();
+                }
+            }
+        }
+
+        private async void adminCompanyGridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var gridViewItem = (FrameworkElement)e.OriginalSource;
+            selectedCompany = gridViewItem.DataContext as Company;
 
             if (selectedCompany != null)
             {
@@ -76,10 +130,10 @@ namespace Prototype_Curio_stagemarkt.AdminMap
             }
         }
 
-        private async void adminStudentListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private async void adminStudentGridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            var listViewItem = (FrameworkElement)e.OriginalSource;
-            selectedStudent = listViewItem.DataContext as Student;
+            var gridViewItem = (FrameworkElement)e.OriginalSource;
+            selectedStudent = gridViewItem.DataContext as Student;
 
             if (selectedStudent != null)
             {
@@ -160,52 +214,6 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                             await databaseErrorDialog.ShowAsync();
                         }
                     }
-                }
-            }
-        }
-
-        private async void adminCompanyListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var clickedCompany = e.ClickedItem as Company;
-
-            if (clickedCompany != null)
-            {
-                using var db = new AppDbContext();
-                var user = db.Users.FirstOrDefault(u => u.CompanyId == clickedCompany.Id);
-
-                if (user != null)
-                {
-                    // Update de TextBlocks in het ContentDialog met de bedrijfsnaam en laatste inlogtijd
-                    companyNameTextBlock.Text = clickedCompany.Name;
-                    companyLastLoginTextBlock.Text = user.LastLogin.HasValue
-                        ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
-                        : "Nooit ingelogd";
-
-                    // Toon het dialoogvenster
-                    await companyInfoDialog.ShowAsync();
-                }
-            }
-        }
-
-        private async void adminStudentListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var clickedStudent = e.ClickedItem as Student;
-
-            if (clickedStudent != null)
-            {
-                using var db = new AppDbContext();
-                var user = db.Users.FirstOrDefault(u => u.StudentId == clickedStudent.Id);
-
-                if (user != null)
-                {
-                    // Update de TextBlocks in het ContentDialog met de studentnaam en laatste inlogtijd
-                    studentNameTextBlock.Text = clickedStudent.Name;
-                    studentLastLoginTextBlock.Text = user.LastLogin.HasValue
-                        ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
-                        : "Nooit ingelogd";
-
-                    // Toon het dialoogvenster
-                    await studentInfoDialog.ShowAsync();
                 }
             }
         }

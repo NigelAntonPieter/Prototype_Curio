@@ -14,16 +14,19 @@
         <converters:SenderToBackgroundConverter x:Key="SenderToBackgroundConverter" />
     </Page.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <!-- Header Grid -->
         <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
             <Grid.Background>
                 <ImageBrush ImageSource="/Assets/curio.jpg"
                             Stretch="UniformToFill">
@@ -34,7 +37,8 @@
                     </ImageBrush.RelativeTransform>
                 </ImageBrush>
             </Grid.Background>
-            <StackPanel Margin="20">
+            <StackPanel Margin="20"
+                        Grid.Column="0">
                 <Button x:Name="LogoButton"
                         Click="LogoButton_Click"
                         Background="Transparent"
@@ -50,74 +54,82 @@
                            Foreground="White"
                            Margin="0,10,0,0" />
             </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock x:Name="ChatTitle"
+                           Grid.Row="1"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="10,10,10,0"
+                           Foreground="Black" />
+            </StackPanel>
         </Grid>
 
-        <!-- Messages List -->
-        <ListView x:Name="senderMessagesListView"
-                  Grid.Row="1"
-                  Margin="10"
-                  ItemsSource="{Binding Messages}"
-                  SelectionMode="None"
-                  Background="Transparent"
-                  BorderThickness="0"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <!-- Container with alignment depending on whether it's the logged-in user -->
-                        <StackPanel Background="{Binding IsSender, Converter={StaticResource SenderToBackgroundConverter}}"
-                                    BorderBrush="LightGray"
-                                    BorderThickness="1"
-                                    CornerRadius="15"
-                                    Padding="10"
-                                    HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}">
+        <!--Message List-->
+        <Grid Grid.Row="1">
+            <ListView x:Name="senderMessagesListView"
+                      Margin="10"
+                      ItemsSource="{Binding Messages}"
+                      SelectionMode="None"
+                      Background="AliceBlue"
+                      BorderThickness="0"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <!-- Container with alignment depending on whether it's the logged-in user -->
+                            <StackPanel Background="{Binding IsSender, Converter={StaticResource SenderToBackgroundConverter}}"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1"
+                                        CornerRadius="15"
+                                        Padding="10"
+                                        HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}">
 
-                            <!-- Show sender name and message content -->
-                            <TextBlock Text="{Binding SenderName }"
-                                       Foreground="DarkSlateGray"
-                                       FontWeight="Bold"
-                                       Margin="0,0,0,5" />
-                            <TextBlock Text="{Binding Content}"
-                                       FontSize="16"
-                                       TextWrapping="Wrap"
-                                       Foreground="Black" />
+                                <!-- Show sender name and message content -->
+                                <TextBlock Text="{Binding Content}"
+                                           FontSize="16"
+                                           TextWrapping="Wrap"
+                                           Foreground="Black" />
+                            </StackPanel>
+
+                            <!-- Timestamp aligned based on sender -->
+                            <TextBlock Text="{Binding SentAt}"
+                                       FontSize="12"
+                                       Foreground="Gray"
+                                       HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}"
+                                       Margin="5,0,5,10" />
                         </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
 
-                        <!-- Timestamp aligned based on sender -->
-                        <TextBlock Text="{Binding SentAt}"
-                                   FontSize="12"
-                                   Foreground="Gray"
-                                   HorizontalAlignment="{Binding IsSender, Converter={StaticResource SenderToAlignmentConverter}}"
-                                   Margin="5,0,5,10" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid Grid.Row="3"
+              Background="#E23C84">
+            <!-- New Message Input -->
+            <StackPanel Orientation="Horizontal"
+                        Margin="10"
+                        HorizontalAlignment="Center">
+                <TextBox x:Name="NewMessageTextBox"
+                         KeyDown="NewMessageTextBox_KeyDown"
+                         PlaceholderText="Schrijf een bericht..."
+                         MinWidth="500"
+                         HorizontalAlignment="Stretch"
+                         Margin="0,0,10,0"
+                         Padding="10"
+                         Background="White"
+                         BorderBrush="LightGray"
+                         BorderThickness="1"
+                         CornerRadius="20"
+                         TextWrapping="Wrap" />
+                <Button Content="Versturen"
+                        Click="SendMessageButton_Click"
+                        Height="40"
+                        MinWidth="100"
+                        BorderBrush="Transparent"
+                        CornerRadius="20" />
+            </StackPanel>
+        </Grid>
 
-        <!-- New Message Input -->
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    Margin="10"
-                    VerticalAlignment="Bottom">
-            <TextBox x:Name="NewMessageTextBox"
-                     PlaceholderText="Schrijf een bericht..."
-                     Width="Auto"
-                     HorizontalAlignment="Stretch"
-                     Height="40"
-                     Margin="0,0,10,0"
-                     Padding="10"
-                     Background="White"
-                     BorderBrush="LightGray"
-                     BorderThickness="1"
-                     CornerRadius="20"
-                     TextWrapping="Wrap" />
-            <Button Content="Versturen"
-                    Click="SendMessageButton_Click"
-                    Height="40"
-                    Background="#E23C84"
-                    Foreground="White"
-                    BorderBrush="Transparent"
-                    CornerRadius="20" />
-        </StackPanel>
     </Grid>
 </Page>

@@ -51,7 +51,7 @@ namespace Prototype_Curio_stagemarkt.Login
         }
 
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -60,87 +60,71 @@ namespace Prototype_Curio_stagemarkt.Login
             {
                 companyId = User.LoggedInUser.CompanyId.Value;
 
-                using var db = new AppDbContext();
-                var applications = await db.Applications
-                                           .Include(a => a.Student)
-                                           .Where(a => a.CompanyId == companyId)
-                                           .ToListAsync();
-
-                _applicationCount = applications.Count;
-                UpdateApplicationCount();
-            }
-
-            if (companyId.HasValue)
-            {
-                using var db = new AppDbContext();
-                var company = db.Companies
-                                 .Include(c => c.Level)
-                                .Include(c => c.LearningPath)
-                                .FirstOrDefault(c => c.Id == companyId.Value);
-
-                if (company != null)
-                {
-                    companyNameTextbox.Text = company.Name;
-                    companyPasswordBox.Password = "*****";
-                    companyEmailTextbox.Text = company.EmailAddress;
-                    companyPhoneTextbox.Text = company.Phone;
-                    companyStreetTextbox.Text = company.Street;
-                    companyCityTextbox.Text = company.City;
-                    companyDescriptionTextbox.Text = company.Description;
-                    companyLevelCombobox.SelectedItem = companyLevelCombobox.Items.
-                        Cast<ComboBoxItem>()
-                      .FirstOrDefault(item => (item.DataContext as Level)?.GradeLevel == company.Level.GradeLevel);
-                    companyLearningPathTextbox.Text = company.LearningPath?.Name ?? "Geen leerweg";
-                    companyCourseCombobox.SelectedItem = companyCourseCombobox.Items
-                     .Cast<ComboBoxItem>()
-                     .FirstOrDefault(item => item.Content.ToString() == company.Specialization);
-                    isPlaceOpen.IsChecked = company.IsOpen;
-
-                    var applications = await db.Applications
-                        .Where(a => a.CompanyId == companyId.Value)
-                        .ToListAsync();
-
-                    applicationListView.ItemsSource = applications;
-                }
-                else
-                {
-                    await noCompanyDialog.ShowAsync();
-                    return;
-                }
+                await LoadCompanyData(companyId.Value);
+                await LoadApplications(companyId.Value);
             }
             else
             {
-                return;
+                await noCompanyDialog.ShowAsync();
             }
         }
+
+        private async Task LoadCompanyData(int companyId)
+        {
+            using var db = new AppDbContext();
+            var company = await db.Companies
+                                  .Include(c => c.Level)
+                                  .Include(c => c.LearningPath)
+                                  .FirstOrDefaultAsync(c => c.Id == companyId);
+
+            if (company != null)
+            {
+                SetCompanyDetailsInUI(company);
+            }
+        }
+
+        private void SetCompanyDetailsInUI(Company company)
+        {
+            companyNameTextbox.Text = company.Name;
+            companyPasswordBox.Password = "*****";
+            companyEmailTextbox.Text = company.EmailAddress;
+            companyPhoneTextbox.Text = company.Phone;
+            companyStreetTextbox.Text = company.Street;
+            companyCityTextbox.Text = company.City;
+            companyDescriptionTextbox.Text = company.Description;
+
+            companyLevelCombobox.SelectedItem = companyLevelCombobox.Items
+                .Cast<ComboBoxItem>()
+                .FirstOrDefault(item => (item.DataContext as Level)?.GradeLevel == company.Level.GradeLevel);
+
+            companyLearningPathTextbox.Text = company.LearningPath?.Name ?? "Geen leerweg";
+
+            companyCourseCombobox.SelectedItem = companyCourseCombobox.Items
+                .Cast<ComboBoxItem>()
+                .FirstOrDefault(item => item.Content.ToString() == company.Specialization);
+
+            isPlaceOpen.IsChecked = company.IsOpen;
+        }
+
+        private async Task LoadApplications(int companyId)
+        {
+            using var db = new AppDbContext();
+            var applications = await db.Applications
+                                       .Include(a => a.Student)
+                                       .Where(a => a.CompanyId == companyId)
+                                       .ToListAsync();
+
+            _applicationCount = applications.Count;
+            UpdateApplicationCount();
+
+            applicationListView.ItemsSource = applications;
+        }
+
 
         private void UpdateApplicationCount()
         {
             applicationCountTextBlock.Text = $"Sollicitanten: {_applicationCount}";
         }
-        private void LoadCourses()
-        {
-            using var db = new AppDbContext();
-            var courses = db.Courses.Select(c => c.Name).ToList();
-            companyCourseCombobox.Items.Clear();
-            foreach (var course in courses)
-            {
-                companyCourseCombobox.Items.Add(new ComboBoxItem { Content = course });
-            }
-        }
-
-        private void LoadLevels()
-        {
-            using var db = new AppDbContext();
-            var levels = db.Levels.ToList();
-            companyLevelCombobox.Items.Clear();
-            foreach (var level in levels)
-            {
-                companyLevelCombobox.Items.Add(new ComboBoxItem { Content = level.GradeLevel, DataContext = level });
-            }
-        }
-
-
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
@@ -178,19 +162,12 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
+
+
+
         private async void registerCompanyButton_Click(object sender, RoutedEventArgs e)
         {
-            using var db = new AppDbContext();
-
-            if (string.IsNullOrEmpty(companyNameTextbox.Text) ||
-                string.IsNullOrEmpty(companyPhoneTextbox.Text) ||
-                string.IsNullOrEmpty(companyEmailTextbox.Text) ||
-                string.IsNullOrEmpty(companyStreetTextbox.Text) ||
-                string.IsNullOrEmpty(companyCityTextbox.Text) ||
-                string.IsNullOrEmpty(companyDescriptionTextbox.Text) ||
-                companyLevelCombobox.SelectedItem == null ||
-                string.IsNullOrEmpty(companyLearningPathTextbox.Text) ||
-                companyCourseCombobox.SelectedItem == null)
+            if (!ValidateCompanyInput())
             {
                 await fiedsDialog.ShowAsync();
                 return;
@@ -198,83 +175,82 @@ namespace Prototype_Curio_stagemarkt.Login
 
             if (User.LoggedInUser is User loggedInCompany)
             {
-                var company = db.Companies.Include(c => c.Level).FirstOrDefault(c => c.Id == loggedInCompany.CompanyId);
-
-                if (company != null)
-                {
-                    var selectedLevel = (companyLevelCombobox.SelectedItem as ComboBoxItem)?.DataContext as Level;
-
-                    if (selectedLevel != null)
-                    {
-                        var existingLevel = await db.Levels.FindAsync(selectedLevel.Id);
-                        if (existingLevel != null)
-                        {
-                            company.Level = existingLevel;
-                        }
-                        else
-                        {
-                            company.Level = selectedLevel;
-                        }
-                    }
-
-                    var learningPath = db.LearningPaths.FirstOrDefault(lp => lp.Name == companyLearningPathTextbox.Text);
-
-                    if (learningPath != null)
-                    {
-                        company.LearningPath = learningPath;
-                    }
-                    else
-                    {
-                        return;
-                    }
-
-                    var selectedCourse = (companyCourseCombobox.SelectedItem as ComboBoxItem)?.Content.ToString();
-                    company.Specialization = selectedCourse; 
-
-                    string enteredPassword = companyPasswordBox.Password;
-
-                    if (!string.IsNullOrEmpty(enteredPassword) && enteredPassword != "*****")
-                    {
-                        if (!SecureHasher.Verify(enteredPassword, company.Password))
-                        {
-                            company.Password = SecureHasher.Hash(enteredPassword);
-                        }
-                    }
-
-                    company.Name = companyNameTextbox.Text;
-                    company.Phone = companyPhoneTextbox.Text;
-                    company.EmailAddress = companyEmailTextbox.Text;
-                    company.Street = companyStreetTextbox.Text;
-                    company.City = companyCityTextbox.Text;
-                    company.Description = companyDescriptionTextbox.Text;
-                    company.IsOpen = isPlaceOpen.IsChecked == true;
-                    company.ImagePath = copiedFile?.Path;
-
-                    db.SaveChanges();  
-
-                    User.LoggedInUser.Company.Name = company.Name;
-                    User.LoggedInUser.Company.Specialization = company.Specialization;
-                    User.LoggedInUser.Company.Phone = company.Phone;
-                    User.LoggedInUser.Company.EmailAddress = company.EmailAddress;
-                    User.LoggedInUser.Company.Street = company.Street;
-                    User.LoggedInUser.Company.City = company.City;
-                    User.LoggedInUser.Company.Description = company.Description;
-
-                    this.DataContext = null;
-                    this.DataContext = User.LoggedInUser;
-
-                    this.Frame.Navigate(typeof(AccountCompanyPage), company);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                return;
+                await UpdateCompany(loggedInCompany);
             }
         }
+
+        private async Task UpdateCompany(User loggedInCompany)
+        {
+            using var db = new AppDbContext();
+            var company = db.Companies.Include(c => c.Level).FirstOrDefault(c => c.Id == loggedInCompany.CompanyId);
+
+            if (company != null)
+            {
+                UpdateCompanyDetails(company, db);
+
+                db.SaveChanges();
+
+                UpdateUserDetails(loggedInCompany, company);
+
+                this.DataContext = null;
+                this.DataContext = User.LoggedInUser;
+                this.Frame.Navigate(typeof(AccountCompanyPage), company);
+            }
+        }
+
+        private void UpdateCompanyDetails(Company company, AppDbContext db)
+        {
+            var selectedLevel = (companyLevelCombobox.SelectedItem as ComboBoxItem)?.DataContext as Level;
+            company.Level = selectedLevel != null && db.Levels.Find(selectedLevel.Id) != null
+                ? db.Levels.Find(selectedLevel.Id)
+                : selectedLevel;
+
+            var learningPath = db.LearningPaths.FirstOrDefault(lp => lp.Name == companyLearningPathTextbox.Text);
+            company.LearningPath = learningPath ?? company.LearningPath;
+
+            company.Specialization = (companyCourseCombobox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            company.Name = companyNameTextbox.Text;
+            company.Phone = companyPhoneTextbox.Text;
+            company.EmailAddress = companyEmailTextbox.Text;
+            company.Street = companyStreetTextbox.Text;
+            company.City = companyCityTextbox.Text;
+            company.Description = companyDescriptionTextbox.Text;
+            company.IsOpen = isPlaceOpen.IsChecked == true;
+            company.ImagePath = copiedFile?.Path;
+
+            if (!string.IsNullOrEmpty(companyPasswordBox.Password) && companyPasswordBox.Password != "*****")
+            {
+                if (!SecureHasher.Verify(companyPasswordBox.Password, company.Password))
+                {
+                    company.Password = SecureHasher.Hash(companyPasswordBox.Password);
+                }
+            }
+        }
+
+        private void UpdateUserDetails(User loggedInCompany, Company company)
+        {
+            loggedInCompany.Company.Name = company.Name;
+            loggedInCompany.Company.Specialization = company.Specialization;
+            loggedInCompany.Company.Phone = company.Phone;
+            loggedInCompany.Company.EmailAddress = company.EmailAddress;
+            loggedInCompany.Company.Street = company.Street;
+            loggedInCompany.Company.City = company.City;
+            loggedInCompany.Company.Description = company.Description;
+        }
+
+        private bool ValidateCompanyInput()
+        {
+            return !(string.IsNullOrEmpty(companyNameTextbox.Text) ||
+                     string.IsNullOrEmpty(companyPhoneTextbox.Text) ||
+                     string.IsNullOrEmpty(companyEmailTextbox.Text) ||
+                     string.IsNullOrEmpty(companyStreetTextbox.Text) ||
+                     string.IsNullOrEmpty(companyCityTextbox.Text) ||
+                     string.IsNullOrEmpty(companyDescriptionTextbox.Text) ||
+                     companyLevelCombobox.SelectedItem == null ||
+                     string.IsNullOrEmpty(companyLearningPathTextbox.Text) ||
+                     companyCourseCombobox.SelectedItem == null);
+        }
+
 
 
         private void isPlaceOpen_Unchecked(object sender, RoutedEventArgs e)
@@ -297,22 +273,6 @@ namespace Prototype_Curio_stagemarkt.Login
         private async void deleteButton_Click(object sender, RoutedEventArgs e)
         {
             await deleteDialog.ShowAsync();
-        }
-
-        
-        private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var cvLinkTextBlock = sender as TextBlock;
-            var cvFilePath = cvLinkTextBlock.Text;
-
-            if (!string.IsNullOrEmpty(cvFilePath))
-            {
-                var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
-                if (file != null)
-                {
-                    await Windows.System.Launcher.LaunchFileAsync(file);
-                }
-            }
         }
 
 
@@ -347,6 +307,21 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
+        private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var cvLinkTextBlock = sender as TextBlock;
+            var cvFilePath = cvLinkTextBlock.Text;
+
+            if (!string.IsNullOrEmpty(cvFilePath))
+            {
+                var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
+                if (file != null)
+                {
+                    await Windows.System.Launcher.LaunchFileAsync(file);
+                }
+            }
+        }
+
         private void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var originalSource = e.OriginalSource as FrameworkElement;
@@ -368,6 +343,65 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
+        private void LoadLevels()
+        {
+            using var db = new AppDbContext();
+            var levels = db.Levels.ToList();
+            companyLevelCombobox.Items.Clear();
+            foreach (var level in levels)
+            {
+                companyLevelCombobox.Items.Add(new ComboBoxItem { Content = level.GradeLevel, DataContext = level });
+            }
+        }
 
+        private void LoadCourses()
+        {
+            using var db = new AppDbContext();
+            var courses = db.Courses.Select(c => c.Name).ToList();
+            companyCourseCombobox.Items.Clear();
+            foreach (var course in courses)
+            {
+                companyCourseCombobox.Items.Add(new ComboBoxItem { Content = course });
+            }
+        }
+
+        private void MarkMessagesAsRead(int? companyId, int studentId)
+        {
+            if (companyId != null)
+            {
+                using var db = new AppDbContext();
+
+                // Zoek naar ongelezen berichten
+                var unreadMessages = db.Messages
+                    .Where(m => m.ReceiverCompanyId == companyId && m.SenderStudentId == studentId && !m.IsRead)
+                    .ToList();
+
+                if (unreadMessages.Any())
+                {
+                    foreach (var message in unreadMessages)
+                    {
+                        message.IsRead = true;
+                    }
+
+                    // Sla de wijzigingen op in de database
+                    db.SaveChanges();
+                }
+            }
+        }
+        private void applicationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (applicationListView.SelectedItem is Student selectedStudent)
+            {
+                int studentId = selectedStudent.Id;
+                var companyId = User.LoggedInUser.CompanyId;
+
+                MarkMessagesAsRead(companyId, studentId);
+
+                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
+                applicationListView.SelectedItem = null;
+
+                applicationListView.Background = new SolidColorBrush(Colors.Transparent);
+            }
+        }
     }
 }

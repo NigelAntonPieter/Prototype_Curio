@@ -16,7 +16,7 @@
             <!-- Content in deze rij -->
         </Grid.RowDefinitions>
 
-        <!-- HEADER: Hier verander ik niks aan -->
+
         <Grid Grid.Row="0">
             <Grid.Background>
                 <ImageBrush ImageSource="/Assets/curio.jpg"
@@ -48,86 +48,74 @@
                 </Button>
                 <TextBlock Text="Van Curio Voor Curio"
                            FontSize="20"
-                           Margin="70,0,0,0" />
+                           Margin="70,0,0,0"
+                           Foreground="White" />
             </StackPanel>
         </Grid>
 
         <!-- CONTENT: Dit is de main content onder de header -->
         <Grid Grid.Row="1"
-              Margin="20,10,20,20">
+              Margin="20,10,20,20"
+              HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.2*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Bedrijven ListView -->
-            <ListView x:Name="adminCompanyListView"
-                      Grid.Column="0"
-                      AllowFocusOnInteraction="False"
-                      Background="White"
+            <GridView Grid.Column="0"
+                      x:Name="adminCompanyGridView"
+                      ItemsSource="{x:Bind AllCompanies}"
                       IsItemClickEnabled="True"
-                      ItemClick="adminCompanyListView_ItemClick"
+                      ItemClick="adminCompanyGridView_ItemClick"
                       IsRightTapEnabled="True"
-                      RightTapped="adminCompanyListView_RightTapped"
-                      Padding="10"
-                      BorderBrush="LightGray"
-                      BorderThickness="1"
-                      CornerRadius="10">
-                <ListView.ItemTemplate>
+                      RightTapped="adminCompanyGridView_RightTapped">
+                <GridView.ItemTemplate>
                     <DataTemplate x:DataType="localData:Company">
                         <StackPanel Orientation="Vertical"
-                                    Margin="10"
-                                    Padding="15"
-                                    BorderBrush="#FFCCCCCC"
-                                    BorderThickness="1"
-                                    CornerRadius="10">
+                                    Margin="5"
+                                    Padding="5"
+                                    BorderBrush="Black"
+                                    BorderThickness="1">
                             <TextBlock Text="{x:Bind Name}"
                                        FontSize="22"
                                        FontWeight="SemiBold"
                                        Foreground="#333333"
-                                       Margin="0,0,0,10" />
+                                       Padding="30"
+                                       HorizontalAlignment="Center"/>
+                            <!-- Add other fields as necessary -->
                         </StackPanel>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </GridView.ItemTemplate>
+            </GridView>
 
-            <!-- Studenten ListView -->
-            <ListView x:Name="adminStudentListView"
-                      Grid.Column="1"
-                      AllowFocusOnInteraction="False"
-                      Background="White"
+            <GridView Grid.Column="1"
+                      x:Name="adminStudentGridView"
+                      ItemsSource="{x:Bind AllStudents}"
                       IsItemClickEnabled="True"
-                      ItemClick="adminStudentListView_ItemClick"
+                      ItemClick="adminStudentGridView_ItemClick"
                       IsRightTapEnabled="True"
-                      RightTapped="adminStudentListView_RightTapped"
-                      Padding="10"
-                      BorderBrush="LightGray"
-                      BorderThickness="1"
-                      CornerRadius="10">
-                <ListView.ItemTemplate>
+                      RightTapped="adminStudentGridView_RightTapped">
+                <GridView.ItemTemplate>
                     <DataTemplate x:DataType="localData:Student">
                         <StackPanel Orientation="Vertical"
-                                    Margin="10"
-                                    Padding="15"
-                                    BorderBrush="#FFCCCCCC"
+                                    Margin="5"
+                                    Padding="5"
                                     BorderThickness="1"
-                                    CornerRadius="10">
-                            <TextBlock Text="Studenten"
-                                       FontSize="26"
-                                       FontWeight="Bold"
-                                       Foreground="#333333"
-                                       Margin="0,0,0,10" />
+                                    BorderBrush="Black">
                             <TextBlock Text="{x:Bind Name}"
                                        FontSize="22"
                                        FontWeight="SemiBold"
                                        Foreground="#333333"
+                                       Padding="30"
                                        HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,0,10" />
+                                       VerticalAlignment="Center"/>
+                            <!-- Add other fields as necessary -->
                         </StackPanel>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </GridView.ItemTemplate>
+            </GridView>
+
 
             <!-- Error dialog -->
             <ContentDialog x:Name="deleteCompanyDialog"
@@ -180,7 +168,6 @@
                     <TextBlock x:Name="studentLastLoginTextBlock" />
                 </StackPanel>
             </ContentDialog>
-
         </Grid>
     </Grid>
 </Page>

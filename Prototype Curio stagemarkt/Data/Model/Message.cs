@@ -29,8 +29,8 @@ namespace Prototype_Curio_stagemarkt.Data.Model
         public virtual Student ReceiverStudent { get; set; }
         public virtual Company ReceiverCompany { get; set; }
 
-        public string SenderName => SenderCompany?.Name ?? SenderStudent?.Name ?? "Unknown";
-        public string ReceiverName => ReceiverCompany?.Name ?? ReceiverStudent?.Name ?? "Unknown";
+        public string SenderName => SenderCompany?.Name ?? SenderStudent?.Name;
+        public string ReceiverName => ReceiverCompany?.Name ?? ReceiverStudent?.Name;
 
         public bool IsSender
         {

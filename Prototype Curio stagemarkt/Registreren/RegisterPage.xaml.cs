@@ -113,10 +113,15 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         // Register methods
 
-        private void RegisterStudent()
+        private async void RegisterStudent()
         {
             using (var db = new AppDbContext())
             {
+                if (db.Students.Any(s => s.EmailAddress == studentEmailTextbox.Text))
+                {
+                    await existingDialog.ShowAsync();
+                    return;
+                }
                 var selectedCourse = studentCourseCombobox.SelectedItem as Course;
                 var internshipTeacher = db.InternschipTeachers.FirstOrDefault();
 
@@ -128,7 +133,8 @@ namespace Prototype_Curio_stagemarkt.Registreren
                     Password = SecureHasher.Hash(studentPasswordBox.Password),
                     EmailAddress = studentEmailTextbox.Text,
                     Specialization = selectedCourse?.Name,
-                    InternshipTeacherId = internshipTeacher.Id
+                    InternshipTeacherId = internshipTeacher.Id,
+                    ImagePath = copiedFile?.Path,
                 };
 
                 db.Students.Add(newStudent);
@@ -148,10 +154,16 @@ namespace Prototype_Curio_stagemarkt.Registreren
             }
         }
 
-        private void RegisterCompany()
+        private async void RegisterCompany()
         {
             using (var db = new AppDbContext())
             {
+                if (db.Companies.Any(c => c.EmailAddress == companyEmailTextbox.Text))
+                {
+                    await existingDialog.ShowAsync();
+                    return;
+                }
+
                 var selectedCourse = companyCourseCombobox.SelectedItem as Course;
                 var selectedLearningPath = (int)companyLearningPathComboBox.SelectedValue;
                 var selectedLevel = (int)companyLevelComboBox.SelectedValue;

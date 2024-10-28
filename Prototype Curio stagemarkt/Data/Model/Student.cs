@@ -25,6 +25,7 @@ namespace Prototype_Curio_stagemarkt.Data.Models
         public ICollection<WorkHour> workHours { get; set; } = new List<WorkHour>();
         public ICollection<Application> Applications { get; set; } = new List<Application>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
+        public ICollection<User> Users { get; set; }
 
     }
 }

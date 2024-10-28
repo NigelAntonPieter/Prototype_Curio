@@ -12,7 +12,7 @@ namespace Prototype_Curio_stagemarkt.Data.Models
     {
         public static User LoggedInUser { get; set; }
         public int Id { get; set; }
-        public bool IsCompany { get; set; } // True for Company, False for Student
+        public bool IsCompany { get; set; } 
 
         public int? CompanyId { get; set; }
         public Company Company { get; set; }

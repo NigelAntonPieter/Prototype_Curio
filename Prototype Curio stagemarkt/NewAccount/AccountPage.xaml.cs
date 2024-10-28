@@ -12,8 +12,8 @@ using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Prototype_Curio_stagemarkt.Utility;
 using System;
-using System.ComponentModel.Design;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Prototype_Curio_stagemarkt.Login
 {
@@ -28,15 +28,11 @@ namespace Prototype_Curio_stagemarkt.Login
             DataContext = User.LoggedInUser;
         }
 
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             PopulateStudentInfo();
-
-            
         }
-
 
         private void PopulateStudentInfo()
         {
@@ -78,17 +74,72 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        private void registerNewAccount_Click(object sender, RoutedEventArgs e)
+        private void LoadCompaniesWithMessages()
         {
-            if (IsInputValid())
+            if (User.LoggedInUser?.StudentId != null)
             {
-                UpdateStudentInfo();
+                using var db = new AppDbContext();
+
+                // Haal de bedrijven op waarmee er berichten zijn
+                var companyIds = db.Messages
+                    .Where(m => m.ReceiverStudentId == User.LoggedInUser.StudentId || m.SenderStudentId == User.LoggedInUser.StudentId)
+                    .Select(m => m.SenderCompanyId)
+                    .Distinct()
+                    .ToList();
+
+                var companies = db.Companies
+                    .Where(c => companyIds.Contains(c.Id))
+                    .ToList();
+
+                companyComboBox.ItemsSource = companies;
+
+                // Controleer of er ongelezen berichten zijn
+                bool hasUnreadMessages = db.Messages
+                    .Any(m => m.ReceiverStudentId == User.LoggedInUser.StudentId && !m.IsRead);
+
+                // Verander de achtergrondkleur van de ComboBox naar rood als er ongelezen berichten zijn
+                companyComboBox.Background = new SolidColorBrush(hasUnreadMessages ? Colors.Red : Colors.White);
             }
         }
 
-        private bool IsInputValid()
+        private void MarkMessagesAsRead(int companyId, int? studentId)
         {
-            return !string.IsNullOrEmpty(studentUsernameTextbox.Text) && studentCourseCombobox.SelectedItem != null;
+            if (studentId != null)
+            {
+                using var db = new AppDbContext();
+
+                // Zoek naar ongelezen berichten
+                var unreadMessages = db.Messages
+                    .Where(m => m.ReceiverStudentId == studentId && m.SenderCompanyId == companyId && !m.IsRead)
+                    .ToList();
+
+                if (unreadMessages.Any())
+                {
+                    foreach (var message in unreadMessages)
+                    {
+                        message.IsRead = true;
+                    }
+
+                    // Sla de wijzigingen op in de database
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        private void companyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (companyComboBox.SelectedItem is Company selectedCompany)
+            {
+                int companyId = selectedCompany.Id;
+                var studentId = User.LoggedInUser.StudentId;
+
+                MarkMessagesAsRead(companyId, studentId);
+
+                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
+                companyComboBox.SelectedItem = null;
+
+                companyComboBox.Background = new SolidColorBrush(Colors.Transparent);
+            }
         }
 
         private void UpdateStudentInfo()
@@ -136,19 +187,6 @@ namespace Prototype_Curio_stagemarkt.Login
             Frame.Navigate(typeof(MainCurioPage), student);
         }
 
-        private void LogoButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(MainCurioPage));
-        }
-
-        private void bDelete_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is int companyId)
-            {
-                RemoveFavoriteCompany(companyId);
-            }
-        }
-
         private void RemoveFavoriteCompany(int companyId)
         {
             if (User.LoggedInUser?.StudentId != null)
@@ -164,35 +202,6 @@ namespace Prototype_Curio_stagemarkt.Login
                     LoadFavoriteCompanies();
                 }
             }
-        }
-
-        private async void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            await deleteDialog.ShowAsync();
-        }
-
-        private void uploadFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(HourCardPage));
-        }
-
-        private void solliciteerButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is Company company)
-            {
-                NavigateToApplyPage(company);
-            }
-        }
-
-        private void NavigateToApplyPage(Company company)
-        {
-            var student = User.LoggedInUser?.Student;
-            Frame.Navigate(typeof(ApplyPage), (company, student, company.Id));
-        }
-
-        private void deleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            DeleteAccountAndNavigate();
         }
 
         private void DeleteAccountAndNavigate()
@@ -214,51 +223,62 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        private bool HasUnreadMessages()
+        // Event Handlers
+        private void registerNewAccount_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new AppDbContext())
+            if (IsInputValid())
             {
-                var studentId = User.LoggedInUser.StudentId;
-                if (studentId == null) return false;
-                return db.Messages.Any(m => m.ReceiverStudentId == studentId && !m.IsRead);
+                UpdateStudentInfo();
             }
         }
 
-        private void LoadCompaniesWithMessages()
+        private bool IsInputValid()
         {
-            if (User.LoggedInUser?.StudentId != null)
-            {
-                using var db = new AppDbContext();
-                var companyIds = db.Messages
-                    .Where(m => m.ReceiverStudentId == User.LoggedInUser.StudentId || m.SenderStudentId == User.LoggedInUser.StudentId)
-                    .Select(m => m.SenderCompanyId) // or m.ReceiverCompanyId based on your logic
-                    .Distinct()
-                    .ToList();
-
-                // Fetch the companies based on the IDs
-                var companies = db.Companies
-                    .Where(c => companyIds.Contains(c.Id))
-                    .ToList();
-
-                // Set the ItemSource of the ListView
-                companyComboBox.ItemsSource = companies;
-            }
+            return !string.IsNullOrEmpty(studentUsernameTextbox.Text) && studentCourseCombobox.SelectedItem != null;
         }
-        private void companyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+       
+
+        private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
-            // Zorg dat er een geselecteerd item is
-            if (companyComboBox.SelectedItem is Company selectedCompany)
+            Frame.Navigate(typeof(MainCurioPage));
+        }
+
+        private void bDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int companyId)
             {
-                int companyId = selectedCompany.Id; // Haal het ID van het geselecteerde bedrijf op
-                var studentId = User.LoggedInUser.StudentId; // Haal het ID van de ingelogde student op
-
-                // Navigeer naar de berichtenpagina met het studentId en companyId
-                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
-
-                // Reset de selectie om herhaalde navigatie te voorkomen
-                companyComboBox.SelectedItem = null;
+                RemoveFavoriteCompany(companyId);
             }
         }
 
+        private async void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            await deleteDialog.ShowAsync();
+        }
+
+        private void deleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            DeleteAccountAndNavigate();
+        }
+
+        private void uploadFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(HourCardPage));
+        }
+
+        private void solliciteerButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is Company company)
+            {
+                NavigateToApplyPage(company);
+            }
+        }
+
+        private void NavigateToApplyPage(Company company)
+        {
+            var student = User.LoggedInUser?.Student;
+            Frame.Navigate(typeof(ApplyPage), (company, student, company.Id));
+        }
     }
 }

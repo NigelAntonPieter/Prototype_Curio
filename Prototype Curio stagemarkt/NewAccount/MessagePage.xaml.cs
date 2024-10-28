@@ -58,7 +58,31 @@ namespace Prototype_Curio_stagemarkt.NewAccount
             _companyId = companyId;
             this.Tag = User.LoggedInUser;
 
+            if (User.LoggedInUser.IsCompany)
+            {
+                // Assuming you have a way to get the receiver's name
+                ChatTitle.Text = $"Chat met: {GetStudentName(_studentId)}"; // Create this method to get the student name
+            }
+            else
+            {
+                ChatTitle.Text = $"Chat met: {GetCompanyName(_companyId)}"; // Create this method to get the company name
+            }
+
             LoadMessages();  
+        }
+
+        private string GetStudentName(int studentId)
+        {
+            using var db = new AppDbContext();
+            var student = db.Students.Find(studentId);
+            return student?.Name ?? "Onbekend";
+        }
+
+        private string GetCompanyName(int companyId)
+        {
+            using var db = new AppDbContext();
+            var company = db.Companies.Find(companyId);
+            return company?.Name ?? "Onbekend";
         }
 
 
@@ -113,10 +137,6 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                 }
             }
 
-
-
-
-
         private async void SendMessageButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(NewMessageTextBox.Text))
@@ -132,18 +152,13 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                     receiverExists = await DoesCompanyExist(_companyId);
                 }
 
-                if (!receiverExists)
-                {
-                    Debug.WriteLine($"Receiver does not exist. StudentId: {_studentId}, CompanyId: {_companyId}");
-                    return; 
-                }
-
                 var newMessage = new Message
                 {
                     Content = NewMessageTextBox.Text,
                     SentAt = DateTime.Now,
                     IsRead = false
                 };
+
 
                 if (User.LoggedInUser.IsCompany)
                 {
@@ -158,11 +173,18 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                     newMessage.SenderCompanyId = null;
                 }
 
+                // Save the message to the database
                 await SaveMessage(newMessage);
+
+                // Add the new message to the ObservableCollection (UI)
                 Messages.Add(newMessage);
+
+                // Clear the input textbox
                 NewMessageTextBox.Text = string.Empty;
             }
         }
+
+
 
 
         private async Task SaveMessage(Message message)
@@ -186,6 +208,16 @@ namespace Prototype_Curio_stagemarkt.NewAccount
             using (var db = new AppDbContext())
             {
                 return await db.Companies.AnyAsync(c => c.Id == companyId);
+            }
+        }
+
+        private void NewMessageTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                e.Handled = true;
+
+                SendMessageButton_Click(sender, e);
             }
         }
     }
