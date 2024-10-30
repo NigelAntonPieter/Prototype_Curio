@@ -67,7 +67,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <!-- Left Column: Registration -->
@@ -87,7 +87,7 @@
                          FontSize="16"
                          PlaceholderText="Voer bedrijfsnaam in" />
 
-                <TextBlock Text="Password"
+                <TextBlock Text="Wachtwoord"
                            FontSize="18"
                            FontWeight="SemiBold" />
                 <PasswordBox x:Name="companyPasswordBox"
@@ -142,9 +142,11 @@
                            FontSize="18"
                            FontWeight="SemiBold" />
                 <TextBox x:Name="companyDescriptionTextbox"
-                         Height="140"
-                         FontSize="16"
-                         PlaceholderText="Voer een beschrijving in" />
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Height="100"
+                         Width="200"
+                         PlaceholderText="Typ hier je tekst..." />
 
                 <TextBlock Text="Niveau"
                            FontSize="18"
@@ -162,7 +164,7 @@
                           Height="40"
                           FontSize="16" />
 
-                <TextBlock Text="LOGO"
+                <TextBlock Text="Logo"
                            FontSize="18"
                            FontWeight="SemiBold" />
                 <Button x:Name="fileButton"
@@ -171,7 +173,7 @@
                         FontWeight="SemiBold"
                         Background="#E23C84"
                         Foreground="White"
-                        Content="Add a photo..." />
+                        Content="Voeg Foto toe..." />
 
                 <TextBlock Text="Is Open"
                            FontSize="18"
@@ -187,43 +189,68 @@
                         Background="#E23C84"
                         Foreground="White"
                         Margin="0,20"
-                        Content="Registreer als Bedrijf" />
+                        Content="Pas aan" />
             </StackPanel>
 
             <!-- Applications List -->
+
             <StackPanel Grid.Column="2"
                         Margin="10"
                         Spacing="15">
-                <TextBlock Text="Lopende Sollicitaties"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           Margin="0,20" />
+                <StackPanel>
+                    <TextBlock Text="Lopende Sollicitaties"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,20" />
+                    <TextBlock x:Name="messageNotificationIcon"
+                               Text="New Messages"
+                               Foreground="Red"
+                               Visibility="Collapsed"
+                               FontWeight="Bold" />
+
+                    <TextBlock x:Name="messageNotificationDetails"
+                               Text=""
+                               Foreground="Gray"
+                               Visibility="Visible"
+                               FontStyle="Italic" />
+                </StackPanel>
+
 
                 <ListView x:Name="applicationListView"
                           Margin="0,0,0,0"
+                          MaxHeight="500"
                           IsRightTapEnabled="True"
                           RightTapped="applicationListView_RightTapped"
+                          IsItemClickEnabled="True"
+                          ItemClick="applicationListView_ItemClick"
                           ItemsSource="{Binding Applications}"
                           SelectionChanged="applicationListView_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding Name}"
-                                           FontWeight="Bold" />
-                                <TextBlock Text="{Binding Motivation}"
-                                           TextWrapping="Wrap"
-                                           MaxLines="2" />
+                                           FontWeight="Bold"
+                                           FontSize="18" />
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Mijn Motivatie:"
+                                               FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Motivation}"
+                                               TextWrapping="Wrap"
+                                               MaxLines="50"
+                                               Width="500" />
+                                </StackPanel>
+
 
                                 <!-- Hyperlink Button for CV -->
-                                <TextBlock Text="CV: "
-                                           FontWeight="SemiBold" />
-                                <TextBlock Text="{Binding CvFilePath}"
+
+                                <TextBlock Text="CV"
                                            Foreground="Blue"
                                            FontWeight="Bold"
                                            TextDecorations="Underline"
                                            PointerPressed="CvLinkTextBlock_PointerPressed"
                                            ToolTipService.ToolTip="Klik om CV te bekijken"
+                                           Tag="{Binding CvFilePath}"
                                            Margin="0,0,0,30" />
                             </StackPanel>
                         </DataTemplate>
@@ -275,6 +302,14 @@
                            TextDecorations="Underline"
                            PointerPressed="CvLinkTextBlock_PointerPressed" />
             </StackPanel>
+        </ContentDialog>
+        <ContentDialog x:Name="deleteApplicationDialog"
+                       Title="Bevestig Verwijdering"
+                       PrimaryButtonText="Ja"
+                       CloseButtonText="Nee"
+                       PrimaryButtonClick="deleteApplicationDialog_PrimaryButtonClick"
+                       DefaultButton="Close">
+            <TextBlock Text="Weet je zeker dat je dit bedrijf wilt verwijderen?" />
         </ContentDialog>
     </Grid>
 </Page>

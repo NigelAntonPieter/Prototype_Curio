@@ -1,10 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
 using Prototype_Curio_stagemarkt.Data;
@@ -14,14 +10,7 @@ using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Prototype_Curio_stagemarkt.Stage
 {
@@ -43,7 +32,6 @@ namespace Prototype_Curio_stagemarkt.Stage
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             if (e.Parameter is (List<Company> filteredCompanies, Student student))
             {
                 InitializeCompanies(filteredCompanies, student);
@@ -75,7 +63,6 @@ namespace Prototype_Curio_stagemarkt.Stage
         private void LoadCompanies()
         {
             using var db = new AppDbContext();
-
             var companies = db.Companies
                 .Include(c => c.LearningPath)
                 .Include(c => c.Level)
@@ -107,6 +94,7 @@ namespace Prototype_Curio_stagemarkt.Stage
             }
         }
 
+        // UI Event Handlers
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainCurioPage));
@@ -120,6 +108,7 @@ namespace Prototype_Curio_stagemarkt.Stage
             }
         }
 
+        // Filtering Methods
         private void ApplyFilter()
         {
             var filteredList = AllCompanies.AsEnumerable();
@@ -149,21 +138,19 @@ namespace Prototype_Curio_stagemarkt.Stage
             }
 
             UpdateFilteredCompanies(filteredList.ToList());
-
             UpdateCheckBoxStates();
         }
-
 
         private void UpdateCheckBoxStates()
         {
             var exclusionCriteria = new List<(CheckBox CheckBox, List<CheckBox> Exclude)>
-        {
-            (bolCheckbox, new List<CheckBox> { bblCheckbox }),
-            (bblCheckbox, new List<CheckBox> { bolCheckbox }),
-            (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
-            (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
-            (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox })
-        };
+            {
+                (bolCheckbox, new List<CheckBox> { bblCheckbox }),
+                (bblCheckbox, new List<CheckBox> { bolCheckbox }),
+                (niveau2Checkbox, new List<CheckBox> { niveau3Checkbox, niveau4Checkbox }),
+                (niveau3Checkbox, new List<CheckBox> { niveau2Checkbox, niveau4Checkbox }),
+                (niveau4Checkbox, new List<CheckBox> { niveau2Checkbox, niveau3Checkbox })
+            };
 
             foreach (var (checkBox, excludeList) in exclusionCriteria)
             {

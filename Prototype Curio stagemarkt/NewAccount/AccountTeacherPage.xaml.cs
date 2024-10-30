@@ -114,11 +114,10 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (e.ClickedItem is WorkHour clickedWorkHour)
             {
-                // Prevent editing if the work hour is approved
                 if (clickedWorkHour.Status == WorkHoursStatus.Approved)
                 {
                     await approvedDialog.ShowAsync();
-                    return; // Exit the method to prevent further actions
+                    return; 
                 }
 
                 workHourDialog.DataContext = clickedWorkHour;
@@ -167,12 +166,12 @@ namespace Prototype_Curio_stagemarkt.Login
                 {
                     StudentName = g.Key.Name,
                     WorkHours = g.ToList(),
-                    WorkHoursStatus = g.Key.Status // Voeg de status toe aan de selectie
+                    WorkHoursStatus = g.Key.Status 
                 })
                 .ToList();
 
-            workHoursListView.ItemsSource = groupedWorkHours; // Bind to grouped work hours
-            await showWorkHoursDetailDialog.ShowAsync(); // Show the dialog
+            workHoursListView.ItemsSource = groupedWorkHours; 
+            await showWorkHoursDetailDialog.ShowAsync(); 
         }
 
 
@@ -188,8 +187,8 @@ namespace Prototype_Curio_stagemarkt.Login
                })
                .ToList();
 
-            workHoursListView.ItemsSource = groupedWorkHours; // Bind to grouped work hours
-            await showWorkHoursDetailDialog.ShowAsync(); // Show the dialog
+            workHoursListView.ItemsSource = groupedWorkHours; 
+            await showWorkHoursDetailDialog.ShowAsync(); 
         }
 
         private async void InreviewdWorkHours_Tapped(object sender, TappedRoutedEventArgs e)
@@ -204,14 +203,14 @@ namespace Prototype_Curio_stagemarkt.Login
                })
                .ToList();
 
-            workHoursListView.ItemsSource = groupedWorkHours; // Bind to grouped work hours
-            await showWorkHoursDetailDialog.ShowAsync(); // Show the dialog
+            workHoursListView.ItemsSource = groupedWorkHours; 
+            await showWorkHoursDetailDialog.ShowAsync(); 
         }
 
         private async Task ShowWorkHourDetails(ObservableCollection<WorkHour> workHours)
         {
-            workHoursListView.ItemsSource = workHours; // Bind the ListView to the appropriate collection
-            await showWorkHoursDetailDialog.ShowAsync(); // Show the dialog
+            workHoursListView.ItemsSource = workHours; 
+            await showWorkHoursDetailDialog.ShowAsync(); 
         }
 
     }

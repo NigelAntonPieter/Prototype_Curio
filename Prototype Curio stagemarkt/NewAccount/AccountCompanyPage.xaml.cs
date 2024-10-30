@@ -28,6 +28,8 @@ using Microsoft.UI.Text;
 using Microsoft.UI;
 using Windows.UI.Text;
 using System.Diagnostics;
+using Prototype_Curio_stagemarkt.AdminMap;
+using System.Xml.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,14 +44,17 @@ namespace Prototype_Curio_stagemarkt.Login
         private Company _company;
         private StorageFile copiedFile;
         private int _applicationCount;
+        private Prototype_Curio_stagemarkt.Data.Models.Application selectedApplication;
 
         public AccountCompanyPage()
         {
             InitializeComponent();
             LoadCourses();
             LoadLevels();
-        }
 
+            applicationListView.SelectionChanged += applicationListView_SelectionChanged;
+
+        }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -62,12 +67,14 @@ namespace Prototype_Curio_stagemarkt.Login
 
                 await LoadCompanyData(companyId.Value);
                 await LoadApplications(companyId.Value);
+                await CheckForUnreadMessages(companyId.Value);
             }
             else
             {
                 await noCompanyDialog.ShowAsync();
             }
         }
+
 
         private async Task LoadCompanyData(int companyId)
         {
@@ -83,6 +90,43 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
+        private async Task LoadApplications(int companyId)
+        {
+            using var db = new AppDbContext();
+            var applications = await db.Applications
+                                       .Include(a => a.Student)
+                                       .Where(a => a.CompanyId == companyId)
+                                       .ToListAsync();
+
+            _applicationCount = applications.Count;
+            UpdateApplicationCount();
+
+            applicationListView.ItemsSource = applications;
+        }
+
+        private void LoadLevels()
+        {
+            using var db = new AppDbContext();
+            var levels = db.Levels.ToList();
+            companyLevelCombobox.Items.Clear();
+            foreach (var level in levels)
+            {
+                companyLevelCombobox.Items.Add(new ComboBoxItem { Content = level.GradeLevel, DataContext = level });
+            }
+        }
+
+        private void LoadCourses()
+        {
+            using var db = new AppDbContext();
+            var courses = db.Courses.Select(c => c.Name).ToList();
+            companyCourseCombobox.Items.Clear();
+            foreach (var course in courses)
+            {
+                companyCourseCombobox.Items.Add(new ComboBoxItem { Content = course });
+            }
+        }
+
+  
         private void SetCompanyDetailsInUI(Company company)
         {
             companyNameTextbox.Text = company.Name;
@@ -106,25 +150,43 @@ namespace Prototype_Curio_stagemarkt.Login
             isPlaceOpen.IsChecked = company.IsOpen;
         }
 
-        private async Task LoadApplications(int companyId)
-        {
-            using var db = new AppDbContext();
-            var applications = await db.Applications
-                                       .Include(a => a.Student)
-                                       .Where(a => a.CompanyId == companyId)
-                                       .ToListAsync();
-
-            _applicationCount = applications.Count;
-            UpdateApplicationCount();
-
-            applicationListView.ItemsSource = applications;
-        }
-
-
         private void UpdateApplicationCount()
         {
             applicationCountTextBlock.Text = $"Sollicitanten: {_applicationCount}";
         }
+
+        private async Task CheckForUnreadMessages(int companyId)
+        {
+            using var db = new AppDbContext();
+            var unreadMessages = await db.Messages
+                                          .Where(m => m.ReceiverCompanyId == companyId && !m.IsRead)
+                                          .Include(m => m.SenderStudent) 
+                                          .ToListAsync();
+
+            int unreadMessageCount = unreadMessages.Count;
+
+            if (unreadMessageCount > 0)
+            {
+
+                messageNotificationIcon.Visibility = Visibility.Visible;
+                messageNotificationIcon.Text = $"{unreadMessageCount} New Message(s)";
+
+                // List the senders
+                var senderNames = unreadMessages
+                    .Select(m => m.SenderStudent?.Name)
+                    .Where(name => !string.IsNullOrEmpty(name))
+                    .Distinct(); 
+
+                messageNotificationDetails.Text = "From: " + string.Join(", ", senderNames);
+            }
+            else
+            {
+                messageNotificationIcon.Visibility = Visibility.Visible;
+                messageNotificationIcon.Text = "0 New Messages";
+                messageNotificationDetails.Text = string.Empty; 
+            }
+        }
+
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
@@ -132,10 +194,115 @@ namespace Prototype_Curio_stagemarkt.Login
             this.Frame.Navigate(typeof(WelcomePage));
         }
 
+        private async void registerCompanyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateCompanyInput())
+            {
+                await fiedsDialog.ShowAsync();
+                return;
+            }
+
+            if (User.LoggedInUser is User loggedInCompany)
+            {
+                await UpdateCompany(loggedInCompany);
+            }
+        }
+
         private async void fileButton_Click(object sender, RoutedEventArgs e)
         {
             await SelectAndCopyFileAsync();
         }
+
+        private async void applicationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (applicationListView.SelectedItem is Student selectedStudent)
+            {
+                int studentId = selectedStudent.Id;
+                var companyId = User.LoggedInUser.CompanyId;
+
+                await MarkMessagesAsRead(companyId, studentId);
+
+                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
+                applicationListView.SelectedItem = null;
+                applicationListView.Background = new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        private async void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var listViewItem = (FrameworkElement)e.OriginalSource;
+            selectedApplication = listViewItem.DataContext as Prototype_Curio_stagemarkt.Data.Models.Application;
+
+            if (selectedApplication != null)
+            {
+                await deleteApplicationDialog.ShowAsync();
+            }
+        }
+
+        private async void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is Prototype_Curio_stagemarkt.Data.Models.Application application)
+            {
+                int? studentId = application.StudentId;
+                int companyId = application.CompanyId;
+
+                if (studentId.HasValue && companyId > 0)
+                {
+                    await MarkMessagesAsRead(companyId, studentId.Value);
+                    Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
+                }
+                else
+                {
+                    Debug.WriteLine("Navigation failed due to missing student or company ID.");
+                }
+            }
+        }
+
+        private async void deleteApplicationDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (selectedApplication != null)
+            {
+                using var db = new AppDbContext();
+
+
+                var existingTrackedApp = db.Applications.Local.FirstOrDefault(a => a.Id == selectedApplication.Id);
+                if (existingTrackedApp != null)
+                {
+                    db.Entry(existingTrackedApp).State = EntityState.Detached;
+                }
+
+                db.Applications.Remove(selectedApplication);
+
+                try
+                {
+                    await db.SaveChangesAsync();
+
+                    var applications = applicationListView.ItemsSource as List<Prototype_Curio_stagemarkt.Data.Models.Application>;
+                    if (applications != null)
+                    {
+                        applications.Remove(selectedApplication);
+                        applicationListView.ItemsSource = null;
+                        applicationListView.ItemsSource = applications;
+                    }
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+
+                    foreach (var entry in ex.Entries)
+                    {
+                        var proposedValues = entry.CurrentValues;
+                        var databaseValues = entry.GetDatabaseValues();
+
+                        if (databaseValues == null)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        // HELPER METHODS // 
 
         private async Task SelectAndCopyFileAsync()
         {
@@ -163,21 +330,6 @@ namespace Prototype_Curio_stagemarkt.Login
         }
 
 
-
-
-        private async void registerCompanyButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!ValidateCompanyInput())
-            {
-                await fiedsDialog.ShowAsync();
-                return;
-            }
-
-            if (User.LoggedInUser is User loggedInCompany)
-            {
-                await UpdateCompany(loggedInCompany);
-            }
-        }
 
         private async Task UpdateCompany(User loggedInCompany)
         {
@@ -251,8 +403,6 @@ namespace Prototype_Curio_stagemarkt.Login
                      companyCourseCombobox.SelectedItem == null);
         }
 
-
-
         private void isPlaceOpen_Unchecked(object sender, RoutedEventArgs e)
         {
             if (_company != null)
@@ -260,7 +410,6 @@ namespace Prototype_Curio_stagemarkt.Login
                 _company.IsOpen = true;
             }
         }
-
 
         private void isPlaceOpen_Checked(object sender, RoutedEventArgs e)
         {
@@ -274,7 +423,6 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             await deleteDialog.ShowAsync();
         }
-
 
         private void deleteDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
@@ -309,10 +457,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            var cvLinkTextBlock = sender as TextBlock;
-            var cvFilePath = cvLinkTextBlock.Text;
-
-            if (!string.IsNullOrEmpty(cvFilePath))
+            if (sender is TextBlock cvLinkTextBlock && cvLinkTextBlock.Tag is string cvFilePath)
             {
                 var file = await StorageFile.GetFileFromPathAsync(cvFilePath);
                 if (file != null)
@@ -322,59 +467,15 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        private void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var originalSource = e.OriginalSource as FrameworkElement;
-
-            while (originalSource != null && originalSource.DataContext == null)
-            {
-                originalSource = VisualTreeHelper.GetParent(originalSource) as FrameworkElement;
-            }
-
-            var application = originalSource?.DataContext as Prototype_Curio_stagemarkt.Data.Models.Application;
-
-            if (application != null)
-            {
-                int? studentId = application.StudentId; // Nullable studentId
-                int companyId = application.CompanyId;  // Assuming companyId is non-nullable
-
-                // Navigate to MesagePage, passing nullable studentId, companyId, and isCompany flag
-                this.Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
-            }
-        }
-
-        private void LoadLevels()
-        {
-            using var db = new AppDbContext();
-            var levels = db.Levels.ToList();
-            companyLevelCombobox.Items.Clear();
-            foreach (var level in levels)
-            {
-                companyLevelCombobox.Items.Add(new ComboBoxItem { Content = level.GradeLevel, DataContext = level });
-            }
-        }
-
-        private void LoadCourses()
-        {
-            using var db = new AppDbContext();
-            var courses = db.Courses.Select(c => c.Name).ToList();
-            companyCourseCombobox.Items.Clear();
-            foreach (var course in courses)
-            {
-                companyCourseCombobox.Items.Add(new ComboBoxItem { Content = course });
-            }
-        }
-
-        private void MarkMessagesAsRead(int? companyId, int studentId)
+        private async Task MarkMessagesAsRead(int? companyId, int studentId)
         {
             if (companyId != null)
             {
                 using var db = new AppDbContext();
 
-                // Zoek naar ongelezen berichten
                 var unreadMessages = db.Messages
-                    .Where(m => m.ReceiverCompanyId == companyId && m.SenderStudentId == studentId && !m.IsRead)
-                    .ToList();
+                                        .Where(m => m.ReceiverCompanyId == companyId && m.SenderStudentId == studentId && !m.IsRead)
+                                        .ToList();
 
                 if (unreadMessages.Any())
                 {
@@ -383,24 +484,14 @@ namespace Prototype_Curio_stagemarkt.Login
                         message.IsRead = true;
                     }
 
-                    // Sla de wijzigingen op in de database
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
+
+                    await CheckForUnreadMessages(companyId.Value);
+
+                    // Refresh DataContext
+                    this.DataContext = null;
+                    this.DataContext = User.LoggedInUser;
                 }
-            }
-        }
-        private void applicationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (applicationListView.SelectedItem is Student selectedStudent)
-            {
-                int studentId = selectedStudent.Id;
-                var companyId = User.LoggedInUser.CompanyId;
-
-                MarkMessagesAsRead(companyId, studentId);
-
-                Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
-                applicationListView.SelectedItem = null;
-
-                applicationListView.Background = new SolidColorBrush(Colors.Transparent);
             }
         }
     }

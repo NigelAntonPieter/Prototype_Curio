@@ -13,7 +13,6 @@ using Prototype_Curio_stagemarkt.NewAccount;
 using Prototype_Curio_stagemarkt.Utility;
 using System;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Prototype_Curio_stagemarkt.Login
 {
@@ -24,7 +23,7 @@ namespace Prototype_Curio_stagemarkt.Login
             InitializeComponent();
             LoadCourses();
             LoadFavoriteCompanies();
-            LoadCompaniesWithMessages(); // Load companies with messages
+            LoadCompaniesWithMessages();
             DataContext = User.LoggedInUser;
         }
 
@@ -52,7 +51,6 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             using var db = new AppDbContext();
             var courses = db.Courses.Select(c => c.Name).ToList();
-
             studentCourseCombobox.Items.Clear();
             foreach (var course in courses)
             {
@@ -69,7 +67,6 @@ namespace Prototype_Curio_stagemarkt.Login
                     .Where(f => f.StudentId == User.LoggedInUser.StudentId)
                     .Select(f => f.Company)
                     .ToList();
-
                 companyListView.ItemsSource = favoriteCompanies;
             }
         }
@@ -79,25 +76,18 @@ namespace Prototype_Curio_stagemarkt.Login
             if (User.LoggedInUser?.StudentId != null)
             {
                 using var db = new AppDbContext();
-
-                // Haal de bedrijven op waarmee er berichten zijn
                 var companyIds = db.Messages
                     .Where(m => m.ReceiverStudentId == User.LoggedInUser.StudentId || m.SenderStudentId == User.LoggedInUser.StudentId)
                     .Select(m => m.SenderCompanyId)
                     .Distinct()
                     .ToList();
-
                 var companies = db.Companies
                     .Where(c => companyIds.Contains(c.Id))
                     .ToList();
-
                 companyComboBox.ItemsSource = companies;
 
-                // Controleer of er ongelezen berichten zijn
                 bool hasUnreadMessages = db.Messages
                     .Any(m => m.ReceiverStudentId == User.LoggedInUser.StudentId && !m.IsRead);
-
-                // Verander de achtergrondkleur van de ComboBox naar rood als er ongelezen berichten zijn
                 companyComboBox.Background = new SolidColorBrush(hasUnreadMessages ? Colors.Red : Colors.White);
             }
         }
@@ -107,20 +97,15 @@ namespace Prototype_Curio_stagemarkt.Login
             if (studentId != null)
             {
                 using var db = new AppDbContext();
-
-                // Zoek naar ongelezen berichten
                 var unreadMessages = db.Messages
                     .Where(m => m.ReceiverStudentId == studentId && m.SenderCompanyId == companyId && !m.IsRead)
                     .ToList();
-
                 if (unreadMessages.Any())
                 {
                     foreach (var message in unreadMessages)
                     {
                         message.IsRead = true;
                     }
-
-                    // Sla de wijzigingen op in de database
                     db.SaveChanges();
                 }
             }
@@ -132,12 +117,9 @@ namespace Prototype_Curio_stagemarkt.Login
             {
                 int companyId = selectedCompany.Id;
                 var studentId = User.LoggedInUser.StudentId;
-
                 MarkMessagesAsRead(companyId, studentId);
-
                 Frame.Navigate(typeof(MesagePage), (studentId, companyId, User.LoggedInUser.IsCompany));
                 companyComboBox.SelectedItem = null;
-
                 companyComboBox.Background = new SolidColorBrush(Colors.Transparent);
             }
         }
@@ -146,7 +128,6 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             using var db = new AppDbContext();
             var loggedInUser = User.LoggedInUser;
-
             var student = db.Students.FirstOrDefault(s => s.Id == loggedInUser.StudentId);
             if (student != null)
             {
@@ -154,7 +135,6 @@ namespace Prototype_Curio_stagemarkt.Login
                 UpdateStudentPassword(student);
                 student.Specialization = (studentCourseCombobox.SelectedItem as ComboBoxItem)?.Content.ToString();
                 db.SaveChanges();
-
                 UpdateLoggedInUser(student);
                 NavigateToMainPage(student);
             }
@@ -177,7 +157,6 @@ namespace Prototype_Curio_stagemarkt.Login
             var loggedInUser = User.LoggedInUser;
             loggedInUser.Student.Name = student.Name;
             loggedInUser.Student.Specialization = student.Specialization;
-
             DataContext = null;
             DataContext = loggedInUser;
         }
@@ -194,7 +173,6 @@ namespace Prototype_Curio_stagemarkt.Login
                 using var db = new AppDbContext();
                 var favorite = db.FavoriteCompanies
                     .FirstOrDefault(f => f.StudentId == User.LoggedInUser.StudentId && f.CompanyId == companyId);
-
                 if (favorite != null)
                 {
                     db.FavoriteCompanies.Remove(favorite);
@@ -209,21 +187,16 @@ namespace Prototype_Curio_stagemarkt.Login
             if (User.LoggedInUser != null)
             {
                 using var db = new AppDbContext();
-
                 var user = db.Users.FirstOrDefault(u => u.StudentId == User.LoggedInUser.StudentId);
                 var student = db.Students.FirstOrDefault(s => s.Id == User.LoggedInUser.StudentId);
-
                 if (user != null) db.Users.Remove(user);
                 if (student != null) db.Students.Remove(student);
-
                 db.SaveChanges();
-
                 User.LoggedInUser = null;
                 Frame.Navigate(typeof(WelcomePage));
             }
         }
 
-        // Event Handlers
         private void registerNewAccount_Click(object sender, RoutedEventArgs e)
         {
             if (IsInputValid())
@@ -236,8 +209,6 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             return !string.IsNullOrEmpty(studentUsernameTextbox.Text) && studentCourseCombobox.SelectedItem != null;
         }
-
-       
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {

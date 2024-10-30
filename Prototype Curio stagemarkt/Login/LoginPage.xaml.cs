@@ -20,12 +20,10 @@ namespace Prototype_Curio_stagemarkt.Login
         public LoginPage()
         {
             InitializeComponent();
-            // Voeg key event handlers toe voor de tekstvakken
             usernameTextbox.KeyUp += UsernameTextbox_KeyUp;
             passwordBox.KeyUp += PasswordBox_KeyUp;
         }
 
-        // Key event handler for username textbox
         private void UsernameTextbox_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
@@ -34,7 +32,6 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        // Key event handler for password box
         private void PasswordBox_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
@@ -43,7 +40,6 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        // Attempt login based on the provided credentials
         private void AttemptLogin()
         {
             using var db = new AppDbContext();
@@ -53,10 +49,10 @@ namespace Prototype_Curio_stagemarkt.Login
                          .Include(u => u.Company)
                          .Include(u => u.Admin)
                          .Include(u => u.Interschip)
-                         .FirstOrDefault(u => (u.Student != null && u.Student.Name == usernameTextbox.Text) ||
-                                              (u.Company != null && u.Company.Name == usernameTextbox.Text) ||
-                                              (u.Interschip != null && u.Interschip.Name == usernameTextbox.Text) ||
-                                              (u.Admin != null && u.Admin.Name == usernameTextbox.Text));
+                         .FirstOrDefault(u => (u.Student.Name != null && u.Student.Name == usernameTextbox.Text) ||
+                                              (u.Company.Name != null && u.Company.Name == usernameTextbox.Text) ||
+                                              (u.Interschip.Name != null && u.Interschip.Name == usernameTextbox.Text) ||
+                                              (u.Admin.Name != null && u.Admin.Name == usernameTextbox.Text));
 
             if (user != null && VerifyPassword(user))
             {
@@ -74,22 +70,21 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        // Verify password for the user
         private bool VerifyPassword(User user)
         {
-            if (user.IsCompany && user.Company != null)
+            if (user.IsCompany)
             {
-                return SecureHasher.Verify(passwordBox.Password, user.Company.Password);
+                return user.Company != null && SecureHasher.Verify(passwordBox.Password, user.Company.Password);
             }
-            if (!user.IsCompany && user.Student != null)
+            else if (user.Student != null)
             {
                 return SecureHasher.Verify(passwordBox.Password, user.Student.Password);
             }
-            if (!user.IsCompany && user.Admin != null)
+            else if (user.Admin != null)
             {
                 return SecureHasher.Verify(passwordBox.Password, user.Admin.Password);
             }
-            if (!user.IsCompany && user.Interschip != null)
+            else if (user.Interschip != null)
             {
                 return SecureHasher.Verify(passwordBox.Password, user.Interschip.Password);
             }
@@ -97,7 +92,6 @@ namespace Prototype_Curio_stagemarkt.Login
             return false;
         }
 
-        // Navigate to the appropriate page based on the user role
         private void NavigateToPage(User user)
         {
             if (user.IsCompany)
@@ -118,13 +112,11 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        // Display an error message if the login attempt fails
         private void DisplayErrorMessage()
         {
             ErrorTextBlock.Text = "Invalid username or password.";
         }
 
-        // Event handler for the logo button
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(WelcomePage));
