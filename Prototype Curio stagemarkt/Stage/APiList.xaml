@@ -30,7 +30,7 @@
             <StackPanel Grid.Column="0"
                         Margin="20">
                 <Button x:Name="LogoButton"
-                        Click="LogoBut"
+                        Click="LogoButton_Click"
                         Background="Transparent"
                         BorderBrush="Transparent"
                         Padding="0"
@@ -47,67 +47,115 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <ListView x:Name="StagesListView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="10"
-                                    BorderBrush="Black"
-                                    BorderThickness="1"
-                                    CornerRadius="15"
-                                    Padding="20">
+            <StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView x:Name="StagesListView" Height="600">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10"
+                                      Background="White"
+                                      Padding="10"
+                                      CornerRadius="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-                            <!-- Naam van de stage -->
-                            <TextBlock Text="{Binding Name}"
-                                       FontSize="38"
-                                       FontWeight="Bold"
-                                       Margin="0,0,0,5"
-                                       Foreground="Black" />
+                                    <!-- Left section: Text and Info -->
+                                    <StackPanel Orientation="Vertical"
+                                                Grid.Column="0"
+                                                Margin="10"
+                                                BorderBrush="Black"
+                                                BorderThickness="1"
+                                                CornerRadius="15"
+                                                Padding="20">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontSize="38"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,5"
+                                                   Foreground="Black" />
+                                        <StackPanel Orientation="Vertical"
+                                                    Margin="0,0,0,10">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Datum: "
+                                                           FontWeight="Bold"
+                                                           Foreground="Black"
+                                                           Margin="0,0,3,0"/>
+                                                <TextBlock Text="{Binding Date}"
+                                                           Foreground="Black" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Plaats: "
+                                                           FontWeight="Bold"
+                                                           Foreground="Black"
+                                                           Margin="0,0,3,0"/>
+                                                <TextBlock Text="{Binding Place}"
+                                                           Foreground="Black" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Leerweg: "
+                                                           FontWeight="Bold"
+                                                           Foreground="Black"
+                                                           Margin="0,0,3,0"/>
+                                                <TextBlock Text="{Binding Course}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Niveau:  "
+                                                           FontWeight="Bold"
+                                                           Foreground="Black" 
+                                                           Margin="0,0,3,0"/>
+                                                <TextBlock Text="{Binding Level}"
+                                                           Foreground="Black" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Description}"
+                                                       Foreground="DarkGray"
+                                                       TextWrapping="Wrap"
+                                                       MaxLines="7"
+                                                       TextTrimming="CharacterEllipsis" />
+                                            <Image Source="{Binding ImageUrl}"
+                                                   Width="150"
+                                                   Height="150"
+                                                   Stretch="Uniform" />
+                                        </StackPanel>
 
-                            <!-- Datum, Plaats, Cursus, Niveau -->
-                            <Grid Margin="0,5,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                                        <Button x:Name="bContent"
+                                                Click="bContent_Click"
+                                                Content="Bekijk stage"
+                                                Background="#FFA500"
+                                                Foreground="White"
+                                                HorizontalAlignment="Left"
+                                                Padding="5,2"
+                                                Margin="0,10,0,0" 
+                                                CommandParameter="{Binding CompanyUrl}"/>
+                                    </StackPanel>
 
-                                <TextBlock Text="{Binding Date}"
-                                           Grid.Column="0"
-                                           Foreground="Gray"
-                                           Margin="0,0,10,0" />
-                                <TextBlock Text="{Binding Place}"
-                                           Grid.Column="1"
-                                           Foreground="Gray"
-                                           Margin="0,0,10,0" />
-                                <TextBlock Text="{Binding Course}"
-                                           Grid.Column="2"
-                                           Foreground="Gray"
-                                           Margin="0,0,10,0" />
-                                <TextBlock Text="{Binding Level}"
-                                           Grid.Column="3"
-                                           Foreground="Gray" />
-                            </Grid>
+                                    <!-- Right section: Company Image -->
+                                    <StackPanel Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
 
-                            <!-- Beschrijving en Afbeelding -->
-                            <StackPanel Orientation="Vertical"
-                                        Spacing="10">
-                                <TextBlock Text="{Binding Description}"
-                                           Foreground="DarkGray"
-                                           TextWrapping="Wrap"
-                                           MaxLines="7"
-                                           TextTrimming="CharacterEllipsis" />
-                                <Image Source="{Binding ImageUrl}"
-                                       Width="150"
-                                       Height="150"
-                                       Stretch="UniformToFill" />
-                            </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
 
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Margin="0,10">
+                    <Button x:Name="PreviousButton"
+                            Content="Previous"
+                            Click="PreviousButton_Click"
+                            Margin="5" />
+                    <Button x:Name="NextButton"
+                            Content="Next"
+                            Click="NextButton_Click"
+                            Margin="5" />
+                </StackPanel>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
