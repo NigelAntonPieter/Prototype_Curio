@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Prototype_Curio_stagemarkt.Data;
 
@@ -12,11 +11,9 @@ using Prototype_Curio_stagemarkt.Data;
 namespace Prototype_Curio_stagemarkt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241028085742_change_Student")]
-    partial class change_Student
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +45,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Fedde",
-                            Password = "5NCLEj4bIUXnrCrAEO3YUbMTmjaeMUtK3eWNiiYtCnQ=:fYJgSzenV8xOeyJqXy11Wg==:10000:SHA512"
+                            Password = "mf82PJ2tPP+F6Vmjp59uNr3MVJ8TvVslF+ZklPclisQ=:vrHCxgYgjvYi6N8ce48U5w==:10000:SHA512"
                         });
                 });
 
@@ -241,7 +238,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 1,
                             Name = "Company1",
-                            Password = "He+AS6QG96PxSJ5tIUFOD4B22OH18J3neP74vOaxrDQ=:++L8ypzLKOj5O4kQfPNyrw==:10000:SHA512",
+                            Password = "Mh28j2e19Rc371Y7HJrC8BhCp5ElNug5ZcOLYt22TYY=:mFKe0uOXSqPmf2Cxb2c3dQ==:10000:SHA512",
                             Phone = "123-456-7890",
                             Specialization = "Native",
                             Street = "123 Main Street"
@@ -256,7 +253,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 2,
                             Name = "Company2",
-                            Password = "ZRmmtyjh7KIKjqcHjUHUGRxnA4eefWhnRnY+uNTF16I=:5urabK8VkknhTTT9T8WYKg==:10000:SHA512",
+                            Password = "/ItSoIwmAq9Q3TwRbGzLbgEmMSH9JrdVysO5wrgHIhQ=:mtnOU+ZJFLYrtRsvtDO+ng==:10000:SHA512",
                             Phone = "987-654-3210",
                             Specialization = "Native",
                             Street = "456 Oak Avenue"
@@ -271,7 +268,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 3,
                             Name = "Company3",
-                            Password = "CKNWrElvsHLgfAm8uMFgin7ep48to7GflJmZIjVRd4k=:L5XVAKzZkA+F+/jpi85Hsg==:10000:SHA512",
+                            Password = "r0CgEB7GBW3nyutDX3+lHF24oB9+h1MUIHrT2FJxinA=:qxrqzpTuC+pb178N+0znag==:10000:SHA512",
                             Phone = "555-123-4567",
                             Specialization = "Native",
                             Street = "789 Pine Road"
@@ -286,7 +283,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 1,
                             Name = "Company4",
-                            Password = "PczpLLnvNVKO+ybzb/oeO87D8ppQgO4haOiaGiu4TF4=:yZg8jNnk14CgDK17IdCUMA==:10000:SHA512",
+                            Password = "y9C4syN+5HUu419rkWLmU0hvCFL1ultjrs32infHSkE=:jSi5whf59CFhiKpkXiUbJg==:10000:SHA512",
                             Phone = "555-123-4567",
                             Specialization = "Web",
                             Street = "799 Pine Road"
@@ -301,7 +298,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 1,
                             LevelId = 2,
                             Name = "Company5",
-                            Password = "1NTYShj19sGp21ByIATESHGe27tM8icsDRKH193TiFI=:pI/ECNQBTYpGeSDmWHb0fw==:10000:SHA512",
+                            Password = "stjOHv3VSjxLnKQ4LGfC23wXmx2BgLmMJu3a5NN0ASQ=:eeaD47S3B1oxpRXBLmMQ+A==:10000:SHA512",
                             Phone = "555-123-4568",
                             Specialization = "Web",
                             Street = "749 Pine Road"
@@ -316,7 +313,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             LearningPathId = 2,
                             LevelId = 3,
                             Name = "Company5",
-                            Password = "ANFhFwJPtt2i19ckU6sOyZGFbGcbLHTvquigzrVKy/M=:Qq7L0TARr4aU4DiY4jJbjA==:10000:SHA512",
+                            Password = "a48+Gntv+xqjVc/QDpwoqC7/F/C/kWqY6qwj1UqX83Q=:cZVjcp/zfMQjWf2NOo8Rpw==:10000:SHA512",
                             Phone = "555-123-4568",
                             Specialization = "Web",
                             Street = "749 Pine Road"
@@ -361,13 +358,13 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Laurens",
-                            Password = "uiMYMDhGPTmYndo8WzJcfL0/Jmaw+9XD2E3kWj4tW+E=:J9xjOERrKi70EHnEdcjXfA==:10000:SHA512"
+                            Password = "ZeTMxRoHLOLqW0Qpvz12O2BH8uzq9REfnaynb0QR9HY=:wa5QvConzYRxxyvAXa+U7w==:10000:SHA512"
                         },
                         new
                         {
                             Id = 2,
                             Name = "Kiki",
-                            Password = "fj4FwZNlOGiZHSgDMs/eaeFiBRZ5st6IeBXbRcdoPTI=:2qNexRQfmEFGDBvNmsBi0w==:10000:SHA512"
+                            Password = "KqV5kn4WjIb/u32DTuL/n6Iw1nUo+CpMnMliYYeNpBU=:Ytvev9MCOA9S2P+cxydzdg==:10000:SHA512"
                         });
                 });
 
@@ -476,7 +473,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Max",
-                            Password = "xWhXeOTP7ullIBEVdIl7AyfTULtQ71+tRPcEfz4tAoM=:+/PD3JpWo/6W9ub9ntsgsw==:10000:SHA512",
+                            Password = "ML0GLqeJ+lB/2F5XL8F9iTaWmkFSJa5eSkEMNhwr6ak=:SqA8znKrefFv9OOfZP1HZA==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -485,7 +482,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "JJ",
-                            Password = "w3799RyKnW5KQL9MHWsAzrmnWlvhCGmeuv/QXsJvASM=:Xpugy0HJt4RqCs8T6tweAQ==:10000:SHA512",
+                            Password = "j1bCrloNFbYGgzAvhN2B1YOYRNLur7oR4paDwZYbsJ8=:N+58VEEMSf8J7YvFe5gPNw==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -494,7 +491,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Krijn",
-                            Password = "vzLQw+Wu4yW8Dm7CigQRCjtBrDvV1Db8AzUH9KZH4hw=:WeMv/atBW2oEhMOX2eCzrQ==:10000:SHA512",
+                            Password = "nvwBLXwOXARVNLwvSKzkNvCMGpjbM6Wh7ALaoTQStOs=:zLy4Qn8qNcuFZiTRedgJSA==:10000:SHA512",
                             Specialization = "FrontEnd"
                         },
                         new
@@ -503,7 +500,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Luna",
-                            Password = "r8kOgKP+FlkPWyGi3X+NEh/yEBgkM0xMVxpaDTWsHuc=:bmDkAhA6LZCsyByuivVI+A==:10000:SHA512",
+                            Password = "n2PGRxYT5DAJetOGkJgakQ4kdOCGDwQUDhfGOwTsrzk=:htPerpILoyv7cT1pFl65kw==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -512,7 +509,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Wiardi",
-                            Password = "a1LyQiFv6SxCEnWRKBHhvy6NqQEwlsGhDH49nHoY8Qs=:iJIBPGZrwwl3NKWimpJB7w==:10000:SHA512",
+                            Password = "AQNVzczPDFovH/DYAnK5vFWvWtxhuda+YqtuUyu5oXg=:eB1d3Qw6av7303I+1uWsMg==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -521,7 +518,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Nigel",
-                            Password = "vTGCqaHkkMFV2sHE+0vsw75iKKKkfVNWIV7RNPJ9jsM=:zKEMTs5K0E2X9lxJe1vsbg==:10000:SHA512",
+                            Password = "x+Mfo1okyUEcm9V3D4g6jJgyZP4tf5KlJMBusmafCwc=:1i0uoAyh0AJ2IYHh2nbhkg==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -530,7 +527,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Kelvin",
-                            Password = "wOJHUZ69AFdlVxFyuaEFRmlhIp49yrhDX3aRlvYr/Ms=:jpilWUuASfueSoc0n7d5/A==:10000:SHA512",
+                            Password = "ZpcSPB/k+VgFE118u7rhG4gWgwnbH0B+URKaqDzpMF4=:4vy/jYrnbLGqx7KIQeieFQ==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -539,7 +536,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 1,
                             Name = "Jonathan",
-                            Password = "Mh0UNNGLt5D0QnAxyNmdC00w8Bambm0O6wkKYYsiRwk=:NkZJ7TKA9MyIDiI/dBmSJw==:10000:SHA512",
+                            Password = "LWJkoSDY5pgpZG80BaQ82ImWUuxtBMay5ACCsacvmos=:SpYHhyiPgarrT8S4aTyqGQ==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -548,7 +545,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Brent",
-                            Password = "9BWxu+o+aNJtt52YeLlpx8+aPBQ1TNox32aDioWSDUM=:XC/v7o+4N6esC815lV+Uog==:10000:SHA512",
+                            Password = "4CgfXxRT7swssBAtjV2KkyhJsGXYyO0pDKEBSH/GRIc=:ALfHfTJ7vNz1itSmejifdA==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -557,7 +554,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Simon",
-                            Password = "wtVfTbviCOmu8SwE2nTlp8EHmp+gLEsMh5jCNT0Olvs=:Ilo4rF8fEfWw5+PgXDXeMA==:10000:SHA512",
+                            Password = "3nA2smHARow7avFrbOkvsASECn+YXJl/vCD9myftkD8=:fBcbSMo/7GsJUuy6oeqNfA==:10000:SHA512",
                             Specialization = "Native"
                         });
                 });
@@ -755,7 +752,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 1
@@ -763,7 +760,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 0,
                             StudentId = 2
@@ -771,7 +768,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 3, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 1
@@ -779,7 +776,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 2,
                             StudentId = 3
@@ -787,7 +784,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2024, 10, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 4
@@ -795,7 +792,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 31, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 5
@@ -803,7 +800,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 30, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 2,
                             StudentId = 2
@@ -811,7 +808,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 8,
-                            Date = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 3
@@ -819,7 +816,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 9,
-                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 2,
                             StudentId = 4
@@ -827,7 +824,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 10,
-                            Date = new DateTime(2024, 10, 19, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 2,
                             Status = 1,
                             StudentId = 5
@@ -835,7 +832,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 11,
-                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 0,
                             StudentId = 6
@@ -843,7 +840,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 12,
-                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 7
@@ -851,7 +848,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 13,
-                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 2,
                             StudentId = 8
@@ -859,7 +856,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 14,
-                            Date = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 9
@@ -867,7 +864,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 15,
-                            Date = new DateTime(2024, 10, 14, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 0,
                             StudentId = 10
@@ -875,7 +872,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 16,
-                            Date = new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 1
@@ -883,7 +880,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 17,
-                            Date = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 2,
                             StudentId = 2
@@ -891,7 +888,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 18,
-                            Date = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 3
@@ -899,7 +896,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 19,
-                            Date = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 0,
                             StudentId = 4
@@ -907,7 +904,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 20,
-                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 2,
                             StudentId = 5
@@ -915,7 +912,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 21,
-                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 6
@@ -923,7 +920,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 22,
-                            Date = new DateTime(2024, 10, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 2,
                             StudentId = 7
@@ -931,7 +928,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 23,
-                            Date = new DateTime(2024, 10, 6, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 14, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 8
@@ -939,7 +936,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 24,
-                            Date = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 9
@@ -947,7 +944,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 25,
-                            Date = new DateTime(2024, 10, 4, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 10
@@ -955,7 +952,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 26,
-                            Date = new DateTime(2024, 10, 3, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 11, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 2,
                             StudentId = 1
@@ -963,7 +960,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 27,
-                            Date = new DateTime(2024, 10, 2, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 1,
                             StudentId = 2
@@ -971,7 +968,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 28,
-                            Date = new DateTime(2024, 10, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 0,
                             StudentId = 3
@@ -979,7 +976,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 29,
-                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 2,
                             Status = 2,
                             StudentId = 4
@@ -987,7 +984,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 30,
-                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 5
@@ -995,7 +992,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 31,
-                            Date = new DateTime(2024, 9, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 6
@@ -1003,7 +1000,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 32,
-                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 7

@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Login;
 using Prototype_Curio_stagemarkt.Registreren;
+using Prototype_Curio_stagemarkt.Stage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,6 +39,11 @@ namespace Prototype_Curio_stagemarkt.Main
         private void RegisterPage_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(RegisterPage));
+        }
+
+        private void ApiPage_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(APiList));
         }
     }
 }

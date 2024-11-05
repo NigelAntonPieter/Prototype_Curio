@@ -25,6 +25,7 @@
     <None Remove="NewAccount\HourCardPage.xaml" />
     <None Remove="NewAccount\MessagePage.xaml" />
     <None Remove="Registreren\RegisterPage.xaml" />
+    <None Remove="Stage\APiList.xaml" />
     <None Remove="Stage\CompanysList.xaml" />
   </ItemGroup>
 
@@ -58,6 +59,11 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Stage\APiList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="NewAccount\MessagePage.xaml">

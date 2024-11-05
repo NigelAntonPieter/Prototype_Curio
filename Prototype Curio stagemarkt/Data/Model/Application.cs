@@ -17,7 +17,8 @@ namespace Prototype_Curio_stagemarkt.Data.Models
         public int CompanyId { get; set; }
         public string CvFilePath { get; set; }
         public DateTime AppliedOn { get; set; } = DateTime.Now;
-        public string Status { get; set; }
+
+        public string Status { get; set; } = "Pending";
 
         public Student Student { get; set; }
         public Company Company { get; set; }

@@ -86,6 +86,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 {
                     // Update de TextBlocks in het ContentDialog met de bedrijfsnaam en laatste inlogtijd
                     companyNameTextBlock.Text = clickedCompany.Name;
+                    companyEmailTextBlock.Text = clickedCompany.EmailAddress;
                     companyLastLoginTextBlock.Text = user.LastLogin.HasValue
                         ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
                         : "Nooit ingelogd";
@@ -109,6 +110,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 {
                     // Update de TextBlocks in het ContentDialog met de studentnaam en laatste inlogtijd
                     studentNameTextBlock.Text = clickedStudent.Name;
+                    studentEmailTextBlock.Text  = clickedStudent.EmailAddress;
                     studentLastLoginTextBlock.Text = user.LastLogin.HasValue
                         ? user.LastLogin.Value.ToString("dd-MM-yyyy HH:mm")
                         : "Nooit ingelogd";
@@ -216,6 +218,13 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                     }
                 }
             }
+        }
+
+        private void searchTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var searchInput = searchTextbox.Text;
+
+            using var db = new AppDbContext();
         }
     }
 }
