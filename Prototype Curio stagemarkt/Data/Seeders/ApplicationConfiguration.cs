@@ -20,6 +20,8 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
             builder.HasOne(a => a.Company)
                 .WithMany(c => c.Applications)
                 .HasForeignKey(a => a.CompanyId);
+
+
         }
     }
 }

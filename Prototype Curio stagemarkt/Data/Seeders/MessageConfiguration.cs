@@ -15,7 +15,7 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
         {
             // Configuring sender relationships
             builder.HasOne(m => m.SenderStudent)
-                   .WithMany()
+                   .WithMany(c =>c.Messages)
                    .HasForeignKey(m => m.SenderStudentId) // Using separate foreign key
                    .OnDelete(DeleteBehavior.Restrict)
                    .HasConstraintName("FK_Message_SenderStudent");
