@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Prototype_Curio_stagemarkt.Data.Model;
-using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Data.Seeders;
 using System;
 using System.Collections.Generic;
@@ -8,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharedModel;
 
 namespace Prototype_Curio_stagemarkt.Data
 {
@@ -25,6 +24,7 @@ namespace Prototype_Curio_stagemarkt.Data
         public DbSet<WorkHour> WorkHours { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<StageMarkt> Stages {  get; set; } 
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

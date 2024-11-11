@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Prototype_Curio_stagemarkt.Data.Model;
+using SharedModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
                    .HasConstraintName("FK_Message_SenderStudent");
 
             builder.HasOne(m => m.SenderCompany)
-                   .WithMany()
+                   .WithMany(c =>c.Messages)
                    .HasForeignKey(m => m.SenderCompanyId) // Using separate foreign key
                    .OnDelete(DeleteBehavior.Restrict)
                    .HasConstraintName("FK_Message_SenderCompany");

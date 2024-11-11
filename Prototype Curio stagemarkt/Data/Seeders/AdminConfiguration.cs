@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Prototype_Curio_stagemarkt.Data.Model;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Utility;
 using System;
 using System.Collections.Generic;

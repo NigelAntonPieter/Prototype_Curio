@@ -42,10 +42,6 @@
                 <Button x:Name="RegisterPage"
                         HorizontalAlignment="Center"
                         Click="RegisterPage_Click">Registeren</Button>
-                <Button x:Name="ApiPage"
-                        HorizontalAlignment="Center"
-                        Click="ApiPage_Click">API</Button>
-
             </StackPanel>
 
         </StackPanel>

@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
+using Prototype_Curio_stagemarkt.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
+using SharedModel;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace Prototype_Curio_stagemarkt.Stage
 {
@@ -16,7 +20,9 @@ namespace Prototype_Curio_stagemarkt.Stage
         private const string ApiUrl = "https://localhost:7249/api/Stages"; // Change to your actual API URL
         private int _currentPage = 1; // Current page index
         private const int _itemsPerPage = 5; // Number of items per page
-        private List<Stage> _allStages; // Store all fetched stages
+        private List<StageMarkt> _allStages; // Store all fetched stages
+        private Student _currentStudent;
+        private StageMarkt _currentStage;
 
         public APiList()
         {
@@ -24,11 +30,33 @@ namespace Prototype_Curio_stagemarkt.Stage
             LoadStages();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is Tuple<Student, List<StageMarkt>> navigationData)
+            {
+                _currentStudent = navigationData.Item1;  // Assign logged-in student
+                _allStages = navigationData.Item2;       // Assign filtered stages if available
+            }
+            else if (e.Parameter is Student student)
+            {
+                _currentStudent = student;  // Assign logged-in student
+                LoadStages();               // Load all stages if no search results are provided
+            }
+
+            DisplayCurrentPage();  // Update the UI with the filtered data
+        }
+
+
+
+
+
         private async void LoadStages()
         {
             try
             {
-                _allStages = await GetStagesAsync(); // Fetch all stages from the API
+                _allStages = await GetStagesAsync();
                 DisplayCurrentPage();
             }
             catch (HttpRequestException ex)
@@ -37,17 +65,26 @@ namespace Prototype_Curio_stagemarkt.Stage
             }
         }
 
-        private async Task<List<Stage>> GetStagesAsync()
+        private void StagesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is StageMarkt selectedStage)
+            {
+                _currentStage = selectedStage;
+            }
+        }
+
+
+        private async Task<List<StageMarkt>> GetStagesAsync()
         {
             using HttpClient client = new HttpClient();
-            string apiUrl = "https://localhost:7249/api/Stages"; // Ensure this URL is correct
+            string apiUrl = "https://localhost:7249/api/Stages";
 
-            HttpResponseMessage response = await client.GetAsync(apiUrl); // Make sure to use GetAsync
+            HttpResponseMessage response = await client.GetAsync(apiUrl); 
 
-            response.EnsureSuccessStatusCode(); // Throws an exception if the status code is not success
+            response.EnsureSuccessStatusCode(); 
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<List<Stage>>(responseBody);
+            return JsonConvert.DeserializeObject<List<StageMarkt>>(responseBody);
         }
 
 
@@ -112,19 +149,46 @@ namespace Prototype_Curio_stagemarkt.Stage
                 });
             }
         }
-    }
 
-    public class Stage
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Date { get; set; }      // Voeg de Date-eigenschap toe
-        public string Place { get; set; }     // Voeg de Place-eigenschap toe
-        public string Course { get; set; }    // Voeg de Course-eigenschap toe
-        public string Level { get; set; }     // Voeg de Level-eigenschap toe
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
-        public string CompanyUrl { get; set; }
-    }
+        private async void bFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentStudent == null)
+            {
+                Debug.WriteLine("No student is logged in.");
+                return;
+            }
 
+            var button = sender as Button;
+            var selectedStage = button?.CommandParameter as StageMarkt;
+
+            if (selectedStage == null)
+            {
+                Debug.WriteLine("No stage is selected.");
+                return;
+            }
+
+            using var db = new AppDbContext();
+
+            // Check if the stage is already marked as favorite
+            var existingFavorite = db.FavoriteCompanies
+                                     .FirstOrDefault(f => f.StudentId == _currentStudent.Id && f.StageId == selectedStage.Id);
+
+            if (existingFavorite == null)
+            {
+                // Add the stage to the favorites list
+                db.FavoriteCompanies.Add(new FavoriteCompany
+                {
+                    StudentId = _currentStudent.Id,
+                    StageId = selectedStage.Id
+                });
+
+                await db.SaveChangesAsync();
+                Debug.WriteLine("Stage added to favorites.");
+            }
+            else
+            {
+                Debug.WriteLine("Stage is already in favorites.");
+            }
+        }
+    }
 }

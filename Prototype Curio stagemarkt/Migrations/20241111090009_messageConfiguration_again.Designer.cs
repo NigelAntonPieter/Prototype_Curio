@@ -12,8 +12,8 @@ using Prototype_Curio_stagemarkt.Data;
 namespace Prototype_Curio_stagemarkt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241105083410_initialcreate")]
-    partial class initialcreate
+    [Migration("20241111090009_messageConfiguration_again")]
+    partial class messageConfiguration_again
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Model.Admin", b =>
+            modelBuilder.Entity("SharedModel.Admin", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,9 +34,11 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -48,11 +50,210 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Fedde",
-                            Password = "mf82PJ2tPP+F6Vmjp59uNr3MVJ8TvVslF+ZklPclisQ=:vrHCxgYgjvYi6N8ce48U5w==:10000:SHA512"
+                            Password = "DCnviR8fUhBHS0OQZIJrRmKdzNB7Gskct6xY0cibLM8=:tKHimR6XTgJZGjSie26jiA==:10000:SHA512"
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Model.Course", b =>
+            modelBuilder.Entity("SharedModel.Application", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppliedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvFilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Motivation")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Applications");
+                });
+
+            modelBuilder.Entity("SharedModel.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsOpen")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("LearningPathId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningPathId");
+
+                    b.HasIndex("LevelId");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Breda",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company1, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company1@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 1,
+                            LevelId = 1,
+                            Name = "Company1",
+                            Password = "rNLc2bW86JLA+VOUPbY1caivUcNATvg04qzz6RS9PKk=:QzmST1cyseJG+V6lC13EWw==:10000:SHA512",
+                            Phone = "123-456-7890",
+                            Specialization = "Native",
+                            Street = "123 Main Street"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "Tilburg",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company2, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company2@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 2,
+                            LevelId = 2,
+                            Name = "Company2",
+                            Password = "hfwwuaqyofLHp+1LAeRu6taYSXovBI3laJxFENBLSfQ=:KONYW2dOveSFo0i0mCU5hA==:10000:SHA512",
+                            Phone = "987-654-3210",
+                            Specialization = "Native",
+                            Street = "456 Oak Avenue"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "Roosendaal",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company3, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company3@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 1,
+                            LevelId = 3,
+                            Name = "Company3",
+                            Password = "pROkm2oyWZP5sI1ts/gVzEUh8ygPUbY5mYp7qel0yIU=:8nyfSFGTr3J/Fk6QPr5knA==:10000:SHA512",
+                            Phone = "555-123-4567",
+                            Specialization = "Native",
+                            Street = "789 Pine Road"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            City = "Genk",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company4, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company4@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 2,
+                            LevelId = 1,
+                            Name = "Company4",
+                            Password = "BxhlqLPcapID2N9GtJMNCTRsFlHPyaPG/6y+Z3p7np0=:XZKTg1pt5t6aobCm+hgymQ==:10000:SHA512",
+                            Phone = "555-123-4567",
+                            Specialization = "Web",
+                            Street = "799 Pine Road"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            City = "Breda",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company5, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company5@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 1,
+                            LevelId = 2,
+                            Name = "Company5",
+                            Password = "52KfuumebwGkUhs9+BuDAHRw9unZcONPLh0pGTgao0Q=:NI99bdxqMlpacTHqRPY4HA==:10000:SHA512",
+                            Phone = "555-123-4568",
+                            Specialization = "Web",
+                            Street = "749 Pine Road"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            City = "Rotterdam",
+                            Description = "Over Ons:\r\n\r\nWij zijn Company5, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
+                            EmailAddress = "Company5@hotmail.nl",
+                            IsOpen = true,
+                            LearningPathId = 2,
+                            LevelId = 3,
+                            Name = "Company5",
+                            Password = "cwVSsMEuld0U2S59+DrV243/670OE8PJ6/fKwjYz+K4=:7gec58BN7BcIb0iHjjpC8A==:10000:SHA512",
+                            Phone = "555-123-4568",
+                            Specialization = "Web",
+                            Street = "749 Pine Road"
+                        });
+                });
+
+            modelBuilder.Entity("SharedModel.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,6 +262,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -85,260 +287,27 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Model.Message", b =>
+            modelBuilder.Entity("SharedModel.FavoriteCompany", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int?>("ReceiverCompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReceiverStudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SenderCompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SenderStudentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("StageId", "StudentId");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("ReceiverCompanyId");
-
-                    b.HasIndex("ReceiverStudentId");
-
-                    b.HasIndex("SenderCompanyId");
-
-                    b.HasIndex("SenderStudentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Application", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AppliedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CvFilePath")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Motivation")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Applications");
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("EmailAddress")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsOpen")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("LearningPathId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LevelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Specialization")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LearningPathId");
-
-                    b.HasIndex("LevelId");
-
-                    b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Breda",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company1, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company1@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 1,
-                            LevelId = 1,
-                            Name = "Company1",
-                            Password = "Mh28j2e19Rc371Y7HJrC8BhCp5ElNug5ZcOLYt22TYY=:mFKe0uOXSqPmf2Cxb2c3dQ==:10000:SHA512",
-                            Phone = "123-456-7890",
-                            Specialization = "Native",
-                            Street = "123 Main Street"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Tilburg",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company2, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company2@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 2,
-                            LevelId = 2,
-                            Name = "Company2",
-                            Password = "/ItSoIwmAq9Q3TwRbGzLbgEmMSH9JrdVysO5wrgHIhQ=:mtnOU+ZJFLYrtRsvtDO+ng==:10000:SHA512",
-                            Phone = "987-654-3210",
-                            Specialization = "Native",
-                            Street = "456 Oak Avenue"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Roosendaal",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company3, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen.\n Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren.\n Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit.\n Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. \nAls je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company3@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 1,
-                            LevelId = 3,
-                            Name = "Company3",
-                            Password = "r0CgEB7GBW3nyutDX3+lHF24oB9+h1MUIHrT2FJxinA=:qxrqzpTuC+pb178N+0znag==:10000:SHA512",
-                            Phone = "555-123-4567",
-                            Specialization = "Native",
-                            Street = "789 Pine Road"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Genk",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company4, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company4@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 2,
-                            LevelId = 1,
-                            Name = "Company4",
-                            Password = "y9C4syN+5HUu419rkWLmU0hvCFL1ultjrs32infHSkE=:jSi5whf59CFhiKpkXiUbJg==:10000:SHA512",
-                            Phone = "555-123-4567",
-                            Specialization = "Web",
-                            Street = "799 Pine Road"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "Breda",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company5, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company5@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 1,
-                            LevelId = 2,
-                            Name = "Company5",
-                            Password = "stjOHv3VSjxLnKQ4LGfC23wXmx2BgLmMJu3a5NN0ASQ=:eeaD47S3B1oxpRXBLmMQ+A==:10000:SHA512",
-                            Phone = "555-123-4568",
-                            Specialization = "Web",
-                            Street = "749 Pine Road"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            City = "Rotterdam",
-                            Description = "Over Ons:\r\n\r\nWij zijn Company5, een dynamisch softwareontwikkelingsbedrijf dat innovatieve oplossingen biedt voor complexe problemen. Onze expertise ligt in het creëren van op maat gemaakte softwaretoepassingen die de bedrijfsprocessen van onze klanten optimaliseren. Van mobiele apps tot uitgebreide webplatformen, wij brengen ideeën tot leven met cutting-edge technologie en een focus op kwaliteit. Ons team bestaat uit gepassioneerde ontwikkelaars, ontwerpers en projectmanagers die samen streven naar uitmuntendheid in elk project.\r\n\r\nWat We Zoeken in een Stagiair:\r\n\r\nWij zijn op zoek naar getalenteerde en leergierige stagiaires die onze passie voor technologie delen. Als stagiair bij [Bedrijfsnaam] krijg je de kans om deel uit te maken van een innovatief team en mee te werken aan uitdagende projecten.\r\n\r\n**Opleidingsachtergrond:**\r\n- Je volgt een opleiding in Informatica, Software Engineering, of een gerelateerde technische studie.\r\n- Basiskennis van programmeertalen zoals Java, Python, of JavaScript is gewenst.\r\n- Bekendheid met softwareontwikkelingsmethodologieën, zoals Agile, is een pluspunt.\r\n\r\n**Karaktereigenschappen:**\r\n- **Proactief:** Je neemt initiatief en bent niet bang om met nieuwe ideeën te komen.\r\n- **Leergierig:** Je hebt een sterke drang om nieuwe vaardigheden te leren en jezelf voortdurend te verbeteren.\r\n- **Teamplayer:** Je werkt graag in teamverband en kunt goed communiceren.\r\n- Oog voor detail: Je hebt een nauwkeurige aanpak en streeft naar hoge kwaliteit in je werk.\r\n\r\nBij [Bedrijfsnaam] geloven we in het bieden van een omgeving waar stagiaires kunnen groeien en waardevolle ervaring kunnen opdoen in de wereld van softwareontwikkeling. Als je klaar bent voor een uitdaging en een passie hebt voor technologie, dan kijken we ernaar uit om van je te horen!",
-                            EmailAddress = "Company5@hotmail.nl",
-                            IsOpen = true,
-                            LearningPathId = 2,
-                            LevelId = 3,
-                            Name = "Company5",
-                            Password = "a48+Gntv+xqjVc/QDpwoqC7/F/C/kWqY6qwj1UqX83Q=:cZVjcp/zfMQjWf2NOo8Rpw==:10000:SHA512",
-                            Phone = "555-123-4568",
-                            Specialization = "Web",
-                            Street = "749 Pine Road"
-                        });
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.FavoriteCompany", b =>
-                {
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CompanyId", "StudentId");
 
                     b.HasIndex("StudentId");
 
                     b.ToTable("FavoriteCompanies");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.InternschipTeacher", b =>
+            modelBuilder.Entity("SharedModel.InternschipTeacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -347,9 +316,11 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -361,17 +332,17 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         {
                             Id = 1,
                             Name = "Laurens",
-                            Password = "ZeTMxRoHLOLqW0Qpvz12O2BH8uzq9REfnaynb0QR9HY=:wa5QvConzYRxxyvAXa+U7w==:10000:SHA512"
+                            Password = "HQKpIXaK8F+EW8Y/1QlM8W7ci+Eo9OKX2EF+hrPWbqk=:XdproFBjMJYzhpI1bTis2A==:10000:SHA512"
                         },
                         new
                         {
                             Id = 2,
                             Name = "Kiki",
-                            Password = "KqV5kn4WjIb/u32DTuL/n6Iw1nUo+CpMnMliYYeNpBU=:Ytvev9MCOA9S2P+cxydzdg==:10000:SHA512"
+                            Password = "YmeBEW2rWxaeqwQhPcb5cynwSIf1gbzQUx5GMxh8iIc=:8iZRiu6zfWstuMoOnklw0A==:10000:SHA512"
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.LearningPath", b =>
+            modelBuilder.Entity("SharedModel.LearningPath", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -380,6 +351,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -399,7 +371,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Level", b =>
+            modelBuilder.Entity("SharedModel.Level", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -432,7 +404,112 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Student", b =>
+            modelBuilder.Entity("SharedModel.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("ReceiverCompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReceiverStudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SenderCompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SenderStudentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverCompanyId");
+
+                    b.HasIndex("ReceiverStudentId");
+
+                    b.HasIndex("SenderCompanyId");
+
+                    b.HasIndex("SenderStudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("SharedModel.StageMarkt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Addres")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CompanyUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Course")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stages");
+                });
+
+            modelBuilder.Entity("SharedModel.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -441,6 +518,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImagePath")
@@ -453,12 +531,15 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Specialization")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -476,7 +557,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Max",
-                            Password = "ML0GLqeJ+lB/2F5XL8F9iTaWmkFSJa5eSkEMNhwr6ak=:SqA8znKrefFv9OOfZP1HZA==:10000:SHA512",
+                            Password = "ILswYJ72nTTxq3cxTJITZXue8Msd/SiARWhKl+dRoB4=:SlXM4rtz9/U5ZoYWS/YBxQ==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -485,7 +566,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "JJ",
-                            Password = "j1bCrloNFbYGgzAvhN2B1YOYRNLur7oR4paDwZYbsJ8=:N+58VEEMSf8J7YvFe5gPNw==:10000:SHA512",
+                            Password = "1XPPN4wiUbmEL9LHA/NRewwWTwkYyfqoI3Jcu1M/zNU=:C/7mBy1yHOxt994wk6ObdA==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -494,7 +575,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Krijn",
-                            Password = "nvwBLXwOXARVNLwvSKzkNvCMGpjbM6Wh7ALaoTQStOs=:zLy4Qn8qNcuFZiTRedgJSA==:10000:SHA512",
+                            Password = "B/ZPFXNDO+emPXKSc4EQ2mawI2U2FJq5ajyoYoMleK4=:FsYVA3s/r2ZvA847pmILbg==:10000:SHA512",
                             Specialization = "FrontEnd"
                         },
                         new
@@ -503,7 +584,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Luna",
-                            Password = "n2PGRxYT5DAJetOGkJgakQ4kdOCGDwQUDhfGOwTsrzk=:htPerpILoyv7cT1pFl65kw==:10000:SHA512",
+                            Password = "UiVfa/qIipnIaWiF0bfQGulAoiYdNIBO7G1mcvv2/nA=:Nu+TiD2VNgxRFWUMZYha2A==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -512,7 +593,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Wiardi",
-                            Password = "AQNVzczPDFovH/DYAnK5vFWvWtxhuda+YqtuUyu5oXg=:eB1d3Qw6av7303I+1uWsMg==:10000:SHA512",
+                            Password = "mHIVfmpUKgSBkRFNChyqPDl5QeYGDbFF2VbF+AkKTd8=:0nGmzp7swodCmn2W0y6sGg==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -521,7 +602,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Nigel",
-                            Password = "x+Mfo1okyUEcm9V3D4g6jJgyZP4tf5KlJMBusmafCwc=:1i0uoAyh0AJ2IYHh2nbhkg==:10000:SHA512",
+                            Password = "3KjuMxi5UapmP6jU1A9MYK4DzINUnMrRU4PycuFOMFM=:uP+3Vl2wWDcA3JJbhwHa2Q==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -530,7 +611,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Kelvin",
-                            Password = "ZpcSPB/k+VgFE118u7rhG4gWgwnbH0B+URKaqDzpMF4=:4vy/jYrnbLGqx7KIQeieFQ==:10000:SHA512",
+                            Password = "KT/E2uq6K6KTuONV561+B1WEkQB1HLf4BuOBIVqOze4=:kgGj7XQjP3w1HvxUNFv7kg==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -539,7 +620,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 1,
                             Name = "Jonathan",
-                            Password = "LWJkoSDY5pgpZG80BaQ82ImWUuxtBMay5ACCsacvmos=:SpYHhyiPgarrT8S4aTyqGQ==:10000:SHA512",
+                            Password = "6dOVYbgtRpHpOq8LRn9E3QOrSnb08plO0g7aFxbixJY=:+vg8PqR251qIRtV0Hi4EWw==:10000:SHA512",
                             Specialization = "Web"
                         },
                         new
@@ -548,7 +629,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student1@example.com",
                             InternshipTeacherId = 1,
                             Name = "Brent",
-                            Password = "4CgfXxRT7swssBAtjV2KkyhJsGXYyO0pDKEBSH/GRIc=:ALfHfTJ7vNz1itSmejifdA==:10000:SHA512",
+                            Password = "Pn1Hy5Qh7FwgQ+K+1HlcDDVoPaEF7MscWYuSnb9ml8Q=:gUIkKYhssBRXnWWkfDDxgg==:10000:SHA512",
                             Specialization = "Native"
                         },
                         new
@@ -557,12 +638,12 @@ namespace Prototype_Curio_stagemarkt.Migrations
                             EmailAddress = "student2@example.com",
                             InternshipTeacherId = 2,
                             Name = "Simon",
-                            Password = "3nA2smHARow7avFrbOkvsASECn+YXJl/vCD9myftkD8=:fBcbSMo/7GsJUuy6oeqNfA==:10000:SHA512",
+                            Password = "SLOkcDE+F1xE+AXfDOuLQsei+WBpIzk4iKfcQRVY72c=:yd6JObz1BzHIHfwVpB8UQA==:10000:SHA512",
                             Specialization = "Native"
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.User", b =>
+            modelBuilder.Entity("SharedModel.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -722,7 +803,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.WorkHour", b =>
+            modelBuilder.Entity("SharedModel.WorkHour", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -755,7 +836,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2024, 11, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 11, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 1
@@ -763,7 +844,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 0,
                             StudentId = 2
@@ -771,7 +852,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2024, 11, 3, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 9, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 1
@@ -779,7 +860,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 8, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 2,
                             StudentId = 3
@@ -787,7 +868,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 7, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 4
@@ -795,7 +876,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2024, 10, 31, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 5
@@ -803,7 +884,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2024, 10, 30, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 2,
                             StudentId = 2
@@ -811,7 +892,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 8,
-                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 3
@@ -819,7 +900,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 9,
-                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 3, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 2,
                             StudentId = 4
@@ -827,7 +908,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 10,
-                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 2,
                             Status = 1,
                             StudentId = 5
@@ -835,7 +916,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 11,
-                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 0,
                             StudentId = 6
@@ -843,7 +924,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 12,
-                            Date = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 31, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 7
@@ -851,7 +932,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 13,
-                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 2,
                             StudentId = 8
@@ -859,7 +940,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 14,
-                            Date = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 9
@@ -867,7 +948,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 15,
-                            Date = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 0,
                             StudentId = 10
@@ -875,7 +956,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 16,
-                            Date = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 1
@@ -883,7 +964,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 17,
-                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 2,
                             StudentId = 2
@@ -891,7 +972,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 18,
-                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 3
@@ -899,7 +980,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 19,
-                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 0,
                             StudentId = 4
@@ -907,7 +988,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 20,
-                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 2,
                             StudentId = 5
@@ -915,7 +996,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 21,
-                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 6
@@ -923,7 +1004,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 22,
-                            Date = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 2,
                             StudentId = 7
@@ -931,7 +1012,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 23,
-                            Date = new DateTime(2024, 10, 14, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 1,
                             StudentId = 8
@@ -939,7 +1020,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 24,
-                            Date = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 8, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 9
@@ -947,7 +1028,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 25,
-                            Date = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 10
@@ -955,7 +1036,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 26,
-                            Date = new DateTime(2024, 10, 11, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 7,
                             Status = 2,
                             StudentId = 1
@@ -963,7 +1044,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 27,
-                            Date = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 16, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 3,
                             Status = 1,
                             StudentId = 2
@@ -971,7 +1052,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 28,
-                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 5,
                             Status = 0,
                             StudentId = 3
@@ -979,7 +1060,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 29,
-                            Date = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 3, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 2,
                             Status = 2,
                             StudentId = 4
@@ -987,7 +1068,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 30,
-                            Date = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 6,
                             Status = 1,
                             StudentId = 5
@@ -995,7 +1076,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 31,
-                            Date = new DateTime(2024, 10, 6, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 8,
                             Status = 0,
                             StudentId = 6
@@ -1003,44 +1084,101 @@ namespace Prototype_Curio_stagemarkt.Migrations
                         new
                         {
                             Id = 32,
-                            Date = new DateTime(2024, 11, 4, 0, 0, 0, 0, DateTimeKind.Local),
+                            Date = new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Local),
                             HoursWorked = 4,
                             Status = 1,
                             StudentId = 7
                         });
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Model.Message", b =>
+            modelBuilder.Entity("SharedModel.Application", b =>
                 {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", null)
-                        .WithMany("Messages")
+                    b.HasOne("SharedModel.Company", "Company")
+                        .WithMany("Applications")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedModel.Student", "Student")
+                        .WithMany("Applications")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SharedModel.Company", b =>
+                {
+                    b.HasOne("SharedModel.LearningPath", "LearningPath")
+                        .WithMany("Companies")
+                        .HasForeignKey("LearningPathId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedModel.Level", "Level")
+                        .WithMany("Companies")
+                        .HasForeignKey("LevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningPath");
+
+                    b.Navigation("Level");
+                });
+
+            modelBuilder.Entity("SharedModel.FavoriteCompany", b =>
+                {
+                    b.HasOne("SharedModel.Company", null)
+                        .WithMany("FavoriteCompanies")
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "ReceiverCompany")
+                    b.HasOne("SharedModel.StageMarkt", "Stage")
+                        .WithMany("FavoriteCompanies")
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedModel.Student", "Student")
+                        .WithMany("FavoriteCompanies")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stage");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SharedModel.Message", b =>
+                {
+                    b.HasOne("SharedModel.Company", "ReceiverCompany")
                         .WithMany()
                         .HasForeignKey("ReceiverCompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("FK_Message_ReceiverCompany");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "ReceiverStudent")
+                    b.HasOne("SharedModel.Student", "ReceiverStudent")
                         .WithMany()
                         .HasForeignKey("ReceiverStudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("FK_Message_ReceiverStudent");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "SenderCompany")
-                        .WithMany()
+                    b.HasOne("SharedModel.Company", "SenderCompany")
+                        .WithMany("Messages")
                         .HasForeignKey("SenderCompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("FK_Message_SenderCompany");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "SenderStudent")
+                    b.HasOne("SharedModel.Student", "SenderStudent")
                         .WithMany()
                         .HasForeignKey("SenderStudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("FK_Message_SenderStudent");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", null)
+                    b.HasOne("SharedModel.Student", null)
                         .WithMany("Messages")
                         .HasForeignKey("StudentId");
 
@@ -1053,70 +1191,13 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Navigation("SenderStudent");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Application", b =>
+            modelBuilder.Entity("SharedModel.Student", b =>
                 {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "Company")
-                        .WithMany("Applications")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "Student")
-                        .WithMany("Applications")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Company", b =>
-                {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.LearningPath", "LearningPath")
-                        .WithMany("Companies")
-                        .HasForeignKey("LearningPathId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Level", "Level")
-                        .WithMany("Companies")
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LearningPath");
-
-                    b.Navigation("Level");
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.FavoriteCompany", b =>
-                {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "Company")
-                        .WithMany("FavoriteCompanies")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "Student")
-                        .WithMany("FavoriteCompanies")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Student", b =>
-                {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.InternschipTeacher", null)
+                    b.HasOne("SharedModel.InternschipTeacher", null)
                         .WithMany("Students")
                         .HasForeignKey("InternschipTeacherId");
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.InternschipTeacher", "InternschipTeacher")
+                    b.HasOne("SharedModel.InternschipTeacher", "InternschipTeacher")
                         .WithMany()
                         .HasForeignKey("InternshipTeacherId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1124,29 +1205,29 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Navigation("InternschipTeacher");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.User", b =>
+            modelBuilder.Entity("SharedModel.User", b =>
                 {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Model.Admin", "Admin")
+                    b.HasOne("SharedModel.Admin", "Admin")
                         .WithMany()
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Company", "Company")
+                    b.HasOne("SharedModel.Company", "Company")
                         .WithMany("Users")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.InternschipTeacher", "Interschip")
+                    b.HasOne("SharedModel.InternschipTeacher", "Interschip")
                         .WithMany()
                         .HasForeignKey("IntershipTeacherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "Student")
+                    b.HasOne("SharedModel.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", null)
+                    b.HasOne("SharedModel.Student", null)
                         .WithMany("Users")
                         .HasForeignKey("StudentId1");
 
@@ -1159,9 +1240,9 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.WorkHour", b =>
+            modelBuilder.Entity("SharedModel.WorkHour", b =>
                 {
-                    b.HasOne("Prototype_Curio_stagemarkt.Data.Models.Student", "Student")
+                    b.HasOne("SharedModel.Student", "Student")
                         .WithMany("workHours")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1170,7 +1251,7 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Company", b =>
+            modelBuilder.Entity("SharedModel.Company", b =>
                 {
                     b.Navigation("Applications");
 
@@ -1181,22 +1262,27 @@ namespace Prototype_Curio_stagemarkt.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.InternschipTeacher", b =>
+            modelBuilder.Entity("SharedModel.InternschipTeacher", b =>
                 {
                     b.Navigation("Students");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.LearningPath", b =>
+            modelBuilder.Entity("SharedModel.LearningPath", b =>
                 {
                     b.Navigation("Companies");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Level", b =>
+            modelBuilder.Entity("SharedModel.Level", b =>
                 {
                     b.Navigation("Companies");
                 });
 
-            modelBuilder.Entity("Prototype_Curio_stagemarkt.Data.Models.Student", b =>
+            modelBuilder.Entity("SharedModel.StageMarkt", b =>
+                {
+                    b.Navigation("FavoriteCompanies");
+                });
+
+            modelBuilder.Entity("SharedModel.Student", b =>
                 {
                     b.Navigation("Applications");
 

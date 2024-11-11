@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.Main;
 using System;
@@ -185,7 +185,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 using var db = new AppDbContext();
 
                 var selectedUserCompany = db.Users.FirstOrDefault(u => u.CompanyId == selectedCompany.Id);
-                var selectedFavoriteCompany = db.FavoriteCompanies.FirstOrDefault(f => f.CompanyId == selectedCompany.Id);
+                var selectedFavoriteCompany = db.FavoriteCompanies.FirstOrDefault(f => f.Stage.Id == selectedCompany.Id);
 
                 db.Companies.Remove(selectedCompany);
 

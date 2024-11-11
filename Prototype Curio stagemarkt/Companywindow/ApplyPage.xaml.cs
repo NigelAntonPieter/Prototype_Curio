@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.Main;
 using System;
@@ -89,7 +89,7 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                     }
 
                     var currentStudent = User.LoggedInUser.Student;
-                    var newApplication = new Prototype_Curio_stagemarkt.Data.Models.Application
+                    var newApplication = new SharedModel.Application
                     {
                         StudentId = currentStudent.Id,
                         CompanyId = selectedCompanyId,

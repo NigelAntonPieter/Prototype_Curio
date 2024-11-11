@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Prototype_Curio_stagemarkt.Data.Models;
 using System;
+using SharedModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +13,11 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
     {
         public void Configure(EntityTypeBuilder<FavoriteCompany> builder)
         {
-            builder.HasKey(fc => new { fc.CompanyId, fc.StudentId });
+            builder.HasKey(fc => new { fc.StageId, fc.StudentId });
 
-            builder.HasOne(fc => fc.Company)
+            builder.HasOne(fc => fc.Stage)
                 .WithMany(c => c.FavoriteCompanies)
-                .HasForeignKey(fc => fc.CompanyId);
+                .HasForeignKey(fc => fc.StageId);
 
             builder.HasOne(fc => fc.Student)
                 .WithMany(s => s.FavoriteCompanies)

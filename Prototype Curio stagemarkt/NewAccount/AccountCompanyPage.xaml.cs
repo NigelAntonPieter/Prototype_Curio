@@ -21,7 +21,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using WinRT.Interop;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Microsoft.UI.Text;
@@ -44,7 +44,7 @@ namespace Prototype_Curio_stagemarkt.Login
         private Company _company;
         private StorageFile copiedFile;
         private int _applicationCount;
-        private Prototype_Curio_stagemarkt.Data.Models.Application selectedApplication;
+        private SharedModel.Application selectedApplication;
 
         public AccountCompanyPage()
         {
@@ -231,7 +231,7 @@ namespace Prototype_Curio_stagemarkt.Login
         private async void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var listViewItem = (FrameworkElement)e.OriginalSource;
-            selectedApplication = listViewItem.DataContext as Prototype_Curio_stagemarkt.Data.Models.Application;
+            selectedApplication = listViewItem.DataContext as SharedModel.Application;
 
             if (selectedApplication != null)
             {
@@ -241,7 +241,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem is Prototype_Curio_stagemarkt.Data.Models.Application application)
+            if (e.ClickedItem is SharedModel.Application application)
             {
                 int? studentId = application.StudentId;
                 int companyId = application.CompanyId;
@@ -277,7 +277,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 {
                     await db.SaveChangesAsync();
 
-                    var applications = applicationListView.ItemsSource as List<Prototype_Curio_stagemarkt.Data.Models.Application>;
+                    var applications = applicationListView.ItemsSource as List<SharedModel.Application>;
                     if (applications != null)
                     {
                         applications.Remove(selectedApplication);

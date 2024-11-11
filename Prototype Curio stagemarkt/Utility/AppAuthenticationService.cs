@@ -1,6 +1,5 @@
 ﻿using Prototype_Curio_stagemarkt.Data;
-using Prototype_Curio_stagemarkt.Data.Model;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;

@@ -6,8 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
 using Prototype_Curio_stagemarkt.Data;
-using Prototype_Curio_stagemarkt.Data.Model;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Prototype_Curio_stagemarkt.Utility;
@@ -65,7 +64,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 using var db = new AppDbContext();
                 var favoriteCompanies = db.FavoriteCompanies
                     .Where(f => f.StudentId == User.LoggedInUser.StudentId)
-                    .Select(f => f.Company)
+                    .Select(f => f.Stage)
                     .ToList();
                 companyListView.ItemsSource = favoriteCompanies;
             }
@@ -166,13 +165,13 @@ namespace Prototype_Curio_stagemarkt.Login
             Frame.Navigate(typeof(MainCurioPage), student);
         }
 
-        private void RemoveFavoriteCompany(int companyId)
+        private void RemoveFavoriteCompany(int stageId)
         {
             if (User.LoggedInUser?.StudentId != null)
             {
                 using var db = new AppDbContext();
                 var favorite = db.FavoriteCompanies
-                    .FirstOrDefault(f => f.StudentId == User.LoggedInUser.StudentId && f.CompanyId == companyId);
+                    .FirstOrDefault(f => f.StudentId == User.LoggedInUser.StudentId && f.StageId == stageId);
                 if (favorite != null)
                 {
                     db.FavoriteCompanies.Remove(favorite);

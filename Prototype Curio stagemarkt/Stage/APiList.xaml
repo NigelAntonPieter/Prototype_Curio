@@ -85,11 +85,11 @@
                                                            Foreground="Black" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Plaats: "
+                                                <TextBlock Text="Stad: "
                                                            FontWeight="Bold"
                                                            Foreground="Black"
                                                            Margin="0,0,3,0"/>
-                                                <TextBlock Text="{Binding Place}"
+                                                <TextBlock Text="{Binding City}"
                                                            Foreground="Black" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
@@ -129,6 +129,16 @@
                                                 Padding="5,2"
                                                 Margin="0,10,0,0" 
                                                 CommandParameter="{Binding CompanyUrl}"/>
+
+                                        <Button x:Name="bFavorite"
+                                                Click="bFavorite_Click"
+                                                Content="Favorite"
+                                                Background="#FFA500"
+                                                Foreground="White"
+                                                HorizontalAlignment="Left"
+                                                Padding="5,2"
+                                                Margin="0,10,0,0"
+                                                CommandParameter="{Binding}"/>
                                     </StackPanel>
 
                                     <!-- Right section: Company Image -->

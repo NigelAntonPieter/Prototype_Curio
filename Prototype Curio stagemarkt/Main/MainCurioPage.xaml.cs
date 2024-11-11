@@ -7,11 +7,10 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
-using Prototype_Curio_stagemarkt.Data.Model;
-using Prototype_Curio_stagemarkt.Data.Models;
 using Prototype_Curio_stagemarkt.Login;
 using Prototype_Curio_stagemarkt.Registreren;
 using Prototype_Curio_stagemarkt.Stage;
+using SharedModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -103,8 +102,6 @@ namespace Prototype_Curio_stagemarkt.Main
             var searchInput = searchTextbox.Text;
 
             using var db = new AppDbContext();
-
-
         }
 
         private void searchAdresTextbox_TextChanged(object sender, TextChangedEventArgs e)
@@ -115,53 +112,46 @@ namespace Prototype_Curio_stagemarkt.Main
 
         private void Bsearch_Click(object sender, RoutedEventArgs e)
         {
-            var searchQuery = searchTextbox.Text.Trim().ToLower();
-            var searchAdresQuery = searchAdresTextbox.Text.Trim().ToLower();
+            var searchQuery = searchTextbox.Text.Trim();
+            var searchAdresQuery = searchAdresTextbox.Text.Trim();
 
             using var db = new AppDbContext();
 
-            List<Company> filteredCompanies;
+            List<StageMarkt> filteredCompanies;
 
+            // Case-insensitive filtering directly
             if (!string.IsNullOrEmpty(searchQuery) && string.IsNullOrEmpty(searchAdresQuery))
             {
-                filteredCompanies = db.Companies
-                    .Include(c => c.LearningPath)
-                    .Where(c => c.IsOpen && c.Name.ToLower().Contains(searchQuery))
+                filteredCompanies = db.Stages
+                    .Where(c => c.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
             else if (string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
-                filteredCompanies = db.Companies
-                    .Include(c => c.LearningPath)
-                    .Where(c => c.IsOpen && c.City.ToLower().Contains(searchAdresQuery))
+                filteredCompanies = db.Stages
+                    .Where(c => c.City.Contains(searchAdresQuery, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
             else if (!string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
-                filteredCompanies = db.Companies
-                    .Include(c => c.LearningPath)
-                    .Where(c => c.IsOpen && c.Name.ToLower().Contains(searchQuery) && c.City.ToLower().Contains(searchAdresQuery))
+                filteredCompanies = db.Stages
+                    .Where(c => c.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) &&
+                                c.City.Contains(searchAdresQuery, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
             else
             {
-                filteredCompanies = db.Companies
-                    .Include(c => c.LearningPath)
-                    .Where(c => c.IsOpen)
-                    .ToList();
+                // No filter applied, return all
+                filteredCompanies = db.Stages.ToList();
             }
 
+            // Navigate with search results if the user is logged in
             if (User.LoggedInUser?.Student != null)
             {
-                this.Frame.Navigate(typeof(CompanysList), (filteredCompanies, User.LoggedInUser.Student));
-            }
-            else
-            {
-                this.Frame.Navigate(typeof(CompanysList), filteredCompanies);
+                this.Frame.Navigate(typeof(APiList), new Tuple<Student, List<StageMarkt>>(User.LoggedInUser.Student, filteredCompanies));
+
             }
         }
-
-
 
         private void AccountPageBUtton_Click(object sender, RoutedEventArgs e)
         {

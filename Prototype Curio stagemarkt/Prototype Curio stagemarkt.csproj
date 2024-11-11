@@ -13,9 +13,11 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Stage\CompanysList.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="AdminMap\AdminPage.xaml" />
     <None Remove="Companywindow\ApplyPage.xaml" />
-    <None Remove="Companywindow\CompanyOverviewPage.xaml" />
     <None Remove="Login\AccountCompanyPage.xaml" />
     <None Remove="Login\AccountPage.xaml" />
     <None Remove="Login\LoginPage.xaml" />
@@ -27,6 +29,9 @@
     <None Remove="Registreren\RegisterPage.xaml" />
     <None Remove="Stage\APiList.xaml" />
     <None Remove="Stage\CompanysList.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Stage\CompanysList.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +64,9 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\source\repos\SharedModel\SharedModel.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Stage\APiList.xaml">
@@ -107,16 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Registreren\RegisterPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Stage\CompanysList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Companywindow\CompanyOverviewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

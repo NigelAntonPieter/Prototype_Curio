@@ -40,10 +40,5 @@ namespace Prototype_Curio_stagemarkt.Main
         {
             this.Frame.Navigate(typeof(RegisterPage));
         }
-
-        private void ApiPage_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(APiList));
-        }
     }
 }

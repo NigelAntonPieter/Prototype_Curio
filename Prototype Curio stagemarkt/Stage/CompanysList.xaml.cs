@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.Data.Model;
-using Prototype_Curio_stagemarkt.Data.Models;
+using SharedModel;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
