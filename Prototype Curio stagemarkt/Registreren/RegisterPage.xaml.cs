@@ -8,7 +8,8 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.Utility;
 using Prototype_Curio_stagemarkt.Login;
@@ -34,7 +35,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private void LoadCourses()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var courses = db.Courses.ToList();
             studentCourseCombobox.ItemsSource = courses;
             companyCourseCombobox.ItemsSource = courses;
@@ -44,7 +45,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private void LoadLearningPaths()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var learningPaths = db.LearningPaths.ToList();
             companyLearningPathComboBox.ItemsSource = learningPaths;
             companyLearningPathComboBox.DisplayMemberPath = "Name";
@@ -53,7 +54,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private void LoadLevelPaths()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var levels = db.Levels.ToList();
             companyLevelComboBox.ItemsSource = levels;
             companyLevelComboBox.DisplayMemberPath = "GradeLevel";
@@ -78,7 +79,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private async Task RegisterStudent()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             if (db.Students.Any(s => s.EmailAddress == studentEmailTextbox.Text))
             {
@@ -113,7 +114,7 @@ namespace Prototype_Curio_stagemarkt.Registreren
 
         private async Task RegisterCompany()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             if (db.Companies.Any(c => c.EmailAddress == companyEmailTextbox.Text))
             {

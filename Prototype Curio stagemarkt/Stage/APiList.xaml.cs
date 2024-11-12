@@ -10,7 +10,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Prototype_Curio_stagemarkt.Stage
@@ -167,7 +168,7 @@ namespace Prototype_Curio_stagemarkt.Stage
                 return;
             }
 
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             // Check if the stage is already marked as favorite
             var existingFavorite = db.FavoriteCompanies

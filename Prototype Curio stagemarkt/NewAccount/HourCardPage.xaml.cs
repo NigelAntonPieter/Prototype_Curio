@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
+using SharedModel.Model;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
         private void LoadStudentWorkHours()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             int studentId = User.LoggedInUser.StudentId ?? 0;
             var student = db.Students.Include(s => s.workHours).FirstOrDefault(s => s.Id == studentId);
 
@@ -64,7 +64,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
             args.Item.IsTabStop = true;
             DateTime selectedDate = args.Item.Date.Date;
 
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 var workHours = db.WorkHours
                     .Where(wh => wh.Date == selectedDate && wh.StudentId == User.LoggedInUser.StudentId)
@@ -97,7 +97,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
                 DateTime selectedDate = HourcardCalendar.SelectedDates[0].Date;
                 int studentId = User.LoggedInUser.StudentId ?? 0;
 
-                using (var db = new AppDbContext())
+                using (var db = new CurioContext())
                 {
                     var workHour = db.WorkHours.FirstOrDefault(wh => wh.Date == selectedDate && wh.StudentId == studentId);
 
@@ -143,7 +143,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
                     if (selectedDate <= DateTime.Today)
                     {
-                        using (var db = new AppDbContext())
+                        using (var db = new CurioContext())
                         {
                             var workHour = db.WorkHours.FirstOrDefault(wh => wh.Date == selectedDate && wh.StudentId == User.LoggedInUser.StudentId);
 

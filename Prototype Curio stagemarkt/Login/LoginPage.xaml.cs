@@ -4,7 +4,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Prototype_Curio_stagemarkt.AdminMap;
 using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.Utility;
 using System;
@@ -41,7 +42,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void AttemptLogin()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             var user = db.Users
                          .Include(u => u.Student)

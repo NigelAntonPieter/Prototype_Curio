@@ -167,5 +167,8 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
+        <ContentDialog>
+            
+        </ContentDialog>
     </Grid>
 </Page>

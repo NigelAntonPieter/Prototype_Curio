@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedModel;
+using SharedModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

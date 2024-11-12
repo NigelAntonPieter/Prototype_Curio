@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedModel;
+using SharedModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,20 +15,20 @@ namespace Prototype_Curio_stagemarkt.Data.Seeders
         {
             // Configuring sender relationships
             builder.HasOne(m => m.SenderStudent)
-                   .WithMany(c =>c.Messages)
+                   .WithMany(c =>c.MessagesSent)
                    .HasForeignKey(m => m.SenderStudentId) // Using separate foreign key
                    .OnDelete(DeleteBehavior.Restrict)
                    .HasConstraintName("FK_Message_SenderStudent");
 
             builder.HasOne(m => m.SenderCompany)
-                   .WithMany(c =>c.Messages)
+                   .WithMany()
                    .HasForeignKey(m => m.SenderCompanyId) // Using separate foreign key
                    .OnDelete(DeleteBehavior.Restrict)
                    .HasConstraintName("FK_Message_SenderCompany");
 
             // Configuring receiver relationships
             builder.HasOne(m => m.ReceiverStudent)
-                   .WithMany()
+                   .WithMany(s => s.MessagesReceived)
                    .HasForeignKey(m =>m.ReceiverStudentId)
                    .OnDelete(DeleteBehavior.Restrict)
                    .HasConstraintName("FK_Message_ReceiverStudent");

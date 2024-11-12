@@ -8,7 +8,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Main;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void LoadWorkHours()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             var workHours = db.WorkHours
                 .Include(w => w.Student)
@@ -85,7 +86,7 @@ namespace Prototype_Curio_stagemarkt.Login
             {
                 var calendarItemDate = args.Item.Date.Date;
 
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var studentWorkHours = db.WorkHours
                     .Include(w => w.Student)
                     .ThenInclude(s => s.InternschipTeacher)
@@ -139,7 +140,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (workHourDialog.DataContext is WorkHour workHour)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var existingWorkHour = await db.WorkHours.FindAsync(workHour.Id);
 
                 if (existingWorkHour != null)

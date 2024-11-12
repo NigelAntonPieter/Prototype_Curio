@@ -5,8 +5,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Prototype_Curio_stagemarkt.Companywindow;
+using SharedModel.Model;
 using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
 using Prototype_Curio_stagemarkt.Main;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Prototype_Curio_stagemarkt.Utility;
@@ -48,7 +48,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void LoadCourses()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var courses = db.Courses.Select(c => c.Name).ToList();
             studentCourseCombobox.Items.Clear();
             foreach (var course in courses)
@@ -61,7 +61,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (User.LoggedInUser?.StudentId != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var favoriteCompanies = db.FavoriteCompanies
                     .Where(f => f.StudentId == User.LoggedInUser.StudentId)
                     .Select(f => f.Stage)
@@ -74,7 +74,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (User.LoggedInUser?.StudentId != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var companyIds = db.Messages
                     .Where(m => m.ReceiverStudentId == User.LoggedInUser.StudentId || m.SenderStudentId == User.LoggedInUser.StudentId)
                     .Select(m => m.SenderCompanyId)
@@ -95,7 +95,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (studentId != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var unreadMessages = db.Messages
                     .Where(m => m.ReceiverStudentId == studentId && m.SenderCompanyId == companyId && !m.IsRead)
                     .ToList();
@@ -125,7 +125,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void UpdateStudentInfo()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var loggedInUser = User.LoggedInUser;
             var student = db.Students.FirstOrDefault(s => s.Id == loggedInUser.StudentId);
             if (student != null)
@@ -169,7 +169,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (User.LoggedInUser?.StudentId != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var favorite = db.FavoriteCompanies
                     .FirstOrDefault(f => f.StudentId == User.LoggedInUser.StudentId && f.StageId == stageId);
                 if (favorite != null)
@@ -185,7 +185,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (User.LoggedInUser != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var user = db.Users.FirstOrDefault(u => u.StudentId == User.LoggedInUser.StudentId);
                 var student = db.Students.FirstOrDefault(s => s.Id == User.LoggedInUser.StudentId);
                 if (user != null) db.Users.Remove(user);

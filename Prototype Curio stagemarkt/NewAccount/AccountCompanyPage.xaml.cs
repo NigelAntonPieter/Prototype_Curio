@@ -21,7 +21,8 @@ using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using WinRT.Interop;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.NewAccount;
 using Microsoft.UI.Text;
@@ -44,7 +45,7 @@ namespace Prototype_Curio_stagemarkt.Login
         private Company _company;
         private StorageFile copiedFile;
         private int _applicationCount;
-        private SharedModel.Application selectedApplication;
+        private SharedModel.Model.Application selectedApplication;
 
         public AccountCompanyPage()
         {
@@ -78,7 +79,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async Task LoadCompanyData(int companyId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var company = await db.Companies
                                   .Include(c => c.Level)
                                   .Include(c => c.LearningPath)
@@ -92,7 +93,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async Task LoadApplications(int companyId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var applications = await db.Applications
                                        .Include(a => a.Student)
                                        .Where(a => a.CompanyId == companyId)
@@ -106,7 +107,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void LoadLevels()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var levels = db.Levels.ToList();
             companyLevelCombobox.Items.Clear();
             foreach (var level in levels)
@@ -117,7 +118,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private void LoadCourses()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var courses = db.Courses.Select(c => c.Name).ToList();
             companyCourseCombobox.Items.Clear();
             foreach (var course in courses)
@@ -157,7 +158,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async Task CheckForUnreadMessages(int companyId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var unreadMessages = await db.Messages
                                           .Where(m => m.ReceiverCompanyId == companyId && !m.IsRead)
                                           .Include(m => m.SenderStudent) 
@@ -231,7 +232,7 @@ namespace Prototype_Curio_stagemarkt.Login
         private async void applicationListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var listViewItem = (FrameworkElement)e.OriginalSource;
-            selectedApplication = listViewItem.DataContext as SharedModel.Application;
+            selectedApplication = listViewItem.DataContext as SharedModel.Model.Application;
 
             if (selectedApplication != null)
             {
@@ -241,7 +242,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async void applicationListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem is SharedModel.Application application)
+            if (e.ClickedItem is SharedModel.Model.Application application)
             {
                 int? studentId = application.StudentId;
                 int companyId = application.CompanyId;
@@ -262,7 +263,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (selectedApplication != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
 
 
                 var existingTrackedApp = db.Applications.Local.FirstOrDefault(a => a.Id == selectedApplication.Id);
@@ -277,7 +278,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 {
                     await db.SaveChangesAsync();
 
-                    var applications = applicationListView.ItemsSource as List<SharedModel.Application>;
+                    var applications = applicationListView.ItemsSource as List<SharedModel.Model.Application>;
                     if (applications != null)
                     {
                         applications.Remove(selectedApplication);
@@ -333,7 +334,7 @@ namespace Prototype_Curio_stagemarkt.Login
 
         private async Task UpdateCompany(User loggedInCompany)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var company = db.Companies.Include(c => c.Level).FirstOrDefault(c => c.Id == loggedInCompany.CompanyId);
 
             if (company != null)
@@ -350,7 +351,7 @@ namespace Prototype_Curio_stagemarkt.Login
             }
         }
 
-        private void UpdateCompanyDetails(Company company, AppDbContext db)
+        private void UpdateCompanyDetails(Company company, CurioContext db)
         {
             var selectedLevel = (companyLevelCombobox.SelectedItem as ComboBoxItem)?.DataContext as Level;
             company.Level = selectedLevel != null && db.Levels.Find(selectedLevel.Id) != null
@@ -428,7 +429,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (User.LoggedInUser != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
 
                 if (User.LoggedInUser.CompanyId.HasValue)
                 {
@@ -471,7 +472,7 @@ namespace Prototype_Curio_stagemarkt.Login
         {
             if (companyId != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
 
                 var unreadMessages = db.Messages
                                         .Where(m => m.ReceiverCompanyId == companyId && m.SenderStudentId == studentId && !m.IsRead)

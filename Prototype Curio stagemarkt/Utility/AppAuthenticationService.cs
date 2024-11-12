@@ -1,5 +1,6 @@
 ﻿using Prototype_Curio_stagemarkt.Data;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Prototype_Curio_stagemarkt.Utility
     {
         public bool Authenticate(string name, string password)
         {
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 var student = db.Students.SingleOrDefault(u => u.Name == name);
                 if (student != null)

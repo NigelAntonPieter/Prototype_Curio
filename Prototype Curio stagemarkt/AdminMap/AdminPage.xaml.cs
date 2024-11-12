@@ -6,7 +6,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.Main;
 using System;
@@ -38,7 +39,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         public AdminPage()
         {
             this.InitializeComponent();
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
 
             AllCompanies = new ObservableCollection<Company>();
             AllStudents = new ObservableCollection<Student>();
@@ -49,7 +50,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
 
         private void LoadCompanies()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var companies = db.Companies.ToList();
             foreach (var company in companies)
             {
@@ -59,7 +60,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
 
         private void LoadStudents()
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var students = db.Students.ToList();
             foreach (var student in students)
             {
@@ -79,7 +80,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
 
             if (clickedCompany != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var user = db.Users.FirstOrDefault(u => u.CompanyId == clickedCompany.Id);
 
                 if (user != null)
@@ -103,7 +104,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
 
             if (clickedStudent != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
                 var user = db.Users.FirstOrDefault(u => u.StudentId == clickedStudent.Id);
 
                 if (user != null)
@@ -147,7 +148,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         {
             if (selectedStudent != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
 
                 var selectedUserStudent = db.Users.FirstOrDefault(u => u.StudentId == selectedStudent.Id);
                 db.Students.Remove(selectedStudent);
@@ -182,7 +183,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         {
             if (selectedCompany != null)
             {
-                using var db = new AppDbContext();
+                using var db = new CurioContext();
 
                 var selectedUserCompany = db.Users.FirstOrDefault(u => u.CompanyId == selectedCompany.Id);
                 var selectedFavoriteCompany = db.FavoriteCompanies.FirstOrDefault(f => f.Stage.Id == selectedCompany.Id);
@@ -224,7 +225,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
         {
             var searchInput = searchTextbox.Text;
 
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
         }
     }
 }

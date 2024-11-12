@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using SharedModel.Data;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,7 +29,7 @@ namespace Prototype_Curio_stagemarkt
         public MainWindow()
         {
             this.InitializeComponent();
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 //db.Database.EnsureDeleted();
                 //db.Database.EnsureCreated();

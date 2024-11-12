@@ -5,7 +5,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using Prototype_Curio_stagemarkt.Data;
 using Prototype_Curio_stagemarkt.Main;
 using System;
@@ -80,7 +81,7 @@ namespace Prototype_Curio_stagemarkt.Companywindow
         {
             if (ValidateApplicationInputs())
             {
-                using (var db = new AppDbContext())
+                using (var db = new CurioContext())
                 {
                     var companyExists = db.Companies.Any(c => c.Id == selectedCompanyId);
                     if (!companyExists)
@@ -89,7 +90,7 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                     }
 
                     var currentStudent = User.LoggedInUser.Student;
-                    var newApplication = new SharedModel.Application
+                    var newApplication = new SharedModel.Model.Application
                     {
                         StudentId = currentStudent.Id,
                         CompanyId = selectedCompanyId,

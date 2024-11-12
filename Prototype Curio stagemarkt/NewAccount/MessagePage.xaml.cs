@@ -12,7 +12,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SharedModel;
+using SharedModel.Model;
+using SharedModel.Data;
 using System.Collections.ObjectModel;
 using Prototype_Curio_stagemarkt.Data;
 using Microsoft.EntityFrameworkCore;
@@ -72,14 +73,14 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
         private string GetStudentName(int studentId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var student = db.Students.Find(studentId);
             return student?.Name ?? "Onbekend";
         }
 
         private string GetCompanyName(int companyId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var company = db.Companies.Find(companyId);
             return company?.Name ?? "Onbekend";
         }
@@ -88,7 +89,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
         public List<Message> GetMessagesForChat(int studentId, int companyId)
         {
-            using var db = new AppDbContext();
+            using var db = new CurioContext();
             var messages = db.Messages
                 .Where(m =>
                     (m.SenderStudentId == studentId && m.ReceiverCompanyId == companyId && m.SenderStudentId.HasValue) ||
@@ -103,7 +104,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
             private async void LoadMessages()
             {
-                using (var db = new AppDbContext())
+                using (var db = new CurioContext())
                 {
                     List<Message> messages;
 
@@ -188,7 +189,7 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
         private async Task SaveMessage(Message message)
         {
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 db.Messages.Add(message);
                 await db.SaveChangesAsync();
@@ -197,14 +198,14 @@ namespace Prototype_Curio_stagemarkt.NewAccount
 
         private async Task<bool> DoesStudentExist(int studentId)
         {
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 return await db.Students.AnyAsync(s => s.Id == studentId);
             }
         }
         private async Task<bool> DoesCompanyExist(int companyId)
         {
-            using (var db = new AppDbContext())
+            using (var db = new CurioContext())
             {
                 return await db.Companies.AnyAsync(c => c.Id == companyId);
             }
