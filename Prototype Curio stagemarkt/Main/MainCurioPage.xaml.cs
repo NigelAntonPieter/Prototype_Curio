@@ -158,5 +158,37 @@ namespace Prototype_Curio_stagemarkt.Main
                 }
             }
         }
+
+        private void Bfakesearch_Click(object sender, RoutedEventArgs e)
+        {
+            var searchQuery = searchTextbox.Text.Trim();
+            var searchAdresQuery = searchAdresTextbox.Text.Trim();
+
+            using var db = new CurioContext();
+
+            List<StageMarkt> filteredCompanies;
+
+            // Perform initial query to retrieve relevant data from the database
+            var stages = db.Stages.AsEnumerable(); // Converts to IEnumerable, allowing client-side filtering.
+
+            // Apply case-insensitive filtering on client-side
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                stages = stages.Where(c => c.Name.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(searchAdresQuery))
+            {
+                stages = stages.Where(c => c.City.ToLower().Contains(searchAdresQuery.ToLower()));
+            }
+
+            filteredCompanies = stages.ToList(); // Materialize the filtered results as a list
+
+            // Navigate with search results if the user is logged in
+            if (User.LoggedInUser?.Student != null)
+            {
+                this.Frame.Navigate(typeof(CompanyList), new Tuple<Student, List<StageMarkt>>(User.LoggedInUser.Student, filteredCompanies));
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Remove="AdminMap\AdminPage.xaml" />
     <None Remove="Companywindow\ApplyPage.xaml" />
+    <None Remove="Companywindow\CompanyOverviewPage.xaml" />
     <None Remove="Login\AccountCompanyPage.xaml" />
     <None Remove="Login\AccountPage.xaml" />
     <None Remove="Login\LoginPage.xaml" />
@@ -28,6 +29,7 @@
     <None Remove="NewAccount\MessagePage.xaml" />
     <None Remove="Registreren\RegisterPage.xaml" />
     <None Remove="Stage\APiList.xaml" />
+    <None Remove="Stage\CompanyList.xaml" />
     <None Remove="Stage\CompanysList.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +65,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\source\repos\SharedModel\SharedModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Stage\CompanyList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Companywindow\CompanyOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Stage\APiList.xaml">
