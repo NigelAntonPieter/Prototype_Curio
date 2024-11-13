@@ -168,7 +168,21 @@
             </StackPanel>
         </Grid>
         <ContentDialog>
-            
+
+        </ContentDialog>
+        <ContentDialog x:Name="acceptDialog"
+                       Title="Favoriet Toegevoegd"
+                       CloseButtonText="OK">
+            <StackPanel>
+                <TextBlock Text="Het bedrijf is toegevoegd aan je favorieten!." />
+            </StackPanel>
+        </ContentDialog>
+        <ContentDialog x:Name="alreadyDialog"
+                       Title=" Al Favoriet"
+                       CloseButtonText="OK">
+            <StackPanel>
+                <TextBlock Text="Het bedrijf is al toegevoegd aan je favorieten!." />
+            </StackPanel>
         </ContentDialog>
     </Grid>
 </Page>

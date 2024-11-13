@@ -184,11 +184,11 @@ namespace Prototype_Curio_stagemarkt.Stage
                 });
 
                 await db.SaveChangesAsync();
-                Debug.WriteLine("Stage added to favorites.");
+                await acceptDialog.ShowAsync();
             }
             else
             {
-                Debug.WriteLine("Stage is already in favorites.");
+                await alreadyDialog.ShowAsync();
             }
         }
     }
