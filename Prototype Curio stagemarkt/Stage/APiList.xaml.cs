@@ -13,21 +13,26 @@ using Windows.UI.Popups;
 using SharedModel.Model;
 using SharedModel.Data;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
 
 namespace Prototype_Curio_stagemarkt.Stage
 {
     public sealed partial class APiList : Page
     {
-        private const string ApiUrl = "https://localhost:7249/api/Stages"; // Change to your actual API URL
-        private int _currentPage = 1; // Current page index
-        private const int _itemsPerPage = 5; // Number of items per page
-        private List<StageMarkt> _allStages; // Store all fetched stages
+        private const string ApiUrl = "https://localhost:7249/api/Stages";
+        private int _currentPage = 1; 
+        private const int _itemsPerPage = 5; 
+        private List<StageMarkt> _allStages; 
         private Student _currentStudent;
         private StageMarkt _currentStage;
+        private List<StageMarkt> filteredStages;
+
+        public ObservableCollection<StageMarkt> FilteredCompanies { get; private set; }
 
         public APiList()
         {
             this.InitializeComponent();
+            FilteredCompanies = new ObservableCollection<StageMarkt>();
             LoadStages();
         }
 
@@ -37,19 +42,29 @@ namespace Prototype_Curio_stagemarkt.Stage
 
             if (e.Parameter is Tuple<Student, List<StageMarkt>> navigationData)
             {
-                _currentStudent = navigationData.Item1;  // Assign logged-in student
-                _allStages = navigationData.Item2;       // Assign filtered stages if available
+                _currentStudent = navigationData.Item1;
+                _allStages = navigationData.Item2;
             }
             else if (e.Parameter is Student student)
             {
-                _currentStudent = student;  // Assign logged-in student
-                LoadStages();               // Load all stages if no search results are provided
+                _currentStudent = student;
+                LoadStages();
             }
-
-            DisplayCurrentPage();  // Update the UI with the filtered data
+            ApplyFilter();  
+            DisplayCurrentPage(); 
         }
 
 
+        private void InitializeCompanies(List<StageMarkt> companies, Student student = null)
+        {
+            FilteredCompanies.Clear();
+            foreach (var company in companies)
+            {
+                FilteredCompanies.Add(company);
+            }
+
+            StagesListView.ItemsSource = FilteredCompanies;
+        }
 
 
 
@@ -58,13 +73,24 @@ namespace Prototype_Curio_stagemarkt.Stage
             try
             {
                 _allStages = await GetStagesAsync();
-                DisplayCurrentPage();
+
+                // Vul de lijst van stages in FilteredCompanies voor de initiële weergave
+                FilteredCompanies.Clear();
+                foreach (var stage in _allStages)
+                {
+                    FilteredCompanies.Add(stage);
+                }
+
+                // Na het laden van de stages kunnen we de filter toepassen en de juiste pagina weergeven
+                ApplyFilter();  // Dit zorgt ervoor dat de lijst gefilterd wordt op basis van de geselecteerde criteria.
+                DisplayCurrentPage();  // Zet de weergave van de pagina in de juiste staat.
             }
             catch (HttpRequestException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error fetching data: {ex.Message}");
+                Debug.WriteLine($"Error fetching data: {ex.Message}");
             }
         }
+
 
         private void StagesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -88,27 +114,6 @@ namespace Prototype_Curio_stagemarkt.Stage
             return JsonConvert.DeserializeObject<List<StageMarkt>>(responseBody);
         }
 
-
-        private void DisplayCurrentPage()
-        {
-            if (_allStages != null)
-            {
-                // Calculate the total number of pages
-                int totalPages = (int)Math.Ceiling((double)_allStages.Count / _itemsPerPage);
-
-                // Ensure the current page is within bounds
-                if (_currentPage < 1) _currentPage = 1;
-                if (_currentPage > totalPages) _currentPage = totalPages;
-
-                // Get the items for the current page
-                var currentItems = _allStages.Skip((_currentPage - 1) * _itemsPerPage).Take(_itemsPerPage).ToList();
-                StagesListView.ItemsSource = currentItems;
-
-                // Enable/disable pagination buttons
-                PreviousButton.IsEnabled = _currentPage > 1;
-                NextButton.IsEnabled = _currentPage < totalPages;
-            }
-        }
 
         private void LogoButton_Click(object sender, RoutedEventArgs e)
         {
@@ -191,5 +196,108 @@ namespace Prototype_Curio_stagemarkt.Stage
                 await alreadyDialog.ShowAsync();
             }
         }
+
+        private void UpdateFilteredCompanies(List<StageMarkt> filtered)
+        {
+            FilteredCompanies.Clear();
+            foreach (var company in filtered)
+            {
+                FilteredCompanies.Add(company);
+            }
+        }
+
+        private void ApplyFilter()
+        {
+            // Begin met de volledige lijst van stages
+            filteredStages = _allStages;
+
+            // Filteren op basis van de checkboxen
+            if (bolCheckbox.IsChecked == true && bblCheckbox.IsChecked == false)
+            {
+                filteredStages = filteredStages.Where(stage => stage.Course.ToLower() == "bol").ToList();
+            }
+            else if (bblCheckbox.IsChecked == true && bolCheckbox.IsChecked == false)
+            {
+                filteredStages = filteredStages.Where(stage => stage.Course.ToLower() == "bbl").ToList();
+            }
+
+            // Controleer of de gefilterde lijst leeg is (voor debugging)
+            Debug.WriteLine($"Aantal gefilterde stages: {filteredStages.Count}");
+
+            // Als de lijst leeg is, toon een bericht of pas de weergave aan
+            if (filteredStages.Count == 0)
+            {
+                StagesListView.ItemsSource = null;
+                return;
+            }
+
+            // Als de lijst niet leeg is, toon dan de huidige pagina
+            DisplayCurrentPage();
+        }
+
+        private void DisplayCurrentPage()
+        {
+            if (filteredStages != null && filteredStages.Count > 0)
+            {
+                // Bereken het totale aantal pagina's
+                int totalPages = (int)Math.Ceiling((double)filteredStages.Count / _itemsPerPage);
+
+                // Zorg ervoor dat de huidige pagina binnen de grenzen blijft
+                if (_currentPage < 1) _currentPage = 1;
+                if (_currentPage > totalPages) _currentPage = totalPages;
+
+                // Verkrijg de items voor de huidige pagina
+                var currentItems = filteredStages.Skip((_currentPage - 1) * _itemsPerPage).Take(_itemsPerPage).ToList();
+                StagesListView.ItemsSource = currentItems;
+
+                // Zet de pagineringsknoppen in of uit
+                PreviousButton.IsEnabled = _currentPage > 1;
+                NextButton.IsEnabled = _currentPage < totalPages;
+            }
+            else
+            {
+                // Als er geen items zijn, toon een boodschap
+                StagesListView.ItemsSource = null;
+            }
+        }
+
+        private void UpdateCheckBoxStates()
+        {
+            var exclusionCriteria = new List<(CheckBox CheckBox, List<CheckBox> Exclude)>
+            {
+                (bolCheckbox, new List<CheckBox> { bblCheckbox }),
+                (bblCheckbox, new List<CheckBox> { bolCheckbox }),
+            };
+
+            foreach (var (checkBox, excludeList) in exclusionCriteria)
+            {
+                UpdateCheckBoxAvailability(checkBox, excludeList);
+            }
+        }
+
+        private void UpdateCheckBoxAvailability(CheckBox checkBox, List<CheckBox> excludeList)
+        {
+            if (checkBox.IsChecked == true)
+            {
+                foreach (var exclude in excludeList)
+                {
+                    exclude.IsEnabled = false;
+                }
+            }
+            else
+            {
+                foreach (var exclude in excludeList)
+                {
+                    if (excludeList.All(e => e.IsChecked != true))
+                    {
+                        exclude.IsEnabled = true;
+                    }
+                }
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) => ApplyFilter();
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => ApplyFilter();
     }
 }
