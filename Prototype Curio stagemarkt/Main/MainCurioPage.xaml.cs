@@ -120,10 +120,8 @@ namespace Prototype_Curio_stagemarkt.Main
 
             List<StageMarkt> filteredCompanies;
 
-            // Perform initial query to retrieve relevant data from the database
-            var stages = db.Stages.AsEnumerable(); // Converts to IEnumerable, allowing client-side filtering.
+            var stages = db.Stages.AsEnumerable(); 
 
-            // Apply case-insensitive filtering on client-side
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 stages = stages.Where(c => c.Name.ToLower().Contains(searchQuery.ToLower()));
@@ -134,9 +132,8 @@ namespace Prototype_Curio_stagemarkt.Main
                 stages = stages.Where(c => c.City.ToLower().Contains(searchAdresQuery.ToLower()));
             }
 
-            filteredCompanies = stages.ToList(); // Materialize the filtered results as a list
+            filteredCompanies = stages.ToList(); 
 
-            // Navigate with search results if the user is logged in
             if (User.LoggedInUser?.Student != null)
             {
                 this.Frame.Navigate(typeof(APiList), new Tuple<Student, List<StageMarkt>>(User.LoggedInUser.Student, filteredCompanies));
@@ -166,28 +163,25 @@ namespace Prototype_Curio_stagemarkt.Main
 
             using var db = new CurioContext();
 
-            List<StageMarkt> filteredCompanies;
+            List<Company> filteredCompanies;
 
-            // Perform initial query to retrieve relevant data from the database
-            var stages = db.Stages.AsEnumerable(); // Converts to IEnumerable, allowing client-side filtering.
+            var companies = db.Companies.AsEnumerable(); 
 
-            // Apply case-insensitive filtering on client-side
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                stages = stages.Where(c => c.Name.ToLower().Contains(searchQuery.ToLower()));
+                companies = companies.Where(c => c.Name.ToLower().Contains(searchQuery.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(searchAdresQuery))
             {
-                stages = stages.Where(c => c.City.ToLower().Contains(searchAdresQuery.ToLower()));
+                companies = companies.Where(c => c.City.ToLower().Contains(searchAdresQuery.ToLower()));
             }
 
-            filteredCompanies = stages.ToList(); // Materialize the filtered results as a list
+            filteredCompanies = companies.ToList(); 
 
-            // Navigate with search results if the user is logged in
             if (User.LoggedInUser?.Student != null)
             {
-                this.Frame.Navigate(typeof(CompanyList), new Tuple<Student, List<StageMarkt>>(User.LoggedInUser.Student, filteredCompanies));
+                this.Frame.Navigate(typeof(CompanyList), (filteredCompanies, User.LoggedInUser.Student));
             }
         }
     }

@@ -43,38 +43,31 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                 _currentCompany = company;
                 _currentStudent = student;
 
-                // Stel de SelectedCompanyId in
-                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+                selectedCompanyId = _currentCompany.Id; 
 
-                // Update the UI with company details
                 companyNameTextblock.Text = company.Name;
                 companyCityTextblock.Text = company.City;
                 companyLearningPathTextblock.Text = company.LearningPath?.Name ?? "No Learning Path";
                 companyLevelTextblock.Text = company.Level?.ToString();
                 companyDescriptionTextblock.Text = company.Description;
 
-                // Set the DataContext to the company if needed
                 DataContext = _currentCompany;
 
-                // Update button states based on whether a student is logged in
-                applyButton.IsEnabled = _currentStudent != null;
+                applyButtonNew.IsEnabled = _currentStudent != null;
             }
             else if (e.Parameter is (Company singleCompany, null))
             {
                 _currentCompany = singleCompany;
 
-                // Stel de SelectedCompanyId in
-                selectedCompanyId = _currentCompany.Id; // Zorg ervoor dat Company.Id bestaat
+                selectedCompanyId = _currentCompany.Id; 
 
-                // Update the UI with company details
                 companyNameTextblock.Text = _currentCompany.Name;
                 companyCityTextblock.Text = _currentCompany.City;
                 companyLearningPathTextblock.Text = _currentCompany.LearningPath?.Name ?? "No Learning Path";
                 companyLevelTextblock.Text = _currentCompany.Level?.ToString();
                 companyDescriptionTextblock.Text = _currentCompany.Description;
 
-                // Disable the buttons if no student is logged in
-                applyButton.IsEnabled = false;
+                applyButtonNew.IsEnabled = false;
             }
             else
             {
@@ -87,17 +80,6 @@ namespace Prototype_Curio_stagemarkt.Companywindow
             this.Frame.GoBack();
         }
 
-        private void applyButton_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            var student = button?.DataContext as Company;
-            var company = button?.DataContext as Company;
-
-            if (student != null)
-            {
-                this.Frame.Navigate(typeof(ApplyPage), (company, _currentStudent, selectedCompanyId));
-            }
-        }
 
         private void favoriteButton_Click(object sender, RoutedEventArgs e)
         {
