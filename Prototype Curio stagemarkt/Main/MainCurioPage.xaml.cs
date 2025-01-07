@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -158,30 +158,49 @@ namespace Prototype_Curio_stagemarkt.Main
 
         private void Bfakesearch_Click(object sender, RoutedEventArgs e)
         {
-            var searchQuery = searchTextbox.Text.Trim();
-            var searchAdresQuery = searchAdresTextbox.Text.Trim();
+            var searchQuery = searchTextbox.Text.Trim().ToLower();
+            var searchAdresQuery = searchAdresTextbox.Text.Trim().ToLower();
 
             using var db = new CurioContext();
 
             List<Company> filteredCompanies;
 
-            var companies = db.Companies.AsEnumerable(); 
-
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery) && string.IsNullOrEmpty(searchAdresQuery))
             {
-                companies = companies.Where(c => c.Name.ToLower().Contains(searchQuery.ToLower()));
+                filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
+                    .Where(c => c.IsOpen && c.Name.ToLower().Contains(searchQuery))
+                    .ToList();
             }
-
-            if (!string.IsNullOrEmpty(searchAdresQuery))
+            else if (string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
             {
-                companies = companies.Where(c => c.City.ToLower().Contains(searchAdresQuery.ToLower()));
+                filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
+                    .Where(c => c.IsOpen && c.City.ToLower().Contains(searchAdresQuery))
+                    .ToList();
             }
-
-            filteredCompanies = companies.ToList(); 
+            else if (!string.IsNullOrEmpty(searchQuery) && !string.IsNullOrEmpty(searchAdresQuery))
+            {
+                filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
+                    .Where(c => c.IsOpen && c.Name.ToLower().Contains(searchQuery) && c.City.ToLower().Contains(searchAdresQuery))
+                    .ToList();
+            }
+            else
+            {
+                filteredCompanies = db.Companies
+                    .Include(c => c.LearningPath)
+                    .Where(c => c.IsOpen)
+                    .ToList();
+            }
 
             if (User.LoggedInUser?.Student != null)
             {
                 this.Frame.Navigate(typeof(CompanyList), (filteredCompanies, User.LoggedInUser.Student));
+            }
+            else
+            {
+                this.Frame.Navigate(typeof(CompanyList), filteredCompanies);
             }
         }
     }

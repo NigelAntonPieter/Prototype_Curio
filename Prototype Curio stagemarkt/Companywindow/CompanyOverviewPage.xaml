@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Prototype_Curio_stagemarkt.Companywindow"
       xmlns:localData="using:Prototype_Curio_stagemarkt.Data"
+      xmlns:localHeader="using:Prototype_Curio_stagemarkt"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -17,40 +18,8 @@
         </Grid.RowDefinitions>
 
         <!-- Header Grid -->
-        <Grid Grid.Row="0">
-            <Grid.Background>
-                <ImageBrush ImageSource="/Assets/curio.jpg"
-                            Stretch="UniformToFill">
-                    <ImageBrush.RelativeTransform>
-                        <TransformGroup>
-                            <TranslateTransform Y="0.9" />
-                        </TransformGroup>
-                    </ImageBrush.RelativeTransform>
-                </ImageBrush>
-            </Grid.Background>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <localHeader:HeaderControl />
 
-            <StackPanel Grid.Column="0"
-                        Margin="20">
-                <Button x:Name="LogoButton"
-                        Click="LogoButton_Click"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        Padding="0"
-                        Margin="0">
-                    <TextBlock Text="CurioMarkt"
-                               FontWeight="Bold"
-                               FontSize="40"
-                               Foreground="White" />
-                </Button>
-                <TextBlock Text="Van Curio Voor Curio"
-                           FontSize="18"
-                           Foreground="White"
-                           Margin="0,10,0,0" />
-            </StackPanel>
-        </Grid>
 
         <Grid Grid.Row="1"
               Background="White">

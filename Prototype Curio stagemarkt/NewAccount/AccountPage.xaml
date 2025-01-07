@@ -61,7 +61,7 @@
                         Click="uploadFileButton_Click"
                         Padding="10,5"
                         CornerRadius="5"
-                        Margin="10">Upload urenkaart</Button>
+                        Margin="10">Urenkaart</Button>
                 <ComboBox x:Name="companyComboBox"
                           SelectionChanged="companyComboBox_SelectionChanged"
                           PlaceholderText="Dm"

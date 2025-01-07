@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid>
+        <local:HeaderControl x:Name="HeaderControl" />
         <Frame x:Name="mainFrame" />
 
         <ProgressRing x:Name="GlobalLoadingIndicator"
@@ -17,5 +18,4 @@
                       Width="50"
                       Height="50" />
     </Grid>
-   
 </Window>

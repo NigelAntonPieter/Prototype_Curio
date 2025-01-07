@@ -21,7 +21,7 @@ namespace Prototype_Curio_stagemarkt.Stage
     {
         private const string ApiUrl = "https://localhost:7249/api/Stages";
         private int _currentPage = 1; 
-        private const int _itemsPerPage = 5; 
+        private const int _itemsPerPage = 10; 
         private List<StageMarkt> _allStages; 
         private Student _currentStudent;
         private StageMarkt _currentStage;
@@ -74,16 +74,14 @@ namespace Prototype_Curio_stagemarkt.Stage
             {
                 _allStages = await GetStagesAsync();
 
-                // Vul de lijst van stages in FilteredCompanies voor de initiële weergave
                 FilteredCompanies.Clear();
                 foreach (var stage in _allStages)
                 {
                     FilteredCompanies.Add(stage);
                 }
 
-                // Na het laden van de stages kunnen we de filter toepassen en de juiste pagina weergeven
-                ApplyFilter();  // Dit zorgt ervoor dat de lijst gefilterd wordt op basis van de geselecteerde criteria.
-                DisplayCurrentPage();  // Zet de weergave van de pagina in de juiste staat.
+                ApplyFilter();  
+                DisplayCurrentPage();  
             }
             catch (HttpRequestException ex)
             {
@@ -299,5 +297,10 @@ namespace Prototype_Curio_stagemarkt.Stage
         private void CheckBox_Checked(object sender, RoutedEventArgs e) => ApplyFilter();
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => ApplyFilter();
+
+        private void searchTextboxStage_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

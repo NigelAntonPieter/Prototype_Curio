@@ -69,77 +69,66 @@
         <Grid Grid.ColumnSpan="2"
               Grid.Row="1"
               Background="White"
-              Margin="180"
-              CornerRadius="30">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+              Margin="0,180"
+              CornerRadius="30"
+              Width="900"
+              HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="39">
+                    <TextBlock Text="Bedrijfsnaam"
+                               Foreground="Black"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                    <TextBox x:Name="searchTextbox"
+                             TextChanged="searchTextbox_TextChanged"
+                             BorderBrush="Black"
+                             BorderThickness="2"
+                             CornerRadius="20"
+                             Width="300"
+                             Height="50"
+                             Margin="10,0,0,0"
+                             FontSize="20"
+                             Padding="9"/>
+                </StackPanel>
+                <StackPanel Margin="39">
+                    <TextBlock Text="Adres"
+                               Foreground="Black"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                    <TextBox x:Name="searchAdresTextbox"
+                             Grid.Column="1"
+                             TextChanged="searchAdresTextbox_TextChanged"
+                             BorderBrush="Black"
+                             BorderThickness="2"
+                             CornerRadius="20"
+                             Width="200"
+                             Height="50"
+                             FontSize="20"
+                             Padding="9"/>
+                </StackPanel>
+                
 
-            <Grid Grid.Column="0"
-                  HorizontalAlignment="Left"
-                  Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Text="Bedrijfsnaam"
-                           Foreground="Black"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center" />
-                <TextBox x:Name="searchTextbox"
-                         Grid.Column="1"
-                         TextChanged="searchTextbox_TextChanged"
-                         BorderBrush="Black"
-                         BorderThickness="2"
-                         Width="300"
-                         Height="50"
-                         Margin="10,0,0,0"
-                         FontSize="20" />
-            </Grid>
-
-            <Grid Grid.Column="1"
-                  HorizontalAlignment="Left"
-                  Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Text="Adres"
-                           Foreground="Black"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center" />
-                <TextBox x:Name="searchAdresTextbox"
-                         Grid.Column="1"
-                         TextChanged="searchAdresTextbox_TextChanged"
-                         BorderBrush="Black"
-                         BorderThickness="2"
-                         Width="200"
-                         Height="50"
-                         Margin="10,0,0,0" />
-                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <StackPanel Orientation="Vertical"
+                            Grid.Column="1"
+                            VerticalAlignment="Center">
                     <Button x:Name="Bsearch"
                             Grid.Column="2"
                             Click="Bsearch_Click"
                             BorderBrush="Black"
                             Content="Zoek"
-                            Margin="20,0,0,0"
                             Background="#E23C84" />
                     <Button x:Name="Bfakesearch"
                             Grid.Column="2"
                             Click="Bfakesearch_Click"
                             BorderBrush="Black"
                             Content="Zoek fake"
-                            Margin="20,0,0,0"
                             Background="AliceBlue" />
                 </StackPanel>
-               
-            </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
