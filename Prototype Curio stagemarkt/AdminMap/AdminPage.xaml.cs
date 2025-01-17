@@ -150,13 +150,20 @@ namespace Prototype_Curio_stagemarkt.AdminMap
             {
                 using var db = new CurioContext();
 
+                // Verwijder berichten die gekoppeld zijn aan deze student
+                var relatedMessages = db.Messages.Where(m => m.SenderStudentId == selectedStudent.Id || m.ReceiverStudentId == selectedStudent.Id);
+                db.Messages.RemoveRange(relatedMessages);
+
+                // Verwijder gekoppelde gebruiker
                 var selectedUserStudent = db.Users.FirstOrDefault(u => u.StudentId == selectedStudent.Id);
-                db.Students.Remove(selectedStudent);
 
                 if (selectedUserStudent != null)
                 {
                     db.Users.Remove(selectedUserStudent);
                 }
+
+                // Verwijder de student
+                db.Students.Remove(selectedStudent);
 
                 try
                 {
@@ -167,10 +174,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 {
                     foreach (var entry in ex.Entries)
                     {
-                        var proposedValues = entry.CurrentValues;
-                        var databaseValues = entry.GetDatabaseValues();
-
-                        if (databaseValues == null)
+                        if (entry.GetDatabaseValues() == null)
                         {
                             await databaseErrorDialog.ShowAsync();
                         }
@@ -179,16 +183,20 @@ namespace Prototype_Curio_stagemarkt.AdminMap
             }
         }
 
+
         private async void deleteCompanyDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             if (selectedCompany != null)
             {
                 using var db = new CurioContext();
 
+                // Verwijder berichten die gekoppeld zijn aan dit bedrijf
+                var relatedMessages = db.Messages.Where(m => m.SenderCompanyId == selectedCompany.Id || m.ReceiverCompanyId == selectedCompany.Id);
+                db.Messages.RemoveRange(relatedMessages);
+
+                // Verwijder gekoppelde gebruiker en favoriete bedrijven
                 var selectedUserCompany = db.Users.FirstOrDefault(u => u.CompanyId == selectedCompany.Id);
                 var selectedFavoriteCompany = db.FavoriteCompanies.FirstOrDefault(f => f.Stage.Id == selectedCompany.Id);
-
-                db.Companies.Remove(selectedCompany);
 
                 if (selectedUserCompany != null)
                 {
@@ -200,6 +208,9 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                     db.FavoriteCompanies.Remove(selectedFavoriteCompany);
                 }
 
+                // Verwijder het bedrijf
+                db.Companies.Remove(selectedCompany);
+
                 try
                 {
                     await db.SaveChangesAsync();
@@ -209,10 +220,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 {
                     foreach (var entry in ex.Entries)
                     {
-                        var proposedValues = entry.CurrentValues;
-                        var databaseValues = entry.GetDatabaseValues();
-
-                        if (databaseValues == null)
+                        if (entry.GetDatabaseValues() == null)
                         {
                             await databaseErrorDialog.ShowAsync();
                         }
@@ -220,6 +228,7 @@ namespace Prototype_Curio_stagemarkt.AdminMap
                 }
             }
         }
+
 
         private void searchTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {

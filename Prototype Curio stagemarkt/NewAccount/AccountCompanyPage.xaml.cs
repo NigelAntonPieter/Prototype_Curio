@@ -433,20 +433,32 @@ namespace Prototype_Curio_stagemarkt.Login
 
                 if (User.LoggedInUser.CompanyId.HasValue)
                 {
-                    var user = db.Users.FirstOrDefault(u => u.CompanyId == User.LoggedInUser.CompanyId);
+                    var companyId = User.LoggedInUser.CompanyId.Value;
+
+                    // Controleer op gerelateerde berichten
+                    var relatedMessages = db.Messages.Where(m => m.SenderCompanyId == companyId || m.ReceiverCompanyId == companyId).ToList();
+                    if (relatedMessages.Any())
+                    {
+                        db.Messages.RemoveRange(relatedMessages);
+                        db.SaveChanges();
+                    }
+
+                    // Verwijder de gebruiker en het bedrijf
+                    var user = db.Users.FirstOrDefault(u => u.CompanyId == companyId);
                     if (user != null)
                     {
                         db.Users.Remove(user);
                         db.SaveChanges();
                     }
 
-                    var company = db.Companies.FirstOrDefault(c => c.Id == User.LoggedInUser.CompanyId);
+                    var company = db.Companies.FirstOrDefault(c => c.Id == companyId);
                     if (company != null)
                     {
                         db.Companies.Remove(company);
                         db.SaveChanges();
                     }
                 }
+
                 User.LoggedInUser = null;
                 this.Frame.Navigate(typeof(WelcomePage));
             }
@@ -455,6 +467,7 @@ namespace Prototype_Curio_stagemarkt.Login
                 this.Frame.GoBack();
             }
         }
+
 
         private async void CvLinkTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
         {

@@ -66,7 +66,8 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <ContentDialog x:Name="noFileDialog">
+        <ContentDialog x:Name="noFileDialog"
+                       CloseButtonText="oke">
             <TextBlock x:Name="errorTextBlock"
                        Text="Er is geen file" />
         </ContentDialog>

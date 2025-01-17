@@ -142,5 +142,10 @@ namespace Prototype_Curio_stagemarkt.Companywindow
                 CvFilePath = copiedFile.Path;
             }
         }
+
+        private void noFileDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
     }
 }
